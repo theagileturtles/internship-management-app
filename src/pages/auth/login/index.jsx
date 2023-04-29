@@ -8,7 +8,7 @@ export default function Index() {
       <Stack spacing={"sm"}>
         <TextInput placeholder="Email" radius="md" />
         <TextInput placeholder="Password" radius="md" />
-        <Button radius={"xl"} >Sign In</Button>
+        <Button radius={"xl"} >Login</Button>
       </Stack>
     </Box>
   );
