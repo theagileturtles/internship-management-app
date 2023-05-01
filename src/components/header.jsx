@@ -10,7 +10,6 @@ function Header(props) {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#DCDCDC',
     height: '60px',
     padding: '0 20px',
   };
