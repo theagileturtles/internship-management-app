@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
       <Layout>
-      <Box sx={{height:"100vh",backgroundColor:"gray"}}></Box>
+      <Box></Box>
       </Layout>
   )
 }

@@ -1,25 +1,37 @@
-import { Box, Stack, Text, Title, useMantineTheme } from "@mantine/core";
+import {
+  Box,
+  Button,
+  NavLink,
+  Stack,
+  Text,
+  Title,
+  useMantineTheme,
+} from "@mantine/core";
+import { Files,CircleCheck,Briefcase,FilePlus } from 'tabler-icons-react';
 import { useState } from "react";
 
 export default function Sidebar() {
   const theme = useMantineTheme();
   const [selectedItem, setSelectedItem] = useState(1);
 
+  function selectedItemHandler(itemID){
+    setSelectedItem(itemID);
+  }
   const anchors = [
     {
       category: "Dashboard",
       items: [
-        { title: "Internship Applications", icon: <></>, id: 1 },
-        { title: "Completed Internship", icon: <></>, id: 2 },
-        { title: "Internship Opportunuties", icon: <></>, id: 3 },
+        { title: "Internship Applications", icon: <Files/>, id: 1 },
+        { title: "Completed Internship", icon: <CircleCheck/>, id: 2 },
+        { title: "Internship Opportunuties", icon: <Briefcase/>, id: 3 },
       ],
     },
     {
       category: "Management",
       items: [
-        { title: "Create an Application", icon: <></>, id: 4 },
+        { title: "Create an Application", icon: <FilePlus/>, id: 4 },
         ,
-        { title: "Request for an Official Letter", icon: <></>, id: 5 },
+        { title: "Request for an Official Letter", icon: <FilePlus/>, id: 5 },
       ],
     },
   ];
@@ -29,10 +41,10 @@ export default function Sidebar() {
         paddingRight: 20,
         paddingLeft: 30,
         paddingTop: 40,
-        height: "100vh",
+        paddingBottom:20
       }}
     >
-      <Box pb={20}>
+      <Box pb={50}>
         <Title color={theme.colors.mainBlue} order={1}>
           IMA
         </Title>
@@ -42,9 +54,22 @@ export default function Sidebar() {
       </Box>
       <Stack spacing={30}>
         {anchors.map((element) => (
-          <Box key={"sidebar-dashboard" + element.category.toLowerCase()}>
+          <Stack spacing={10} key={"sidebar-dashboard" + element.category.toLowerCase()}>
             <Text color={theme.colors.mainBlue}>{element.category}</Text>
-          </Box>
+            <Stack spacing={5}>
+              {element.items.map((subElement) => (
+                <NavLink
+                 icon={subElement.icon}
+                  onClick={()=>{selectedItemHandler(subElement.id)}}
+                  active={subElement.id === selectedItem}
+                  label={subElement.title}
+                  key={"sidebar-dashboard-element-" + subElement.id}
+                  color={"cyan"}
+                  sx={{transition:"0.1s"}}
+                />
+              ))}
+            </Stack>
+          </Stack>
         ))}
       </Stack>
     </Box>

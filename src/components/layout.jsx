@@ -6,10 +6,10 @@ export default function Layout({ children }) {
   return (
     <>
       <Grid>
-        <Grid.Col span={12} xs={12} sm={4} md={3} lg={2}>
+        <Grid.Col span={12} xs={12}  sm={4} md={3} xl={2}>
           <Sidebar />
         </Grid.Col>
-        <Grid.Col span={12} xs={12} sm={8} md={9} lg={10}>
+        <Grid.Col span={12} xs={12}  sm={8} md={9} xl={10}>
           <Header />
           <main>{children}</main>
         </Grid.Col>
