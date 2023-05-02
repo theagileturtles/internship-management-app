@@ -1,10 +1,10 @@
 import "@/styles/globals.css";
+import { MantineProvider } from "@mantine/core";
 import Head from "next/head";
 
 export default function App({ Component, pageProps }) {
   return (
-    <>
-      {" "}
+    <MantineProvider theme={{colors:{"mainBlue":["#08b3ad"], "mainLightBlue":["#dbf4f3"]}}} withGlobalStyles withNormalizeCSS>
       <Head>
         <title>Internship Management App</title>
         <meta
@@ -15,6 +15,6 @@ export default function App({ Component, pageProps }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Component {...pageProps} />
-    </>
+    </MantineProvider>
   );
 }
