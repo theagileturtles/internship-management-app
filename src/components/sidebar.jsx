@@ -22,7 +22,7 @@ export default function Sidebar() {
       category: "Dashboard",
       items: [
         { title: "Internship Applications", icon: <Files/>, id: 1 },
-        { title: "Completed Internship", icon: <CircleCheck/>, id: 2 },
+        { title: "Completed Internships", icon: <CircleCheck/>, id: 2 },
         { title: "Internship Opportunuties", icon: <Briefcase/>, id: 3 },
       ],
     },
@@ -40,7 +40,7 @@ export default function Sidebar() {
       sx={{
         paddingRight: 20,
         paddingLeft: 30,
-        paddingTop: 40,
+        paddingTop: 80,
         paddingBottom:20
       }}
     >

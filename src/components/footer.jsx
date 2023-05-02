@@ -10,13 +10,10 @@ function Footer() {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    height: "100px",
-    padding: "10px 70px",
+    padding: "2vw 3vw",
     position: "absolute",
+    width:"-webkit-fill-available",
     bottom: 0,
-    left: 0,
-    right: 0,
-    fontFamily: "Roboto Flex",
   };
 
   const leftStyle = {
