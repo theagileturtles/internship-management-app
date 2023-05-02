@@ -1,0 +1,10 @@
+{
+    "session":{
+        "user":{
+            "uuid":"",
+            "name":"",
+            "role":""
+        },
+        "expired-date":""
+    }
+}
