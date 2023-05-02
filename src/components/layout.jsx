@@ -5,16 +5,17 @@ import Footer from "./footer";
 
 export default function Layout({ children }) {
   return (
-    <>
-      <Grid>
-        <Grid.Col span={12} xs={12}  sm={4} md={3} xl={2}>
-          <Sidebar />
+
+      <Grid grow gutter={0}>
+        <Grid.Col xs={12} sm={4} md={3} xl={2}>
+          <Sidebar/>
         </Grid.Col>
-        <Grid.Col span={12} xs={12}  sm={8} md={9} xl={10}>
-        <Header userName="Sinan Sensev" userId="200209013"
-          <main>{children}</main>
+        <Grid.Col xs={12} sm={8} md={9} xl={10}>
+            <Header userName="Sinan Sensev" userId="200209013"></Header>
+            <main>{children}</main>
+            <Footer/>
         </Grid.Col>
       </Grid>
-    </>
+
   );
 }

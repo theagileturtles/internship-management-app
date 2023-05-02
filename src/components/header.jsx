@@ -4,12 +4,13 @@ import { ActionIcon, Avatar, Text } from "@mantine/core";
 
 function Header(props) {
   const headerStyle = {
-    marginTop: "20px",
+    paddingTop: "10px",
+    paddingBottom: "10px",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    height: "60px",
-    padding: "0 20px",
+    // height: "60px",
+    paddingRight: "20px",
   };
 
   const leftStyle = {
