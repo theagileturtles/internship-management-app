@@ -11,7 +11,6 @@ export default function Home() {
 
   return (
     <>
-
       <Layout>
       Here is the home page
       </Layout>
