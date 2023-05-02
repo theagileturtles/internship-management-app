@@ -40,7 +40,7 @@ export default function Sidebar() {
       sx={{
         paddingRight: 20,
         paddingLeft: 30,
-        paddingTop: 80,
+        paddingTop: 40,
         paddingBottom:20
       }}
     >
