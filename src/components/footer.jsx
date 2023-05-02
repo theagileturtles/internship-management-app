@@ -1,4 +1,4 @@
-import { Text } from "@mantine/core";
+import { Anchor, Text } from "@mantine/core";
 import Logo from "../assets/uulogo.png";
 import Image from "next/image";
 import React from "react";
@@ -73,7 +73,9 @@ function Footer() {
           </Text>
         </div>
         <div style={separatorStyle}></div>
-        <Image src={Logo} style={logoStyle} alt="logo" />
+        <Anchor href="https://uskudar.edu.tr">
+          <Image src={Logo} style={logoStyle} alt="logo" />
+        </Anchor>
       </div>
       <div style={copyrightStyle}>
         <Text>© 2023 Agile Turtles</Text>
