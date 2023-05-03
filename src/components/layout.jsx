@@ -1,12 +1,21 @@
+import { Grid } from "@mantine/core";
 import Header from "./header";
+import Sidebar from "./sidebar";
 import Footer from "./footer";
 
 export default function Layout({ children }) {
   return (
-    <>
-      <Header userName="Sinan Sensev" userId="200209013" avatarUrl="https://banner2.cleanpng.com/20180703/ya/kisspng-computer-icons-user-avatar-user-5b3bafe2381423.1933594815306383062297.jpg" />
-      <main>{children}</main>
-      <Footer />
-    </>
+
+      <Grid grow gutter={0}>
+        <Grid.Col xs={12} sm={4} md={3} xl={2}>
+          <Sidebar/>
+        </Grid.Col>
+        <Grid.Col xs={12} sm={8} md={9} xl={10}>
+            <Header userName="Sinan Sensev" userId="200209013"></Header>
+            <main>{children}</main>
+            <Footer/>
+        </Grid.Col>
+      </Grid>
+
   );
 }
