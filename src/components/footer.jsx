@@ -1,4 +1,4 @@
-import { Text } from "@mantine/core";
+import { Anchor, Text } from "@mantine/core";
 import Logo from "../assets/uulogo.png";
 import Image from "next/image";
 import React from "react";
@@ -10,13 +10,10 @@ function Footer() {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    height: "100px",
-    padding: "10px 70px",
+    padding: "2vw 3vw",
     position: "absolute",
+    width:"-webkit-fill-available",
     bottom: 0,
-    left: 0,
-    right: 0,
-    fontFamily: "Roboto Flex",
   };
 
   const leftStyle = {
@@ -76,7 +73,9 @@ function Footer() {
           </Text>
         </div>
         <div style={separatorStyle}></div>
-        <Image src={Logo} style={logoStyle} alt="logo" />
+        <Anchor href="https://uskudar.edu.tr">
+          <Image src={Logo} style={logoStyle} alt="logo" />
+        </Anchor>
       </div>
       <div style={copyrightStyle}>
         <Text>© 2023 Agile Turtles</Text>
