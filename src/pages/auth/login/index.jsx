@@ -1,7 +1,16 @@
 // Importing useState hook from React library for managing state
 import { useState } from "react";
 // Importing Box, Button, Stack, TextInput, and Checkbox components from Mantine's Core library for styling
-import { Box, Button, Stack, TextInput, Checkbox, useMantineTheme, Title, Text } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Stack,
+  TextInput,
+  Checkbox,
+  useMantineTheme,
+  Title,
+  Text,
+} from "@mantine/core";
 // Importing logo image from assets folder
 import logo from "../../../assets/uulogo.png";
 // Importing Image component from Next.js library for optimized image rendering
@@ -13,8 +22,9 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const theme = useMantineTheme();
+  const [showPassword, setShowPassword] = useState(false);
 
+  const theme = useMantineTheme();
 
   // Function to handle changes in email input field
   const handleEmailChange = (event) => {
@@ -25,6 +35,10 @@ function LoginPage() {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
+  
+  const handleShowPassword = (event)=>{
+    setShowPassword(event.target.checked)
+  }
 
   // Function to handle changes in rememberMe checkbox
   const handleRememberMeChange = (event) => {
@@ -56,7 +70,12 @@ function LoginPage() {
         {/* Box component for displaying the sign in header */}
         <Box sx={{ textAlign: "center", fontSize: "2rem" }}>
           <Title fw={400}>
-            Sign in to <span style={{color:theme.colors.mainBlue[6],fontWeight: "bold" }}>IMA</span>
+            Sign in to{" "}
+            <span
+              style={{ color: theme.colors.mainBlue[6], fontWeight: "bold" }}
+            >
+              IMA
+            </span>
           </Title>
         </Box>
         {/* TextInput component for email input */}
@@ -73,11 +92,11 @@ function LoginPage() {
           radius="md"
           value={password}
           onChange={handlePasswordChange}
-          type="password"
+          type={showPassword ? "text" :"password"}
           sx={{ width: "300px", borderColor: "black" }}
         />
         {/* Box component for positioning rememberMe checkbox */}
-        <Box
+        <Stack
           sx={{
             width: "100%",
             display: "flex",
@@ -85,21 +104,25 @@ function LoginPage() {
             alignItems: "start",
           }}
         >
+          <Checkbox
+            label="Show Password"
+            checked={showPassword}
+            onChange={handleShowPassword}
+          />
           {/* Checkbox component for rememberMe option */}
           <Checkbox
-         
             label="Remember me"
             checked={rememberMe}
             onChange={handleRememberMeChange}
           />
-        </Box>
+        </Stack>
         {/* Button component for submitting the login form */}
         <Button
           radius={"xl"}
           size="sm"
           sx={{
             width: "150px",
-            transition:"0.3s",
+            transition: "0.3s",
             ":hover": { backgroundColor: theme.colors.mainHoverBlue },
           }}
           onClick={handleLogin}
