@@ -17,6 +17,13 @@ export default async function handler(req, res) {
         await query(connection)(
             "INSERT INTO mockup_database.users (first_name, last_name, email, password, role) values(?,?,?,MD5(?),?);",
             [body.firstName, body.lastName, body.email, body.password, body.role])
+
+        body.departments.map(async (department) => {
+            await query(connection)(
+                "INSERT INTO mockup_database.department_relations (user_uuid,department) values(@last_uuid, ?);",
+                [department])
+        })
+
         switch (body.role) {
             case "student":
                 await query(connection)(
@@ -33,11 +40,15 @@ export default async function handler(req, res) {
             default:
                 break;
         }
-        res.status(200).json({message:"Done"});
+        res.status(200).json({
+            message: "Done"
+        });
     } catch (error) {
         console.log(error)
-        res.status(400).json({error:"Bad Request"});
-    } finally{
+        res.status(400).json({
+            error: "Bad Request"
+        });
+    } finally {
         connection.end()
     }
 
