@@ -49,6 +49,7 @@ function LoginPage() {
   const handleLogin = (event) => {
     event.preventDefault();
     console.log("Login with:", email, password, rememberMe);
+    document.location.href = "/"
   };
 
   // Return JSX to render login page

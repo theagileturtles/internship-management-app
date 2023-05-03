@@ -64,7 +64,7 @@ export default function Sidebar() {
                   active={subElement.id === selectedItem}
                   label={subElement.title}
                   key={"sidebar-dashboard-element-" + subElement.id}
-                  color={"cyan"}
+                  color={"mainBlue"}
                   sx={{transition:"0.1s"}}
                 />
               ))}
