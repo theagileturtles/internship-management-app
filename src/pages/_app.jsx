@@ -23,6 +23,15 @@ export default function App({ Component, pageProps }) {
         colorScheme: "light",
         primaryColor: "mainBlue",
         colors: {
+          text:[
+            '#adadad',
+            '#999999',
+            '#858585',
+            '#707070',
+            '#5c5c5c',
+            '#474747',
+            '#333333',
+          ],
           mainBlue: [
             '#cef0ef',
             '#b5e8e6',
