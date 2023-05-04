@@ -9,7 +9,7 @@ function Header(props) {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    // height: "60px",
+    height: "85px",
     paddingRight: "20px",
   };
 
