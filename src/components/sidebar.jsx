@@ -20,7 +20,7 @@ export default function Sidebar() {
     {
       category: "Dashboard",
       items: [
-        { title: "Internship Applications", icon: <Files/>, href: "/student/internship-application"},
+        { title: "Internship Applications", icon: <Files/>, href: "/student/internship-applications"},
         { title: "Completed Internships", icon: <CircleCheck/>, href: "/student/completed-internships"},
         { title: "Internship Opportunuties", icon: <Briefcase/>, href:"/student/internship-opportunuties"},
       ],
