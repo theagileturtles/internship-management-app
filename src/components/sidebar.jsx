@@ -8,30 +8,29 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { Files,CircleCheck,Briefcase,FilePlus } from 'tabler-icons-react';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Sidebar() {
   const theme = useMantineTheme();
-  const [selectedItem, setSelectedItem] = useState(1);
+  const router = useRouter()
 
-  function selectedItemHandler(itemID){
-    setSelectedItem(itemID);
-  }
   const anchors = [
     {
       category: "Dashboard",
       items: [
-        { title: "Internship Applications", icon: <Files/>, id: 1 },
-        { title: "Completed Internships", icon: <CircleCheck/>, id: 2 },
-        { title: "Internship Opportunuties", icon: <Briefcase/>, id: 3 },
+        { title: "Internship Applications", icon: <Files/>, href: "/student/internship-application"},
+        { title: "Completed Internships", icon: <CircleCheck/>, href: "/student/completed-internships"},
+        { title: "Internship Opportunuties", icon: <Briefcase/>, href:"/student/internship-opportunuties"},
       ],
     },
     {
       category: "Management",
       items: [
-        { title: "Create an Application", icon: <FilePlus/>, id: 4 },
+        { title: "Create an Application", icon: <FilePlus/>, id: 4, href:"/student/create-an-application"},
         ,
-        { title: "Request for an Official Letter", icon: <FilePlus/>, id: 5 },
+        { title: "Request for an Official Letter", icon: <FilePlus/>, id: 5, href:"/student/request-for-an-official-letter"},
       ],
     },
   ];
@@ -58,15 +57,19 @@ export default function Sidebar() {
             <Text color={theme.colors.mainBlue}>{element.category}</Text>
             <Stack spacing={5}>
               {element.items.map((subElement) => (
+                <Link style={{ textDecoration: 'none' }} href={subElement.href}
+                key={"sidebar-dashboard-element-" + subElement.href.replace("/","-")}
+                >
                 <NavLink
+                // component="a"
                  icon={subElement.icon}
-                  onClick={()=>{selectedItemHandler(subElement.id)}}
-                  active={subElement.id === selectedItem}
-                  label={subElement.title}
-                  key={"sidebar-dashboard-element-" + subElement.id}
+                  // href={subElement.href}
+                  active={router.pathname.includes(subElement.href)}
+                  label={ subElement.title}
                   color={"mainBlue"}
                   sx={{transition:"0.1s"}}
                 />
+                </Link>
               ))}
             </Stack>
           </Stack>
