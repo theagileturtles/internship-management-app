@@ -1,8 +1,22 @@
 import "@/styles/globals.css";
 import { MantineProvider } from "@mantine/core";
 import Head from "next/head";
+import Router from 'next/router';
 
 export default function App({ Component, pageProps }) {
+
+  // Router.onRouteChangeStart = (url) => {
+  //   console.log("hey")
+  // };
+  
+  // Router.onRouteChangeComplete = (url) => {
+  //   console.log("completed")
+  // };
+  
+  // Router.onRouteChangeError = (err, url) => {
+  //   console.log("error..")
+  // };
+
   return (
     <MantineProvider
       theme={{
