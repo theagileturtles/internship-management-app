@@ -9,9 +9,9 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 
-export default function Index() {
+export default function Index({ data }) {
   const theme = useMantineTheme();
-  
+
   return (
     <Layout>
       <Box
@@ -55,42 +55,92 @@ export default function Index() {
               </Grid.Col>
             </Grid>
             <Accordion color="mainBlue" variant="filled" chevronPosition="left">
-              <Accordion.Item
-                sx={{transition:"0.3s",
-                  ":hover": {
-                    backgroundColor: "#f9f9f9",
-                  },
-                  "&[data-active]": {
-                    backgroundColor: theme.colors.mainBlue[0],
-                  },
-                }}
-                value="item-1"
-              >
-                <Accordion.Control>
-                  <Grid>
-                    <Grid.Col xs={4}>
-                      <Text ta={"center"} order={5}>
-                        05.05.2023
-                      </Text>
-                    </Grid.Col>
-                    <Grid.Col xs={4}>
-                      <Text ta={"center"} order={5}>
-                        Voluntary
-                      </Text>
-                    </Grid.Col>
-                    <Grid.Col xs={4}>
-                      <Text ta={"center"} order={5}>
-                        Pending for SGK Entry
-                      </Text>
-                    </Grid.Col>
-                  </Grid>
-                </Accordion.Control>
-                <Accordion.Panel>Panel 1</Accordion.Panel>
-              </Accordion.Item>
+              {data.map((element,index) => (
+                <>
+                  <Accordion.Item key={"accordion_item_"+index}
+                    sx={{
+                        width:"100%",
+                      transition: "0.3s",
+                      ":hover": {
+                        backgroundColor: "#f9f9f9",
+                      },
+                      "&[data-active]": {
+                        backgroundColor: theme.colors.mainBlue[0],
+                      },
+                    }}
+                    value={"accordion_item_"+index}
+                  >
+                    <Accordion.Control>
+                      <Grid>
+                        <Grid.Col xs={4}>
+                          <Text ta={"center"} order={5}>
+                            {element.createdAt}
+                          </Text>
+                        </Grid.Col>
+                        <Grid.Col xs={4}>
+                          <Text ta={"center"} order={5}>
+                          {element.type}
+                          </Text>
+                        </Grid.Col>
+                        <Grid.Col xs={4}>
+                          <Text ta={"center"} order={5}>
+                          {element.status}
+                          </Text>
+                        </Grid.Col>
+                      </Grid>
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                        <Grid sx={{width:"100%", justifyContent:"center", display:"flex"}}>
+                            <Grid.Col xs={6}>
+                                <Text>Files</Text>
+                                
+                            </Grid.Col>
+                            <Grid.Col xs={6}>
+                            <Text>Logs</Text>
+                            </Grid.Col>
+                        </Grid>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                </>
+              ))}
             </Accordion>
           </Stack>
         </Box>
       </Box>
     </Layout>
   );
+}
+
+export async function getServerSideProps() {
+  // Fetch data from external API
+  // const res = await fetch(`https://.../data`);
+  // const data = await res.json();
+
+  const data = [
+    {
+      createdAt: "15.04.2023",
+      type: "Voluntary",
+      status: "Pending for SGK Entry",
+      files: [
+        { name: "Transcript", link: "/" },
+        { name: "Application Form", link: "/" },
+      ],
+      logs: [
+        "created at 15.04.2023 - 23:54",
+        "approved by coordinator 16.04.2023 - 14:02",
+      ],
+    },
+    {
+      createdAt: "12.04.2023",
+      type: "Compulsory-2",
+      status: "Pending for Approvment",
+      files: [
+        { name: "Transcript", link: "/" },
+        { name: "Application Form", link: "/" },
+      ],
+      logs: ["created at 12.04.2023 - 23:54"],
+    },
+  ];
+  // Pass data to the page via props
+  return { props: { data } };
 }
