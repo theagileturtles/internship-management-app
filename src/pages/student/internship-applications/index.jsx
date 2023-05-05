@@ -44,6 +44,8 @@ function TableHeader(props){
 // This function will be displayed (rendered) on the screen when http://localhost:3000/student/internship-applications called.
 export default function Index({ data }) {
   // We can code here in JS to do the operations that we need.
+
+  // Theme object helps to use theme color codes which we declared already in _app.js file.
   const theme = useMantineTheme();
 
   // Return needs to be a JSX component. You cannot write JS code directly in a component. You can write JS code in curly brackets {}. 
