@@ -13,37 +13,44 @@ import {
 import Link from "next/link";
 import { Download } from "tabler-icons-react";
 
+// Custom Text component as Title for details part
 function DetailsTitle(props){
     return(
         <Text size={"xs"} {...props}/>
     )
 }
 
+// Custom Text component as content for details part
 function DetailsText(props){
     return (
         <Text size={"sm"} fw={700} {...props}/>
     )
 }
 
+// Custom Text component as text for the rows
 function TableText(props){
     return (
         <Text fw={700} ta={"center"} {...props}/>
     )
 }
 
+// Custom Text component as title for the columns
 function TableHeader(props){
     return (
         <Text ta={"center"} {...props}/>
     )
 }
 
+// This function will be displayed (rendered) on the screen when http://localhost:3000/student/internship-applications called.
 export default function Index({ data }) {
+  // We can code here in JS to do the operations that we need.
   const theme = useMantineTheme();
 
-
-
+  // Return needs to be a JSX component. You cannot write JS code directly in a component. You can write JS code in curly brackets {}. 
   return (
+    // This layout function provides the header, sidebar and footer. You can go to file directly by clicking the component name while pressing CTRL
     <Layout>
+      {/* Parent div */}
       <Box
         sx={{
           height: "100%",
@@ -52,9 +59,13 @@ export default function Index({ data }) {
           paddingRight: "5vw",
         }}
       >
+        {/* Title for the page. pb means padding bottom which creates space between bottom part. ta means text align. Also you can define
+        these features in sx prop which helps to create custom css on the specific mantine component*/}
         <Title pb={5} ta={"left"} color="text">
           INTERNSHIP APPLICATIONS
         </Title>
+
+        {/* This box wraps the table and its content*/}
         <Box
           sx={{
             backgroundColor: "white",
@@ -66,7 +77,10 @@ export default function Index({ data }) {
             display: "flex",
           }}
         >
+          {/* This stack wraps the all rows (header is included). It helps to display the components row by row (one on top of the other). More info:https://mantine.dev/core/stack */}
           <Stack sx={{ width: "100%" }}>
+            {/* Used grid to make it more responsive the header of the table. Normally these are in a row. After a specific resolution it will be displayed as one on top of the other*/}
+            {/* More info about the grid: https://mantine.dev/core/grid */}
             <Grid pl={"2.875rem"} pr={"1rem"} pt={15}>
               <Grid.Col xs={4}>
                 <TableHeader >Created at</TableHeader>
@@ -78,7 +92,12 @@ export default function Index({ data }) {
                 <TableHeader >Status</TableHeader>
               </Grid.Col>
             </Grid>
+            {/* This helps to accordion display for the content rows. When the user clicks the row, it will be extented and display the details. */}
+            {/* More info about the Accordion: https://mantine.dev/core/accordion/*/}
             <Accordion color="mainBlue" variant="filled" chevronPosition="left">
+
+              {/* data variable is an Array which contains the information about the internship-application. We are using map function to render each element as a row component.*/}
+              {/* More info about Array.prototype.map function: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map */}
               {data.map((element, index) => (
                 <>
                   <Accordion.Item
