@@ -1,11 +1,7 @@
-import Layout from '@/components/layout'
-import { Box } from '@mantine/core'
+import { redirect } from 'next/navigation';
 
 
 export default function Home() {
-  return (
-      <Layout>
-      <Box sx={{backgroundColor:"#f2f2f2",height:"75vh"}}></Box>
-      </Layout>
-  )
+
+  return(<></>)
 }

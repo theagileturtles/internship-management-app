@@ -1,14 +1,37 @@
 import "@/styles/globals.css";
 import { MantineProvider } from "@mantine/core";
 import Head from "next/head";
+import Router from 'next/router';
 
 export default function App({ Component, pageProps }) {
+
+  // Router.onRouteChangeStart = (url) => {
+  //   console.log("hey")
+  // };
+  
+  // Router.onRouteChangeComplete = (url) => {
+  //   console.log("completed")
+  // };
+  
+  // Router.onRouteChangeError = (err, url) => {
+  //   console.log("error..")
+  // };
+
   return (
     <MantineProvider
       theme={{
         colorScheme: "light",
         primaryColor: "mainBlue",
         colors: {
+          text:[
+            '#adadad',
+            '#999999',
+            '#858585',
+            '#707070',
+            '#5c5c5c',
+            '#474747',
+            '#333333',
+          ],
           mainBlue: [
             '#cef0ef',
             '#b5e8e6',

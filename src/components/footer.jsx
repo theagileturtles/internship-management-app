@@ -3,17 +3,16 @@ import Logo from "../assets/uulogo.png";
 import Image from "next/image";
 import React from "react";
 
-function Footer() {
+function Footer({sx}) {
   const footerStyle = {
+    height:"180px",
     backgroundColor: "#034240",
     color: "#fff",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     padding: "2vw 3vw",
-    position: "absolute",
-    width:"-webkit-fill-available",
-    bottom: 0,
+    ...sx
   };
 
   const leftStyle = {
