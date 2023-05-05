@@ -56,9 +56,9 @@ export default function Sidebar() {
           <Stack spacing={10} key={"sidebar-dashboard" + element.category.toLowerCase()}>
             <Text color={theme.colors.mainBlue}>{element.category}</Text>
             <Stack spacing={5}>
-              {element.items.map((subElement) => (
+              {element.items.map((subElement,index) => (
                 <Link style={{ textDecoration: 'none' }} href={subElement.href}
-                key={"sidebar-dashboard-element-" + subElement.href.replace("/","-")}
+                key={"sidebar-dashboard-element-" + subElement.href.replace("/","-")+"-"+index}
                 >
                 <NavLink
                 // component="a"
