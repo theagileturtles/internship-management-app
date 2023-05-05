@@ -185,6 +185,10 @@ export default function Index({ data }) {
   );
 }
 
+
+// Next js offered several render options. Server Side Rendering is one of them. It means, this part of the code runs on the server.
+// In future, we will implement the API endpoints here. Then we will get information from the endpoint.
+// Now I just hardcodded the data here.
 export async function getServerSideProps() {
   // Fetch data from external API
   // const res = await fetch(`https://.../data`);
