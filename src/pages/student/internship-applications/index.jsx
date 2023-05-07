@@ -44,7 +44,7 @@ export default function Index({ data }) {
   // Return needs to be a JSX component. You cannot write JS code directly in a component. You can write JS code in curly brackets {}.
   return (
     // This layout function provides the header, sidebar and footer. You can go to file directly by clicking the component name while pressing CTRL
-    <Layout>
+    <Layout role={"student"}>
       {/* Parent div */}
       <Box
         sx={{
