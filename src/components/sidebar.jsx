@@ -43,18 +43,18 @@ export default function Sidebar() {
         paddingBottom:20
       }}
     >
-      <Box pb={50}>
-        <Title color={theme.colors.mainBlue} order={1}>
+      <Box sx={{color:theme.colors.mainBlue[6]}} pb={50}>
+        <Title  order={1}>
           IMA
         </Title>
-        <Text color={theme.colors.mainBlue} order={5}>
+        <Text  order={5}>
           Internship Management App
         </Text>
       </Box>
-      <Stack spacing={30}>
+      <Stack sx={{color:theme.colors.mainBlue[6]}} spacing={30}>
         {anchors.map((element) => (
           <Stack spacing={10} key={"sidebar-dashboard" + element.category.toLowerCase()}>
-            <Text color={theme.colors.mainBlue}>{element.category}</Text>
+            <Text >{element.category}</Text>
             <Stack spacing={5}>
               {element.items.map((subElement,index) => (
                 <Link style={{ textDecoration: 'none' }} href={subElement.href}
@@ -66,7 +66,6 @@ export default function Sidebar() {
                   // href={subElement.href}
                   active={router.pathname.includes(subElement.href)}
                   label={ subElement.title}
-                  color={"mainBlue"}
                   sx={{transition:"0.1s"}}
                 />
                 </Link>
