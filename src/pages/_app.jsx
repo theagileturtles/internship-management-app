@@ -31,6 +31,11 @@ export default function App({ Component, pageProps }) {
             '#5c5c5c',
             '#474747',
             '#333333',
+            '#2e2e2e',
+            '#292929',
+            '#242424',
+            '#1f1f1f',
+            '#1a1a1a',
           ],
           mainBlue: [
             '#cef0ef',
@@ -40,9 +45,26 @@ export default function App({ Component, pageProps }) {
             '#39c2bd',
             '#21bbb5',
             '#08b3ad',
+            '#07a19c',
+            '#068f8a',
+            '#067d79',
+            '#056b68',
+            '#045a57'
           ],
-          mainLightBlue: ["#dbf4f3"],
-          mainHoverBlue: ["#06A09A"],
+          info:[
+            '#fff6d7',
+            '#fff4cd',
+            '#fff2c2',
+            '#fff0b8',
+            '#ffedae',
+            '#ffeba4',
+            '#ffe99a',
+            '#e6d28b',
+            '#ccba7b',
+            '#b3a36c',
+            '#998c5c',
+            '#80754d'
+          ]
         },
       }}
       withGlobalStyles
