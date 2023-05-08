@@ -9,11 +9,12 @@ import {
   useMantineTheme,
   Flex,
   Anchor,
-
+  Button,
+  Group,
+  Pagination,
 } from "@mantine/core";
 
 import { Download } from "tabler-icons-react";
-
 
 function DetailsTitle(props) {
   return <Text size={"xs"} {...props} />;
@@ -22,7 +23,6 @@ function DetailsTitle(props) {
 function DetailsText(props) {
   return <Text size={"sm"} fw={700} {...props} />;
 }
-
 
 function TableText(props) {
   return <Text fw={700} ta={"center"} {...props} />;
@@ -33,7 +33,6 @@ function TableHeader(props) {
 }
 
 export default function Index({ data }) {
-
   const theme = useMantineTheme();
 
   return (
@@ -50,28 +49,30 @@ export default function Index({ data }) {
           RECIEVED INTERNSHIP APPLICATIONS
         </Title>
 
-
         <Box
           sx={{
             backgroundColor: "white",
             borderRadius: 50,
-            marginBottom:"50px",
+            marginBottom: "50px",
             minHeight: "50vh",
             textAlign: "left",
-            justifyContent: "center",
             display: "flex",
+            flexDirection:"column",
           }}
         >
-          <Stack sx={{ width: "100%" }}>
+          <Stack pb={20} sx={{minHeight:"45vh",width: "100%" }}>
             <Grid pl={"2.875rem"} pr={"1rem"} pt={15}>
-              <Grid.Col xs={4}>
+              <Grid.Col xs={6} md={3}>
                 <TableHeader>Created at</TableHeader>
               </Grid.Col>
-              <Grid.Col xs={4}>
-                <TableHeader>Internship Type</TableHeader>
+              <Grid.Col xs={6} md={3}>
+                <TableHeader>Student</TableHeader>
               </Grid.Col>
-              <Grid.Col xs={4}>
-                <TableHeader>Status</TableHeader>
+              <Grid.Col xs={6} md={3}>
+                <TableHeader>Company</TableHeader>
+              </Grid.Col>
+              <Grid.Col xs={6} md={3}>
+                <TableHeader>Internship Type</TableHeader>
               </Grid.Col>
             </Grid>
             <Accordion color="mainBlue" variant="filled" chevronPosition="left">
@@ -92,19 +93,28 @@ export default function Index({ data }) {
                 >
                   <Accordion.Control sx={{ width: "100%" }}>
                     <Grid>
-                      <Grid.Col xs={4}>
+                      <Grid.Col xs={6} md={3}>
                         <TableText>{element.createdAt}</TableText>
                       </Grid.Col>
-                      <Grid.Col xs={4}>
-                        <TableText>{element.type}</TableText>
+                      <Grid.Col xs={6} md={3}>
+                        <TableText>
+                          {element.firstName + " " + element.lastName}
+                        </TableText>
                       </Grid.Col>
-                      <Grid.Col xs={4}>
-                        <TableText>{element.status}</TableText>
+                      <Grid.Col xs={6} md={3}>
+                        <TableText>{element.company}</TableText>
+                      </Grid.Col>
+                      <Grid.Col xs={6} md={3}>
+                        <TableText>{element.type}</TableText>
                       </Grid.Col>
                     </Grid>
                   </Accordion.Control>
-                  <Accordion.Panel sx={{ color: theme.colors.mainBlue[6] }}>
-                    <Grid grow pl={"2.875rem"} pr={"1rem"} columns={12}>
+                  <Accordion.Panel
+                    pl={"2.875rem"}
+                    pr={"1rem"}
+                    sx={{ color: theme.colors.mainBlue[6] }}
+                  >
+                    <Grid pb={15} grow columns={12}>
                       <Grid.Col
                         sx={{
                           justifyContent: "center",
@@ -166,16 +176,40 @@ export default function Index({ data }) {
                         span={4}
                       >
                         <Box ta={"center"}>
-                          <DetailsTitle>Department</DetailsTitle>
-                          <DetailsText>{element.department}</DetailsText>
+                          <DetailsTitle>Student No</DetailsTitle>
+                          <DetailsText>{element.studentNo}</DetailsText>
                         </Box>
                       </Grid.Col>
                     </Grid>
+                    <Flex sx={{ justifyContent: "center" }}>
+                      <Group>
+                        <Button
+                          radius={"xl"}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                          }}
+                          sx={{ width: "100px" }}
+                        >
+                          Approve
+                        </Button>
+                        <Button
+                          color="red"
+                          radius={"xl"}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                          }}
+                          sx={{ width: "100px" }}
+                        >
+                          Reject
+                        </Button>
+                      </Group>
+                    </Flex>
                   </Accordion.Panel>
                 </Accordion.Item>
               ))}
             </Accordion>
           </Stack>
+          <Pagination mb={"sm"} sx={{alignSelf:"center"}} total={1} />
         </Box>
       </Box>
     </Layout>
@@ -185,26 +219,27 @@ export default function Index({ data }) {
 export async function getServerSideProps() {
   const data = [
     {
-      uuid: "e16f6b76-2e97-48ba-bcf0-52d209bdc0c1",
-      createdAt: "15.04.2023",
-      type: "Voluntary",
-      status: "Pending for SGK Entry",
-      department: "Software Engineering",
+      uuid: "0855eae4-eb8e-11ed-a05b-0242ac120003",
+      createdAt: "12.04.2023",
+      company: "Trendyol",
+      type: "Compulsory-2",
+      firstName: "Sinan",
+      lastName: "Sensev",
+      studentNo: "200209012",
       files: [
         { name: "Transcript", link: "/" },
         { name: "Application Form", link: "/" },
       ],
-      logs: [
-        "created at 15.04.2023 - 23:54",
-        "approved by coordinator 16.04.2023 - 14:02",
-      ],
+      logs: ["created at 12.04.2023 - 23:54"],
     },
     {
-      uuid: "0855eae4-eb8e-11ed-a05b-0242ac120003",
-      createdAt: "12.04.2023",
-      type: "Compulsory-2",
-      status: "Pending for Approvment",
-      department: "Software Engineering",
+      uuid: "12bc883e-e3a0-4231-9982-a8104e184d94",
+      createdAt: "15.04.2023",
+      company: "Microssoft",
+      type: "Voluntary",
+      firstName: "Mohammad",
+      lastName: "Hameedat",
+      studentNo: "0000000000",
       files: [
         { name: "Transcript", link: "/" },
         { name: "Application Form", link: "/" },
