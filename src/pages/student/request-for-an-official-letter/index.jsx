@@ -19,7 +19,7 @@ import { Checkbox, Download, Upload } from "tabler-icons-react";
 export default function Index() {
   const theme = useMantineTheme();
   return (
-    <Layout>
+    <Layout role={"student"}>
       <Box
         sx={{
           minHeight: "100%",
