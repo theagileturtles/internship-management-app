@@ -7,20 +7,20 @@ import {
   Title,
   useMantineTheme,
 } from "@mantine/core";
-import { Files,CircleCheck,Briefcase,FilePlus } from 'tabler-icons-react';
+import { Files,CircleCheck,Briefcase,FilePlus, File, FileCheck, Mail, MailForward, FileDescription, FileExport } from 'tabler-icons-react';
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-export default function Sidebar() {
+export default function Sidebar({role}) {
   const theme = useMantineTheme();
   const router = useRouter()
-
-  const anchors = [
+  console.log(role)
+  const studentAnchors = [
     {
       category: "Dashboard",
       items: [
-        { title: "Internship Applications", icon: <Files/>, href: "/student/internship-applications"},
+        { title: "Internship Applications", icon: <File/>, href: "/student/internship-applications"},
         { title: "Completed Internships", icon: <CircleCheck/>, href: "/student/completed-internships"},
         { title: "Internship Opportunuties", icon: <Briefcase/>, href:"/student/internship-opportunuties"},
       ],
@@ -34,6 +34,37 @@ export default function Sidebar() {
       ],
     },
   ];
+
+  const instructorAnchors =[
+    {
+      category: "Dashboard",
+      items: [
+        { title: "Recieved Internship Applications", icon: <File/>, href: "/instructor/recieved-internship-applications"},
+        { title: "Completed Internship Applications", icon: <FileExport/>, href: "/instructor/completed-internship-applications"},
+        { title: "Recieved Official Letter Requests", icon: <Mail/>, href: "/instructor/recieved-official-letter-requests"},
+        { title: "Completed Official Letter Requests", icon: <MailForward/>, href: "/instructor/completed-official-letter-requests"},
+      ],
+    },
+    {
+      category: "Management",
+      items: [
+        { title: "Upload an Internship Application Form", icon: <FilePlus/>, id: 4, href:"/instructor/upload-an-internship-application-form"},
+      ],
+    },
+  ];
+  let anchors = []
+  
+  switch (role) {
+    case "student":
+      anchors = [...studentAnchors];
+      break;
+    case "instructor":
+      anchors = [...instructorAnchors];
+      break;
+    default:
+      break;
+  }
+  
   return (
     <Box
       sx={{

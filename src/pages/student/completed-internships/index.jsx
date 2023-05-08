@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 export default function Index({data}){
 
-    return(<Layout>
+    return(<Layout role={"student"}>
         
     </Layout>)
 }
