@@ -14,10 +14,26 @@ import {
   Center,
   Textarea,
 } from "@mantine/core";
-import { Checkbox, Download, Upload } from "tabler-icons-react";
+import { useState } from "react";
+import { Checkbox, Download, Tex, Upload } from "tabler-icons-react";
 
+const MAX_LETTER = 150;
 export default function Index() {
   const theme = useMantineTheme();
+
+  const defaultValues = {
+    company:"",
+    type:"",
+    transcript:"",
+    message:"",
+  }
+
+  const [values, setValues] = useState(defaultValues)
+
+  function messageHandler(event){
+    setValues({...values,message:event.target.value})
+  }
+
   return (
     <Layout role={"student"}>
       <Box
@@ -72,7 +88,22 @@ export default function Index() {
               </Radio.Group>
             </Grid.Col>
             <Grid.Col xs={12} sm={12} lg={6} xl={6}>
-              <Textarea  autosize minRows={6} maxRows={6} radius={"xl"} placeholder="Additional Information" label="Message" />
+              <Stack>
+
+            <FileInput
+                      icon={<Upload size={"1.1rem"} />}
+                      variant="filled"
+                      placeholder="Your Transcript"
+                      label="Transcript"
+                      radius="xl"
+                      withAsterisk
+                      sx={{ maxWidth: 300 }}
+                    />
+                    <Stack display={"flex"} spacing={2}>
+                    <Textarea onChange={messageHandler} autosize minRows={3} maxRows={3} radius={"md"} maxLength={150} placeholder="Additional Information" label="Message"/>
+                      <Text  size={"sm"} sx={{alignSelf:"end"}} color="dimmed">{values.message.length}/{MAX_LETTER}</Text>
+                    </Stack>
+              </Stack>
             </Grid.Col>
             <Grid.Col xl={12}>
               <Center>
