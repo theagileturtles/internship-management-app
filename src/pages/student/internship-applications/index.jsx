@@ -63,12 +63,11 @@ export default function Index({ data }) {
         {/* This box wraps the table and its content*/}
         <Box
           sx={{
-            overflowX:"clip",
-            overflowY:"auto",
             backgroundColor: "white",
             borderRadius: 50,
-            width: "100%",
-            height: "50vh",
+            marginBottom:"50px",
+            paddingBottom:"50px",
+            minHeight: "50vh",
             textAlign: "left",
             justifyContent: "center",
             display: "flex",
