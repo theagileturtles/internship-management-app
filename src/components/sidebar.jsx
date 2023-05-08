@@ -15,13 +15,13 @@ import Link from "next/link";
 export default function Sidebar({role}) {
   const theme = useMantineTheme();
   const router = useRouter()
-  console.log(role)
   const studentAnchors = [
     {
       category: "Dashboard",
       items: [
         { title: "Internship Applications", icon: <File/>, href: "/student/internship-applications"},
        // { title: "Completed Internships", icon: <CircleCheck/>, href: "/student/completed-internships"},
+       { title: "Official Letter Requests", icon: <Mail/>, href:"/student/official-letter-requests"},
         { title: "Internship Opportunuties", icon: <Briefcase/>, href:"/student/internship-opportunuties"},
       ],
     },
@@ -29,7 +29,6 @@ export default function Sidebar({role}) {
       category: "Management",
       items: [
         { title: "Create an Application", icon: <FilePlus/>, id: 4, href:"/student/create-an-application"},
-        ,
         { title: "Request for an Official Letter", icon: <FilePlus/>, id: 5, href:"/student/request-for-an-official-letter"},
       ],
     },
