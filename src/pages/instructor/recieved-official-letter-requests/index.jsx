@@ -255,7 +255,6 @@ export async function getServerSideProps() {
       studentNo: "0000000000",
       files: [
         { name: "Transcript", link: "/" },
-        { name: "Application Form", link: "/" },
       ],
       logs: ["created at 12.04.2023 - 23:54"],
     },
