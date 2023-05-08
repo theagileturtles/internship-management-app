@@ -46,12 +46,12 @@ export default function Index() {
             display: "flex",
           }}
         >
-          <Grid sx={{height:"fit-content"}} gutter={30}>
+          <Grid sx={{ height: "fit-content" }} gutter={30}>
             <Grid.Col sx={{}} lg={12} xl={3}>
               <Box
                 p={"1rem"}
                 sx={{
-                    height:"100%",
+                  height: "100%",
                   backgroundColor: theme.colors.info[3],
                   color: theme.colors.info[11],
                   borderRadius: 30,
@@ -65,11 +65,17 @@ export default function Index() {
                   uploaded, your application will be rejected.
                 </Text>
                 <Anchor
-                sx={{display:"flex",justifyContent:"center"}}
+                  sx={{ display: "flex", justifyContent: "center" }}
                   download
                   href="https://stix.uskudar.edu.tr/student/download/047d0b80bc1310e8ff05478ffadc538a"
                 >
-                  <Button leftIcon = {<Download size={"1.1rem"} />} ta={"center"}  radius={"xl"}>Download</Button>
+                  <Button
+                    leftIcon={<Download size={"1.1rem"} />}
+                    ta={"center"}
+                    radius={"xl"}
+                  >
+                    Download
+                  </Button>
                 </Anchor>
               </Box>
             </Grid.Col>
@@ -85,21 +91,20 @@ export default function Index() {
                   />
                 </Grid.Col>
 
-                <Grid.Col xs={12} sm={12}  lg={6} xl={6}>
+                <Grid.Col xs={12} sm={12} lg={6} xl={6}>
                   <Radio.Group
                     name="typeOfInternship"
                     label="Choose Internship Type"
                     withAsterisk
                   >
                     <Stack mt="xs">
-                      <Radio value="react" label="React" />
-                      <Radio value="svelte" label="Svelte" />
-                      <Radio value="ng" label="Angular" />
-                      <Radio value="vue" label="Vue" />
+                      <Radio value="compulsary1" label="Compulsary-1" />
+                      <Radio value="compulsary2" label="Compulsary-2" />
+                      <Radio value="voluntary" label="Voluntary" />
                     </Stack>
                   </Radio.Group>
                 </Grid.Col>
-                <Grid.Col xs={12} sm={12}  lg={6} xl={6}>
+                <Grid.Col xs={12} sm={12} lg={6} xl={6}>
                   <Stack>
                     <FileInput
                       icon={<Upload size={"1.1rem"} />}
