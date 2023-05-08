@@ -79,13 +79,16 @@ export default function Index({ data }) {
             {/* Used grid to make it more responsive the header of the table. Normally these are in a row. After a specific resolution it will be displayed as one on top of the other*/}
             {/* More info about the grid: https://mantine.dev/core/grid */}
             <Grid pl={"2.875rem"} pr={"1rem"} pt={15}>
-              <Grid.Col xs={4}>
+              <Grid.Col xs={3}>
                 <TableHeader>Created at</TableHeader>
               </Grid.Col>
-              <Grid.Col xs={4}>
+              <Grid.Col xs={3}>
+                <TableHeader>Company</TableHeader>
+              </Grid.Col>
+              <Grid.Col xs={3}>
                 <TableHeader>Internship Type</TableHeader>
               </Grid.Col>
-              <Grid.Col xs={4}>
+              <Grid.Col xs={3}>
                 <TableHeader>Status</TableHeader>
               </Grid.Col>
             </Grid>
@@ -111,13 +114,16 @@ export default function Index({ data }) {
                 >
                   <Accordion.Control sx={{ width: "100%" }}>
                     <Grid>
-                      <Grid.Col xs={4}>
+                      <Grid.Col xs={3}>
                         <TableText>{element.createdAt}</TableText>
                       </Grid.Col>
-                      <Grid.Col xs={4}>
+                      <Grid.Col xs={3}>
+                        <TableText>{element.company}</TableText>
+                      </Grid.Col>
+                      <Grid.Col xs={3}>
                         <TableText>{element.type}</TableText>
                       </Grid.Col>
-                      <Grid.Col xs={4}>
+                      <Grid.Col xs={3}>
                         <TableText>{element.status}</TableText>
                       </Grid.Col>
                     </Grid>
@@ -213,6 +219,7 @@ export async function getServerSideProps() {
     {
       uuid: "e16f6b76-2e97-48ba-bcf0-52d209bdc0c1",
       createdAt: "15.04.2023",
+      company:"Turkcell",
       type: "Voluntary",
       status: "Pending for SGK Entry",
       department: "Software Engineering",
@@ -228,6 +235,7 @@ export async function getServerSideProps() {
     {
       uuid: "0855eae4-eb8e-11ed-a05b-0242ac120003",
       createdAt: "12.04.2023",
+      company:"Trendyol",
       type: "Compulsory-2",
       status: "Pending for Approvment",
       department: "Software Engineering",
