@@ -244,6 +244,19 @@ export async function getServerSideProps() {
       ],
       logs: ["created at 12.04.2023 - 23:54"],
     },
+    {
+      uuid: "0823eae4-eb8e-11ed-a05b-0242ac120003",
+      createdAt: "12.04.2023",
+      company:"Getir",
+      type: "Compulsory-1",
+      status: "Done",
+      department: "Software Engineering",
+      files: [
+        { name: "Transcript", link: "/" },
+        { name: "Application Form", link: "/" },
+      ],
+      logs: ["created at 12.04.2023 - 23:54"],
+    },
   ];
   // Pass data to the page via props
   return { props: { data } };
