@@ -38,15 +38,16 @@ export default function Sidebar({role}) {
     {
       category: "Dashboard",
       items: [
-        { title: "Recieved Internship Applications", icon: <File/>, href: "/instructor/recieved-internship-applications"},
+       
         { title: "Completed Internship Applications", icon: <FileExport/>, href: "/instructor/completed-internship-applications"},
-        { title: "Recieved Official Letter Requests", icon: <Mail/>, href: "/instructor/recieved-official-letter-requests"},
         { title: "Completed Official Letter Requests", icon: <MailForward/>, href: "/instructor/completed-official-letter-requests"},
       ],
     },
     {
       category: "Management",
       items: [
+        { title: "Manage Internship Applications", icon: <File/>, href: "/instructor/manage-internship-applications"},
+        { title: "Manage Official Letter Requests", icon: <Mail/>, href: "/instructor/manage-official-letter-requests"},
         { title: "Upload an Internship Application Form", icon: <FilePlus/>, id: 4, href:"/instructor/upload-an-internship-application-form"},
       ],
     },
