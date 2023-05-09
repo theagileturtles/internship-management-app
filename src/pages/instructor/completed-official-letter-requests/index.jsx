@@ -47,7 +47,7 @@ export default function Index({ data }) {
                 }}
             >
                 <Title pb={5} ta={"left"} color="text">
-                    COMPLETED OFFICIAL, LETTER REQUESTS
+                    COMPLETED OFFICIAL LETTER REQUESTS
                 </Title>
                 <Box
                     sx={{
@@ -188,6 +188,10 @@ export default function Index({ data }) {
                                                 }}
                                                 span={12}
                                             >
+                                                <Box ta={"center"}>
+                                                    <DetailsTitle>Message</DetailsTitle>
+                                                    <DetailsText>{element.message ?? "No message is provided"}</DetailsText>
+                                                </Box>
                                             </Grid.Col>
                                         </Grid>
                                     </Accordion.Panel>
@@ -212,8 +216,10 @@ export async function getServerSideProps() {
             firstName: "Sinan",
             lastName: "Sensev",
             studentNo: "200209012",
+            message: "Company wants to see an official letter.",
             files: [
                 { name: "Transcript", link: "/" },
+                { name: "Official Letter", link: "/" },
             ],
             logs: ["created at 12.04.2023 - 23:54"],
         },
@@ -227,6 +233,8 @@ export async function getServerSideProps() {
             studentNo: "0000000000",
             files: [
                 { name: "Transcript", link: "/" },
+                { name: "Official Letter", link: "/" },
+
             ],
             logs: ["created at 12.04.2023 - 23:54"],
         },
