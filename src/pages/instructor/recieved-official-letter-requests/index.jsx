@@ -192,14 +192,14 @@ export default function Index({ data }) {
                       >
                         <Box ta={"center"}>
                           <DetailsTitle>Message</DetailsTitle>
-                          <DetailsText>{element.message??"No message is provided"}</DetailsText>
+                          <DetailsText>{element.message ?? "No message is provided"}</DetailsText>
                         </Box>
                       </Grid.Col>
-          
+
                     </Grid>
-                    <Stack sx={{display:"flex", justifyContent:"center", alignItems:"center"}}>
+                    <Stack sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                       <FileInput
-                        sx={{ minWidth: "150px", width:"100%", maxWidth:"250px"}}
+                        sx={{ minWidth: "150px", width: "100%", maxWidth: "250px" }}
                         icon={<Upload size={"1.1rem"} />}
                         placeholder="Official Letter"
                         label="Official Letter"
@@ -239,7 +239,7 @@ export async function getServerSideProps() {
       firstName: "Sinan",
       lastName: "Sensev",
       studentNo: "200209012",
-      message:"Company wants to see an official letter.",
+      message: "Company wants to see an official letter.",
       files: [
         { name: "Transcript", link: "/" },
       ],
