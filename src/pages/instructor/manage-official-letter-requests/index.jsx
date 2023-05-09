@@ -47,7 +47,7 @@ export default function Index({ data }) {
         }}
       >
         <Title pb={5} ta={"left"} color="text">
-          RECIEVED OFFICIAL LETTER REQUESTS
+          MANAGE OFFICIAL LETTER REQUESTS
         </Title>
 
         <Box
