@@ -40,7 +40,7 @@ export default function Index() {
           sx={{
             backgroundColor: "white",
             borderRadius: 50,
-            marginBottom:"50px",
+            marginBottom: "50px",
             minHeight: "50vh",
             textAlign: "left",
             justifyContent: "center",
