@@ -113,7 +113,7 @@ export default function Index({ data }) {
                     pr={"1rem"}
                     sx={{ color: theme.colors.mainBlue[6] }}
                   >
-                    <Grid pb={15} grow columns={12}>
+                    <Grid grow columns={12}>
                       <Grid.Col
                         sx={{
                           justifyContent: "center",
@@ -182,25 +182,6 @@ export default function Index({ data }) {
                         </Box>
                       </Grid.Col>
                     </Grid>
-                    <Stack
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      {element.officialLetter ?? (<Anchor
-                        sx={{ justifyContent: "center", display: "flex" }}
-                        target="_blank"
-                        href={element.officialLetter}
-                        download
-                      >
-                        <Flex gap={3} direction={"row"}>
-                          <Download size={18} />
-                          <DetailsText>Official Letter</DetailsText>
-                        </Flex>
-                      </Anchor>)}
-                    </Stack>
                   </Accordion.Panel>
                 </Accordion.Item>
               ))}
@@ -233,7 +214,8 @@ export async function getServerSideProps() {
       type: "Voluntary",
       status: "Recieved",
       studentNo: "0000000000",
-      files: [{ name: "Transcript", link: "/" }],
+      files: [{ name: "Transcript", link: "/" },
+      { name: "Official Letter", link: "/" }],
       logs: ["created at 12.04.2023 - 23:54"],
     },
   ];
