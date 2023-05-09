@@ -46,7 +46,7 @@ export default function Index({ data }) {
         }}
       >
         <Title pb={5} ta={"left"} color="text">
-          RECIEVED INTERNSHIP APPLICATIONS
+        MANAGE INTERNSHIP APPLICATIONS
         </Title>
 
         <Box
