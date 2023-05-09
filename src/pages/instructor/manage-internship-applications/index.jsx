@@ -57,10 +57,10 @@ export default function Index({ data }) {
             minHeight: "50vh",
             textAlign: "left",
             display: "flex",
-            flexDirection:"column",
+            flexDirection: "column",
           }}
         >
-          <Stack pb={20} sx={{minHeight:"45vh",width: "100%" }}>
+          <Stack pb={20} sx={{ minHeight: "45vh", width: "100%" }}>
             <Grid pl={"2.875rem"} pr={"1rem"} pt={15}>
               <Grid.Col xs={6} md={3}>
                 <TableHeader>Created at</TableHeader>
@@ -209,7 +209,7 @@ export default function Index({ data }) {
               ))}
             </Accordion>
           </Stack>
-          <Pagination mb={"sm"} sx={{alignSelf:"center"}} total={1} />
+          <Pagination mb={"sm"} sx={{ alignSelf: "center" }} total={1} />
         </Box>
       </Box>
     </Layout>

@@ -65,8 +65,8 @@ export default function Index({ data }) {
           sx={{
             backgroundColor: "white",
             borderRadius: 50,
-            marginBottom:"50px",
-            paddingBottom:"50px",
+            marginBottom: "50px",
+            paddingBottom: "50px",
             minHeight: "50vh",
             textAlign: "left",
             justifyContent: "center",
@@ -218,7 +218,7 @@ export async function getServerSideProps() {
     {
       uuid: "e16f6b76-2e97-48ba-bcf0-52d209bdc0c1",
       createdAt: "15.04.2023",
-      company:"Turkcell",
+      company: "Turkcell",
       type: "Voluntary",
       status: "Pending for SGK Entry",
       department: "Software Engineering",
@@ -234,7 +234,7 @@ export async function getServerSideProps() {
     {
       uuid: "0855eae4-eb8e-11ed-a05b-0242ac120003",
       createdAt: "12.04.2023",
-      company:"Trendyol",
+      company: "Trendyol",
       type: "Compulsory-2",
       status: "Pending for Approvment",
       department: "Software Engineering",
@@ -247,7 +247,7 @@ export async function getServerSideProps() {
     {
       uuid: "0823eae4-eb8e-11ed-a05b-0242ac120003",
       createdAt: "12.04.2023",
-      company:"Getir",
+      company: "Getir",
       type: "Compulsory-1",
       status: "Done",
       department: "Software Engineering",
