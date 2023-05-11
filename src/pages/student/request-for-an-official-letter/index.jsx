@@ -21,6 +21,11 @@ const MAX_LETTER = 150;
 export default function Index() {
   const theme = useMantineTheme();
 
+  const [companyName, setCompanyName] = useState();
+  const [type, setType] = useState();
+  const [transcript, setTranscript] = useState();
+  const [message, setMessage] = useState();
+
   const defaultValues = {
     company:"",
     type:"",
@@ -108,7 +113,7 @@ export default function Index() {
             <Grid.Col xl={12}>
               <Center>
                 <Button sx={{ width: "100%", maxWidth: 200 }} radius={"xl"}>
-                  Create
+                  Request
                 </Button>
               </Center>
             </Grid.Col>
