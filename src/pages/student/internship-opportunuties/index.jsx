@@ -176,6 +176,8 @@ export default function Index({ data }) {
                       </Stack>
                       <Center>
                         <Button
+                       
+                        target="_blank"
                           component="a"
                           href={element.href}
                           radius={"xl"}
@@ -213,7 +215,7 @@ export async function getServerSideProps() {
       createdAt: "10.05.2023",
       title: "Techno Camp 2023 Turkcell Global Information",
       type: "Summer Internship",
-      href: "/",
+      href: "https://www.kariyer.net/is-ilani/turkcell-global-bilgi-techno-camp-2023-3422741",
       company: "Turkcell",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut sodales turpis, ac rhoncus lectus. Ut rhoncus odio non ultricies sollicitudin. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis vitae lacus nunc. Nullam in varius libero. Donec elementum facilisis mauris a convallis. Ut iaculis luctus augue quis sodales.",
