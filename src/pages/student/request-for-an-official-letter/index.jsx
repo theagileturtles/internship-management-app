@@ -16,7 +16,7 @@ import {
 } from "@mantine/core";
 import { useState } from "react";
 import { Checkbox, Download, Tex, Upload } from "tabler-icons-react";
-
+   
 const MAX_LETTER = 150;
 export default function Index() {
   const theme = useMantineTheme();
