@@ -1,9 +1,13 @@
 {
     "session":{
         "user":{
-            "uuid":"",
-            "name":"",
-            "role":""
+            "uuid":"33313938-6266-6263-2d66-3164392d3131",
+            "firstName":"Ilayda",
+            "lastName":"Bakırcıoğlu",
+            "schoolID":"180209023",
+            "departmentID":"1",
+            "department":"Software Engineering",
+            "roleID":"2"
         },
         "expired-date":""
     }
