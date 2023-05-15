@@ -6,14 +6,15 @@ import { useState } from "react";
 import { Download, Upload } from "tabler-icons-react";
 
 export default function Index({data}) {
-  const defaultValue = data.url ? {
+
+  const defaultValue = data.uuid ? {
     name: "application_form.pdf",
   } : null;
 
   const [file, setFile] = useState(defaultValue);
   const [fileLoading, setFileLoading] = useState(false);
   const [fileChanged, setFileChanged] = useState(false)
-  const [hrefDownload, setHrefDownload] = useState(data.url);
+  const [hrefDownload, setHrefDownload] = useState("/api/instructor/download/application-form/"+data.uuid);
 
   function uploadHandler(event) {
     setFileLoading(true);
@@ -33,14 +34,16 @@ export default function Index({data}) {
     toBase64(file)
       .then((blob) => {
         setHrefDownload(blob)
+        console.log(blob);
       })
     setFile(file);
     setFileChanged(true);
+    
   }
 
   function cancelHandler() {
     setFile(defaultValue);
-    setHrefDownload(data.url)
+    setHrefDownload(data.b64)
     setFileChanged(false);
   }
 
@@ -149,6 +152,7 @@ function toBase64(blob) {
 }
 
 export async function getServerSideProps() {
-  const data = await fetch("http://localhost:3000/api/instructor/get-form").then((res)=>res.json()).then((res)=>res.data)
+ 
+  const data = await fetch("http://localhost:3000/api/instructor/get-form-uuid").then((res)=>res.json()).then((res)=>res.data)
   return { props: {data} };
 }
