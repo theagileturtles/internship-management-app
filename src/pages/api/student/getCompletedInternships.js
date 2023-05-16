@@ -6,6 +6,13 @@ import {
 const sessionData = require('./../../../../session-example.json');
 
 export default async function handler(req, res) {
+  
+  if (req.method !== "GET") {
+    res.status(405).json({
+      error: "Method Not Allowed"
+    });
+  }
+
   try {
     const user = sessionData.session.user;
     const uuid = user.uuid;

@@ -7,6 +7,14 @@ const sessionData = require('./../../../../session-example.json');
 
 //TODO: use auth middleware
 export default async function handler(req, res) {
+  
+  if (req.method !== "POST") {
+    res.status(405).json({
+      error: "Method Not Allowed"
+    });
+    return;
+  }
+
   try {
     const uuid = sessionData.session.user.uuid;
 
@@ -17,13 +25,6 @@ export default async function handler(req, res) {
       return
     }
   
-    if (req.method !== "POST") {
-      res.status(405).json({
-        error: "Method Not Allowed"
-      });
-      return;
-    }
-
     // validate user_uuid
     if (!isValidBinaryUUID(uuid)) {
         return res.status(400).json({ message: 'Invalid user_uuid.' });
