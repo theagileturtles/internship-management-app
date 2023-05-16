@@ -319,7 +319,7 @@ export default function Index({ data }) {
             style={styles}
             sx={{ position: "fixed", bottom: "3rem", left: "3rem" }}
             icon={<Check size="1.1rem" />}
-            color="mainBlue"
+            color={notificationData.color}
             title={notificationData.title}
           >
             {notificationData.description}
