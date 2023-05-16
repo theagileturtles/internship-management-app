@@ -63,7 +63,12 @@ export default function Index({ data }) {
   }
 
   function cancelHandler() {
-    setFile(defaultFile);
+    if(typeof values.uuid === "undefined"){
+      setFile(null);
+    }else{
+      setFile(defaultFile);
+    }
+    
     setHrefDownload("/api/instructor/download/application-form/" + values.uuid);
     setFileChanged(false);
   }

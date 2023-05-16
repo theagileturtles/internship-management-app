@@ -12,6 +12,7 @@ import {
   Button,
   Group,
   Pagination,
+  Tooltip,
 } from "@mantine/core";
 
 import { Download } from "tabler-icons-react";
@@ -93,9 +94,11 @@ export default function Index({ data }) {
                 >
                   <Accordion.Control sx={{ width: "100%" }}>
                     <Grid>
+                    <Tooltip label={new Date(element.createdAt).toLocaleString()}>
                       <Grid.Col xs={6} md={3}>
-                        <TableText>{element.createdAt}</TableText>
+                        <TableText>{new Date(element.createdAt).toLocaleDateString()}</TableText>
                       </Grid.Col>
+                      </Tooltip>
                       <Grid.Col xs={6} md={3}>
                         <TableText>
                           {element.firstName + " " + element.lastName}
@@ -105,7 +108,7 @@ export default function Index({ data }) {
                         <TableText>{element.company}</TableText>
                       </Grid.Col>
                       <Grid.Col xs={6} md={3}>
-                        <TableText>{element.type}</TableText>
+                        <TableText>{element.type.label}</TableText>
                       </Grid.Col>
                     </Grid>
                   </Accordion.Control>
@@ -131,7 +134,7 @@ export default function Index({ data }) {
                         >
                           <DetailsTitle>Files</DetailsTitle>
 
-                          {element.files.map((file) => (
+                          {element.files?.map((file) => (
                             <Anchor
                               sx={{ justifyContent: "center", display: "flex" }}
                               key={element.uuid + "_file_" + file.name}
@@ -147,7 +150,7 @@ export default function Index({ data }) {
                           ))}
                         </Stack>
                       </Grid.Col>
-                      <Grid.Col
+                      {/* <Grid.Col
                         sx={{
                           justifyContent: "center",
                           display: "flex",
@@ -157,7 +160,7 @@ export default function Index({ data }) {
                       >
                         <Stack spacing={0} ta={"center"}>
                           <DetailsTitle>Logs</DetailsTitle>
-                          {element.logs.map((log, index) => (
+                          {element.logs?.map((log, index) => (
                             <DetailsText
                               sx={{ color: "inherit" }}
                               key={element.uuid + "_log_" + index}
@@ -166,7 +169,7 @@ export default function Index({ data }) {
                             </DetailsText>
                           ))}
                         </Stack>
-                      </Grid.Col>
+                      </Grid.Col> */}
                       <Grid.Col
                         sx={{
                           justifyContent: "center",
@@ -177,7 +180,7 @@ export default function Index({ data }) {
                       >
                         <Box ta={"center"}>
                           <DetailsTitle>Student No</DetailsTitle>
-                          <DetailsText>{element.studentNo}</DetailsText>
+                          <DetailsText>{element.studentID}</DetailsText>
                         </Box>
                       </Grid.Col>
                     </Grid>
@@ -217,35 +220,8 @@ export default function Index({ data }) {
 }
 
 export async function getServerSideProps() {
-  const data = [
-    {
-      uuid: "0855eae4-eb8e-11ed-a05b-0242ac120003",
-      createdAt: "12.04.2023",
-      company: "Trendyol",
-      type: "Compulsory-2",
-      firstName: "Sinan",
-      lastName: "Sensev",
-      studentNo: "200209012",
-      files: [
-        { name: "Transcript", link: "/" },
-        { name: "Application Form", link: "/" },
-      ],
-      logs: ["created at 12.04.2023 - 23:54"],
-    },
-    {
-      uuid: "12bc883e-e3a0-4231-9982-a8104e184d94",
-      createdAt: "15.04.2023",
-      company: "Microssoft",
-      type: "Voluntary",
-      firstName: "Mohammad",
-      lastName: "Hameedat",
-      studentNo: "0000000000",
-      files: [
-        { name: "Transcript", link: "/" },
-        { name: "Application Form", link: "/" },
-      ],
-      logs: ["created at 12.04.2023 - 23:54"],
-    },
-  ];
+  const response = await fetch("http://localhost:3000/api/instructor/get/internship-applications?status=pending_for_coordinator").then((res)=>res.json())
+  
+  const data = [...response.data];
   return { props: { data } };
 }
