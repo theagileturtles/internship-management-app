@@ -1,10 +1,9 @@
 import {
   createConnection,
   query
-} from "../data_access/database";
+} from "../../data_access/database";
 
-import sessionExample from "../../../../session-example.json"
-import AWS from "aws-sdk";
+import sessionExample from "../../../../../session-example.json"
 
 export default async function handler(req, res) {
   const session = sessionExample.session;
@@ -34,13 +33,14 @@ export default async function handler(req, res) {
     if (response.length === 0) {
       res.status(404).json({
         data: {
-          url: null
+          error:"Not Found"
         }
       })
     } else {
       res.status(200).json({
         data: {
-          uuid: response[0].uuid
+          uuid: response[0].uuid,
+          createdAt: new Date(new Date(response[0].created_at).getTime() - (new Date(response[0].created_at ).getTimezoneOffset() * 60000))
         }
       })
     }
