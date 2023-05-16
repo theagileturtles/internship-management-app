@@ -1,9 +1,9 @@
 import Layout from "@/components/layout";
 import UploadInput from "@/components/uploadinput";
-import { Title, Box, Stack, Button, Group, ActionIcon } from "@mantine/core";
+import { Title, Box, Stack, Button, Group, ActionIcon, Transition, Notification, Text } from "@mantine/core";
 
 import { useEffect, useState } from "react";
-import { Download, Trash, Upload } from "tabler-icons-react";
+import { Check, Cross, Download, Trash, Upload } from "tabler-icons-react";
 
 export default function Index({ data }) {
   const [values, setValues] = useState(data);
@@ -15,6 +15,12 @@ export default function Index({ data }) {
   const [hrefDownload, setHrefDownload] = useState(
     "/api/instructor/download/application-form/" + values.uuid
   );
+  const [notificationVisible, setNotificationVisible] = useState(false);
+  const [notificationData, setNotificationData] = useState({
+    title: "",
+    description: "",
+    icon: <Check />,
+  });
 
   function uploadHandler() {
     setFileLoading(true);
@@ -38,6 +44,28 @@ export default function Index({ data }) {
         });
         setFileChanged(false);
         setFile(defaultFile);
+        setNotificationData({
+          title: "The Application Form is Uploaded!",
+          description: (
+            <Text>
+              You can check the form if it is correct by downloanding from the download button.
+            </Text>
+          ),
+          icon: <Check />,
+        });
+        setNotificationVisible(true);
+      }).catch(()=>{
+        setNotificationData({
+          title: "an Error Occured",
+          description: (
+            <Text>
+             Please try again later.
+            </Text>
+          ),
+          color:"red",
+          icon: <Cross />,
+        });
+        setNotificationVisible(true);
       });
   }
 
@@ -49,6 +77,28 @@ export default function Index({ data }) {
       setHrefDownload("");
       setFileChanged(false);
       setFile(null);
+      setNotificationData({
+        title: "The Application Form is Deleted!",
+        description: (
+          <Text>
+           The application form is deleted.
+          </Text>
+        ),
+        icon: <Check />,
+      });
+      setNotificationVisible(true);
+    }).catch(()=>{
+      setNotificationData({
+        title: "an Error Occured",
+        description: (
+          <Text>
+           Please try again later.
+          </Text>
+        ),
+        color:"red",
+        icon: <Cross />,
+      });
+      setNotificationVisible(true);
     });
   }
 
@@ -74,6 +124,7 @@ export default function Index({ data }) {
   }
 
   return (
+    <>
     <Layout role={"instructor"}>
       <Box
         sx={{
@@ -188,6 +239,29 @@ export default function Index({ data }) {
         </Box>
       </Box>
     </Layout>
+          <Transition
+          mounted={notificationVisible}
+          transition="fade"
+          duration={200}
+          timingFunction="ease"
+        >
+          {(styles) => (
+            <Notification
+              onClose={() => {
+                setNotificationVisible(false);
+              }}
+              withCloseButton
+              style={styles}
+              sx={{ position: "fixed", bottom: "3rem", left: "3rem" }}
+              icon={<Check size="1.1rem" />}
+              color={notificationData.color}
+              title={notificationData.title}
+            >
+              {notificationData.description}
+            </Notification>
+          )}
+        </Transition>
+        </>
   );
 }
 
