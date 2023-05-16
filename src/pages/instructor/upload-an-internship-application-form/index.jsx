@@ -2,48 +2,69 @@ import Layout from "@/components/layout";
 import UploadInput from "@/components/uploadinput";
 import { Title, Box, Stack, Button, Group, ActionIcon } from "@mantine/core";
 
-import { useState } from "react";
-import { Download, Upload } from "tabler-icons-react";
+import { useEffect, useState } from "react";
+import { Download, Trash, Upload } from "tabler-icons-react";
 
-export default function Index({data}) {
+export default function Index({ data }) {
+  const [values, setValues] = useState(data);
+  const defaultFile = { name: "application_form.pdf" };
 
-  const defaultValue = data.uuid ? {
-    name: "application_form.pdf",
-  } : null;
-
-  const [file, setFile] = useState(defaultValue);
+  const [file, setFile] = useState(values.uuid ? defaultFile : null);
   const [fileLoading, setFileLoading] = useState(false);
-  const [fileChanged, setFileChanged] = useState(false)
-  const [hrefDownload, setHrefDownload] = useState("/api/instructor/download/application-form/"+data.uuid);
+  const [fileChanged, setFileChanged] = useState(false);
+  const [hrefDownload, setHrefDownload] = useState(
+    "/api/instructor/download/application-form/" + values.uuid
+  );
 
-  function uploadHandler(event) {
+  function uploadHandler() {
     setFileLoading(true);
     toBase64(file)
       .then((blob) => {
-        return fetch("http://localhost:3000/api/instructor/upload-form", {
-          method: "POST",
-          body: blob,
-        });
+        return fetch(
+          "http://localhost:3000/api/instructor/upload/application-form",
+          {
+            method: "POST",
+            body: blob,
+          }
+        );
       })
-      .then((response) => {
+      .then(() => {
         setFileLoading(false);
+        getUUID().then((res) => {
+          setValues(res);
+          setHrefDownload(
+            "/api/instructor/download/application-form/" + res.uuid
+          );
+        });
+        setFileChanged(false);
+        setFile(defaultFile);
       });
   }
 
-  function fileHandler(file){
-    toBase64(file)
-      .then((blob) => {
-        setHrefDownload(blob)
-        console.log(blob);
-      })
-    setFile(file);
-    setFileChanged(true);
-    
+  function deleteHandler() {
+    fetch("http://localhost:3000/api/instructor/delete/application-form", {
+      method: "DELETE",
+    }).then(() => {
+      setValues({});
+      setHrefDownload("");
+      setFileChanged(false);
+      setFile(null);
+    });
+  }
+
+  function fileHandler(file) {
+    if (file) {
+      toBase64(file).then((blob) => {
+        setHrefDownload(blob);
+      });
+      setFile(file);
+      setFileChanged(true);
+    }
   }
 
   function cancelHandler() {
-    setFile(defaultValue);
-    setHrefDownload(data.b64)
+    setFile(defaultFile);
+    setHrefDownload("/api/instructor/download/application-form/" + values.uuid);
     setFileChanged(false);
   }
 
@@ -88,8 +109,14 @@ export default function Index({data}) {
               }}
             >
               <UploadInput
-                description={"Uploaded at 2020"}
-                defaultValue={defaultValue}
+                description={
+                  typeof values.createdAt !== "undefined"
+                    ? "Last Update: " +
+                      new Date(values.createdAt).toLocaleTimeString() +
+                      " - " +
+                      new Date(values.createdAt).toLocaleDateString()
+                    : ""
+                }
                 value={file}
                 onChange={fileHandler}
                 variant="filled"
@@ -99,17 +126,35 @@ export default function Index({data}) {
                 radius={"xl"}
                 sx={{ width: "100%", maxWidth: "300px" }}
               />
-              {file ? <ActionIcon
-                component="a"
-                download = {file?.name}
-                href={hrefDownload}
-                target="_blank"
-                mb={"0.3rem"}
-                radius={"xl"}
-              >
-                <Download size={"1.3rem"} />
-              </ActionIcon>:<></>}
-             
+              <Group spacing={2}>
+                {file ? (
+                  <ActionIcon
+                    color="mainBlue"
+                    component="a"
+                    download={file?.name}
+                    href={hrefDownload}
+                    target="_blank"
+                    mb={"0.3rem"}
+                    radius={"xl"}
+                  >
+                    <Download size={"1.3rem"} />
+                  </ActionIcon>
+                ) : (
+                  <></>
+                )}
+                {file && !fileChanged ? (
+                  <ActionIcon
+                    onClick={deleteHandler}
+                    color="red"
+                    mb={"0.3rem"}
+                    radius={"xl"}
+                  >
+                    <Trash size={"1.3rem"} />
+                  </ActionIcon>
+                ) : (
+                  <></>
+                )}
+              </Group>
             </Group>
             <Group>
               <Button
@@ -152,7 +197,12 @@ function toBase64(blob) {
 }
 
 export async function getServerSideProps() {
- 
-  const data = await fetch("http://localhost:3000/api/instructor/get-form-uuid").then((res)=>res.json()).then((res)=>res.data)
-  return { props: {data} };
+  const data = await getUUID();
+  return { props: { data } };
+}
+
+async function getUUID() {
+  return await fetch("http://localhost:3000/api/instructor/get/form-uuid")
+    .then((res) => res.json())
+    .then((res) => res.data);
 }

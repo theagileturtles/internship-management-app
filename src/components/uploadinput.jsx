@@ -3,7 +3,6 @@ import { File, Pencil } from "tabler-icons-react";
 
 function Value({ file, defaultName, alreadyUploaded }) {
 
-console.log(file)
   return (
     <Box sx={{ display: "flex" }}>
       <Box

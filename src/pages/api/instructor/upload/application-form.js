@@ -1,8 +1,9 @@
 import {
   createConnection,
   query
-} from "../data_access/database";
-import sessionExample from "../../../../session-example.json"
+} from "../../data_access/database";
+
+import sessionExample from "../../../../../session-example.json"
 
 import AWS from "aws-sdk";
 
@@ -21,7 +22,6 @@ export default async function handler(req, res) {
     let uuid = await query(connection)(
       "SELECT UUID() as uuid")
       uuid = uuid[0].uuid
-      console.log(uuid)
     const uploadedPDF = await s3
       .upload({
         Bucket: process.env.AWS_S3_BUCKET_NAME + "/application-forms",
