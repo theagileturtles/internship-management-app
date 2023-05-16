@@ -12,7 +12,7 @@ export function typeConverter(type){
     }
 }
 
-export function statusConverter(status){
+export function internshipStatusConverter(status){
     switch (status) {
       case "pending_for_coordinator":
         return {alias:status, label: "Pending for Coordinator"}
@@ -22,6 +22,17 @@ export function statusConverter(status){
         return {alias:status, label: "Pending for SGK Entry"}
       case "approved":
         return {alias:status, label: "Approved"}
+      default:
+        break;
+    }
+  }
+
+  export function letterStatusConverter(status){
+    switch (status) {
+      case "pending":
+        return {alias:status, label: "Pending"}
+      case "completed":
+        return {alias:status, label: "Completed"}
       default:
         break;
     }

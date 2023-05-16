@@ -4,7 +4,7 @@ import {
 } from "../../data_access/database";
 
 import sessionExample from "../../../../../session-example.json"
-import { statusConverter, typeConverter } from "@/utils/response-converter";
+import { internshipStatusConverter, typeConverter } from "@/utils/response-converter";
 
 export default async function handler(req, res) {
   const session = sessionExample.session;
@@ -43,15 +43,15 @@ export default async function handler(req, res) {
       return {
         ...element,
         createdAt: new Date(new Date(element.createdAt).getTime() - (new Date(element.createdAt).getTimezoneOffset() * 60000)),
-        status:statusConverter(element.status),
+        status:internshipStatusConverter(element.status),
         type: typeConverter(element.type),
         files: [{
             name: "Transcript",
-            link: "http://localhost:3000/api/instructor/download/transcript/"+element.userUUID,
+            link: "http://localhost:3000/api/instructor/download/transcript/"+element.UUID,
           },
           {
             name: "Application Form",
-            link: "http://localhost:3000/api/instructor/download/application-form/"+element.userUUID,
+            link: "http://localhost:3000/api/instructor/download/application-form/"+element.UUID,
           }
         ]
       }
