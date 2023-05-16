@@ -16,6 +16,8 @@ import {
   Alert,
   Notification,
   Transition,
+  Modal,
+  Textarea,
 } from "@mantine/core";
 import { useState } from "react";
 
@@ -41,11 +43,18 @@ export default function Index({ data }) {
   const theme = useMantineTheme();
   const [values, setValues] = useState(data);
   const [notificationVisible, setNotificationVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [notificationData, setNotificationData] = useState({
     title: "",
     description: "",
     icon: <Check />,
   });
+  const [message, setMessage] = useState("")
+  const [rejectUUID, setRejectUUID] = useState()
+
+  function messageHandler(event){
+    setMessage(event.target.value)
+  }
 
   function approveHandler(event, uuid) {
     event.stopPropagation();
@@ -77,8 +86,13 @@ export default function Index({ data }) {
 
   function rejectHandler(event, uuid) {
     event.stopPropagation();
+    setModalVisible(true)
+    setRejectUUID(uuid);
+  }
+
+  function rejectAndSendHandler(){
     fetch(
-      `/api/instructor/manage/internship-application/${uuid}?action=reject`,
+      `/api/instructor/manage/internship-application/${rejectUUID}?action=reject`,
       {
         method: "PUT",
       }
@@ -96,6 +110,8 @@ export default function Index({ data }) {
           icon: <Check />,
         });
         setNotificationVisible(true);
+        setModalVisible(false)
+        setMessage("")
       }
     });
   }
@@ -326,6 +342,47 @@ export default function Index({ data }) {
           </Notification>
         )}
       </Transition>
+      <Modal
+        centered
+        opened={modalVisible}
+        onClose={()=>setModalVisible(false)}
+        title={"Feedback"}
+      >
+        <Flex
+          direction={"column"}
+          sx={{ justifyContent: "center", alignItems: "center" }}
+          p={5}
+        >
+          <Textarea
+            w={"100%"}
+            label="Message"
+            withAsterisk
+            placeholder="Message about the rejection."
+            onChange={messageHandler}
+          />
+          <Group>
+            <Button
+              color="red"
+              sx={{ width: "fit-content" }}
+              mt={"1rem"}
+              radius={"xl"}
+              disabled = {message.length === 0}
+              onClick={rejectAndSendHandler}
+            >
+              Reject the Application
+            </Button>
+            <Button
+              color="gray"
+              sx={{ width: "fit-content" }}
+              mt={"1rem"}
+              radius={"xl"}
+              onClick={()=>{setModalVisible(false)}}
+            >
+              Cancel
+            </Button>
+          </Group>
+        </Flex>
+      </Modal>
     </>
   );
 }
