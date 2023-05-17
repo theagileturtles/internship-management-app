@@ -57,31 +57,31 @@ export default function Index({ data }) {
   }
 
   function approveHandler(event, uuid) {
-    event.stopPropagation();
-    fetch(
-      `/api/instructor/manage/internship-application/${uuid}?action=approve`,
-      {
-        method: "PUT",
-      }
-    ).then((res) => {
-      if (res.status === 200) {
-        fetchData().then((response) => setValues(response));
-        setNotificationData({
-          title: "The Application is Approved!",
-          description: (
-            <Text>
-              You can track the application from{" "}
-              <span style={{ fontWeight: 700 }}>
-                Completed Internship Applications
-              </span>{" "}
-              tab in the sidebar.
-            </Text>
-          ),
-          icon: <Check />,
-        });
-        setNotificationVisible(true);
-      }
-    });
+  //   event.stopPropagation();
+  //   fetch(
+  //     `/api/instructor/manage/internship-application/${uuid}?action=approve`,
+  //     {
+  //       method: "PUT",
+  //     }
+  //   ).then((res) => {
+  //     if (res.status === 200) {
+  //       fetchData().then((response) => setValues(response));
+  //       setNotificationData({
+  //         title: "The Application is Approved!",
+  //         description: (
+  //           <Text>
+  //             You can track the application from{" "}
+  //             <span style={{ fontWeight: 700 }}>
+  //               Completed Internship Applications
+  //             </span>{" "}
+  //             tab in the sidebar.
+  //           </Text>
+  //         ),
+  //         icon: <Check />,
+  //       });
+  //       setNotificationVisible(true);
+  //     }
+  //   });
   }
 
   function rejectHandler(event, uuid) {
@@ -91,29 +91,29 @@ export default function Index({ data }) {
   }
 
   function rejectAndSendHandler(){
-    fetch(
-      `/api/instructor/manage/internship-application/${rejectUUID}?action=reject`,
-      {
-        method: "PUT",
-      }
-    ).then((res) => {
-      if (res.status === 200) {
-        fetchData().then((response) => setValues(response));
-        setNotificationData({
-          title: "The Application is Rejected!",
-          description: (
-            <Text>
-              The application was sent back to the student. The student will get
-              a notification about that.
-            </Text>
-          ),
-          icon: <Check />,
-        });
-        setNotificationVisible(true);
-        setModalVisible(false)
-        setMessage("")
-      }
-    });
+    // fetch(
+    //   `/api/instructor/manage/internship-application/${rejectUUID}?action=reject`,
+    //   {
+    //     method: "PUT",
+    //   }
+    // ).then((res) => {
+    //   if (res.status === 200) {
+    //     fetchData().then((response) => setValues(response));
+    //     setNotificationData({
+    //       title: "The Application is Rejected!",
+    //       description: (
+    //         <Text>
+    //           The application was sent back to the student. The student will get
+    //           a notification about that.
+    //         </Text>
+    //       ),
+    //       icon: <Check />,
+    //     });
+    //     setNotificationVisible(true);
+    //     setModalVisible(false)
+    //     setMessage("")
+    //   }
+    // });
   }
   return (
     <>
@@ -388,7 +388,61 @@ export default function Index({ data }) {
 }
 
 export async function getServerSideProps() {
-  const data = await fetchData();
+  // const data = await fetchData();
+  const data = [{
+    "UUID": "33353831-3834-6362-2d66-3432312d3131",
+    "userUUID": "33313938-6266-6263-2d66-3164392d3131",
+    "firstName": "İlayda",
+    "lastName": "Bakırcıoğlu",
+    "company": "Halkbank",
+    "studentID": "180209023",
+    "status": {
+      "alias": "pending_for_sgk",
+      "label": "Rejected"
+    },
+    "createdAt": "2023-05-16T19:38:18.000Z",
+    "type": {
+      "alias": "voluntary",
+      "label": "Voluntary"
+    },
+    "files": [
+      {
+        "name": "Transcript",
+        "link": "http://localhost:3000/api/instructor/download/transcript/33353831-3834-6362-2d66-3432312d3131"
+      },
+      {
+        "name": "Application Form",
+        "link": "http://localhost:3000/api/instructor/download/application-form/33353831-3834-6362-2d66-3432312d3131"
+      }
+    ]
+  },
+  {
+    "UUID": "37366364-3765-6264-2d66-3237352d3131",
+    "userUUID": "33316231-3532-3764-2d66-3164392d3131",
+    "firstName": "Burak",
+    "lastName": "Taşçı",
+    "company": "Wi",
+    "studentID": "190209031",
+    "status": {
+      "alias": "pending_for_sgk",
+      "label": "Pending for SGK Entry"
+    },
+    "createdAt": "2023-05-14T16:36:23.000Z",
+    "type": {
+      "alias": "compulsory1",
+      "label": "Compulsary 1"
+    },
+    "files": [
+      {
+        "name": "Transcript",
+        "link": "http://localhost:3000/api/instructor/download/transcript/37366364-3765-6264-2d66-3237352d3131"
+      },
+      {
+        "name": "Application Form",
+        "link": "http://localhost:3000/api/instructor/download/application-form/37366364-3765-6264-2d66-3237352d3131"
+      }
+    ]
+  }];
   return { props: { data } };
 }
 

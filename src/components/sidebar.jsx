@@ -7,7 +7,7 @@ import {
   Title,
   useMantineTheme,
 } from "@mantine/core";
-import { Files,CircleCheck,Briefcase,FilePlus, File, FileCheck, Mail, MailForward, FileDescription, FileExport } from 'tabler-icons-react';
+import { Files,CircleCheck,Briefcase,FilePlus, File, FileCheck, Mail, MailForward, FileDescription, FileExport, Tie } from 'tabler-icons-react';
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -48,25 +48,25 @@ export default function Sidebar({role}) {
       items: [
         { title: "Manage Internship Applications", icon: <File/>, href: "/instructor/manage-internship-applications"},
         { title: "Manage Official Letter Requests", icon: <Mail/>, href: "/instructor/manage-official-letter-requests"},
-        { title: "Upload an Internship Application Form", icon: <FilePlus/>, id: 4, href:"/instructor/upload-an-internship-application-form"},
+        { title: "Upload an Internship Application Form", icon: <FilePlus/>, href:"/instructor/upload-an-internship-application-form"},
       ],
     },
   ];
+
   const careerCenterAnchors =[
     {
       category: "Dashboard",
       items: [
        
-        { title: "Completed Internship Applications", icon: <FileExport/>, href: "/instructor/completed-internship-applications"},
-        { title: "Internship Opportunuties", icon: <MailForward/>, href: "/instructor/completed-official-letter-requests"},
+        { title: "Completed Internship Applications", icon: <FileExport/>, href: "/career-center/completed-internship-applications"},
+        { title: "Internship Opportunuties", icon: <Briefcase/>, href: "/career-center/internship-opportunities"},
       ],
     },
     {
       category: "Management",
       items: [
-        { title: "Manage Internship Applications", icon: <File/>, href: "/instructor/manage-internship-applications"},
-        { title: "Manage Official Letter Requests", icon: <Mail/>, href: "/instructor/manage-official-letter-requests"},
-        { title: "Upload an Internship Application Form", icon: <FilePlus/>, id: 4, href:"/instructor/upload-an-internship-application-form"},
+        { title: "Manage Internship Applications", icon: <File/>, href: "/career-center/manage-internship-applications"},
+        { title: "Publish Internship Opportunity", icon: <Tie/>, href: "/career-center/publish-internship-opportunity"},
       ],
     },
   ];

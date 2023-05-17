@@ -36,9 +36,7 @@ function TableHeader(props) {
 
 export default function Index({ data }) {
   const theme = useMantineTheme();
-  function checkboxHandler(event, alias){
 
-  }
   return (
     <Layout role={"career_center"}>
       <Box
@@ -50,19 +48,11 @@ export default function Index({ data }) {
         }}
       >
 
-        <Grid sx={{alignItems:"center"}} pb grow gutter={0}>
-          <Grid.Col xs={6}>
+
           <Title  ta={"left"} color="text">
               COMPLETED INTERNSHIP APPLICATIONS
             </Title>
-          </Grid.Col>
-          <Grid.Col pr={"1rem"} sx={{display:"flex", justifyContent:"end"}} xs={6}>
-        <Group>
-          <Checkbox onChange={(event)=>{checkboxHandler(event,"approved")}} defaultChecked label="Approved"/>
-          <Checkbox onChange={(event)=>{checkboxHandler(event,"pending_for_sgk")}} defaultChecked label="Pending For SGK Entry"/>
-        </Group>
-          </Grid.Col>
-        </Grid>
+
             
         <Box
           sx={{
@@ -88,9 +78,6 @@ export default function Index({ data }) {
               </Grid.Col>
               <Grid.Col xs={12} md={6} lg={2}>
                 <TableHeader>Internship Type</TableHeader>
-              </Grid.Col>
-              <Grid.Col xs={12} md={12} lg={2}>
-                <TableHeader>Status</TableHeader>
               </Grid.Col>
             </Grid>
             <Accordion color="mainBlue" variant="filled" chevronPosition="left">
@@ -130,9 +117,6 @@ export default function Index({ data }) {
                       </Grid.Col>
                       <Grid.Col xs={12} md={6} lg={2}>
                         <TableText>{element.type.label}</TableText>
-                      </Grid.Col>
-                      <Grid.Col xs={12} md={12} lg={2}>
-                        <TableText>{element.status.label}</TableText>
                       </Grid.Col>
                     </Grid>
                   </Accordion.Control>
@@ -221,9 +205,64 @@ export default function Index({ data }) {
 }
 
 export async function getServerSideProps() {
-  const response = await fetch(
-    "http://localhost:3000/api/instructor/get/internship-applications?status=pending_for_sgk,approved"
-  ).then((res) => res.json());
-  const data = [...response.data];
+  // const response = await fetch(
+  //   "http://localhost:3000/api/instructor/get/internship-applications?status=pending_for_sgk,approved"
+  // ).then((res) => res.json());
+
+
+  const data = [{
+      "UUID": "33353831-3834-6362-2d66-3432312d3131",
+      "userUUID": "33313938-6266-6263-2d66-3164392d3131",
+      "firstName": "İlayda",
+      "lastName": "Bakırcıoğlu",
+      "company": "Halkbank",
+      "studentID": "180209023",
+      "status": {
+        "alias": "pending_for_sgk",
+        "label": "Rejected"
+      },
+      "createdAt": "2023-05-16T19:38:18.000Z",
+      "type": {
+        "alias": "voluntary",
+        "label": "Voluntary"
+      },
+      "files": [
+        {
+          "name": "Transcript",
+          "link": "http://localhost:3000/api/instructor/download/transcript/33353831-3834-6362-2d66-3432312d3131"
+        },
+        {
+          "name": "Application Form",
+          "link": "http://localhost:3000/api/instructor/download/application-form/33353831-3834-6362-2d66-3432312d3131"
+        }
+      ]
+    },
+    {
+      "UUID": "37366364-3765-6264-2d66-3237352d3131",
+      "userUUID": "33316231-3532-3764-2d66-3164392d3131",
+      "firstName": "Burak",
+      "lastName": "Taşçı",
+      "company": "Wi",
+      "studentID": "190209031",
+      "status": {
+        "alias": "pending_for_sgk",
+        "label": "Pending for SGK Entry"
+      },
+      "createdAt": "2023-05-14T16:36:23.000Z",
+      "type": {
+        "alias": "compulsory1",
+        "label": "Compulsary 1"
+      },
+      "files": [
+        {
+          "name": "Transcript",
+          "link": "http://localhost:3000/api/instructor/download/transcript/37366364-3765-6264-2d66-3237352d3131"
+        },
+        {
+          "name": "Application Form",
+          "link": "http://localhost:3000/api/instructor/download/application-form/37366364-3765-6264-2d66-3237352d3131"
+        }
+      ]
+    }];
   return { props: { data } };
 }
