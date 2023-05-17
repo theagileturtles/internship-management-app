@@ -1,8 +1,10 @@
 import React from "react";
-import { Mail,Bell } from 'tabler-icons-react';
+import { Mail, Bell } from "tabler-icons-react";
 import { ActionIcon, Avatar, Text } from "@mantine/core";
+import { useRouter } from "next/router";
 
 function Header(props) {
+  const router = useRouter()
   const headerStyle = {
     paddingTop: "10px",
     paddingBottom: "10px",
@@ -73,13 +75,32 @@ function Header(props) {
       <div style={leftStyle}></div>
       <div style={rightStyle}>
         <div style={messageStyle}>
-          <ActionIcon radius={"xl"}>
-            <Mail color="#333333"/>
+          <ActionIcon
+              component="a"
+              href="/messages/incoming"
+            color="text"
+            variant={
+              router.pathname.includes("/messages/")
+                  ? "filled"
+                  : "subtle"
+            }
+            radius={"xl"}
+          >
+            <Mail />
           </ActionIcon>
         </div>
         <div style={notificationStyle}>
-          <ActionIcon radius={"xl"}>
-          <Bell color="#333333"/>
+          <ActionIcon
+
+            color="text"
+            variant={
+              router.pathname.includes("/notifications/")
+                  ? "filled"
+                  : "subtle"
+            }
+            radius={"xl"}
+          >
+            <Bell />
           </ActionIcon>
         </div>
         <div style={userInfoStyle}>
