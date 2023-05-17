@@ -13,15 +13,13 @@ import {
   Group,
   Pagination,
   Tooltip,
+  Checkbox,
 } from "@mantine/core";
 
 import { Download } from "tabler-icons-react";
 
-
-
-
 function DetailsTitle(props) {
-  return <Text  size={"xs"} {...props} />;
+  return <Text size={"xs"} {...props} />;
 }
 
 function DetailsText(props) {
@@ -38,7 +36,9 @@ function TableHeader(props) {
 
 export default function Index({ data }) {
   const theme = useMantineTheme();
+  function checkboxHandler(event, alias){
 
+  }
   return (
     <Layout role={"instructor"}>
       <Box
@@ -49,10 +49,21 @@ export default function Index({ data }) {
           paddingRight: "5vw",
         }}
       >
-        <Title pb={5} ta={"left"} color="text">
-        COMPLETED INTERNSHIP APPLICATIONS
-        </Title>
 
+        <Grid sx={{alignItems:"center"}} pb grow gutter={0}>
+          <Grid.Col xs={6}>
+          <Title  ta={"left"} color="text">
+              COMPLETED INTERNSHIP APPLICATIONS
+            </Title>
+          </Grid.Col>
+          <Grid.Col pr={"1rem"} sx={{display:"flex", justifyContent:"end"}} xs={6}>
+        <Group>
+          <Checkbox onChange={(event)=>{checkboxHandler(event,"approved")}} defaultChecked label="Approved"/>
+          <Checkbox onChange={(event)=>{checkboxHandler(event,"pending_for_sgk")}} defaultChecked label="Pending For SGK Entry"/>
+        </Group>
+          </Grid.Col>
+        </Grid>
+            
         <Box
           sx={{
             backgroundColor: "white",
@@ -72,7 +83,7 @@ export default function Index({ data }) {
               <Grid.Col xs={12} md={6} lg={3}>
                 <TableHeader>Student</TableHeader>
               </Grid.Col>
-              <Grid.Col xs={12} md={6}lg={2}>
+              <Grid.Col xs={12} md={6} lg={2}>
                 <TableHeader>Company</TableHeader>
               </Grid.Col>
               <Grid.Col xs={12} md={6} lg={2}>
@@ -99,11 +110,15 @@ export default function Index({ data }) {
                   value={"accordion_item_" + index}
                 >
                   <Accordion.Control sx={{ width: "100%" }}>
-                    <Grid sx={{display:"flex",alignItems:"center"}} grow>
-                      <Tooltip label={new Date(element.createdAt).toLocaleString()}>
-                      <Grid.Col xs={12} md={6} lg={2}>
-                        <TableText>{new Date(element.createdAt).toLocaleDateString()}</TableText>
-                      </Grid.Col>
+                    <Grid sx={{ display: "flex", alignItems: "center" }} grow>
+                      <Tooltip
+                        label={new Date(element.createdAt).toLocaleString()}
+                      >
+                        <Grid.Col xs={12} md={6} lg={2}>
+                          <TableText>
+                            {new Date(element.createdAt).toLocaleDateString()}
+                          </TableText>
+                        </Grid.Col>
                       </Tooltip>
                       <Grid.Col xs={12} md={6} lg={3}>
                         <TableText>
@@ -206,7 +221,9 @@ export default function Index({ data }) {
 }
 
 export async function getServerSideProps() {
-  const response = await fetch("http://localhost:3000/api/instructor/get/internship-applications?status=pending_for_sgk,approved").then((res)=>res.json())
+  const response = await fetch(
+    "http://localhost:3000/api/instructor/get/internship-applications?status=pending_for_sgk,approved"
+  ).then((res) => res.json());
   const data = [...response.data];
   return { props: { data } };
 }

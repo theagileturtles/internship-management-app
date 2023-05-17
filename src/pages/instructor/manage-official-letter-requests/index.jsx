@@ -114,7 +114,7 @@ export default function Index({ data }) {
                         <TableText>{element.company}</TableText>
                       </Grid.Col>
                       <Grid.Col xs={6} md={3}>
-                        <TableText>{element.type.label}</TableText>
+                        <TableText>{element.type?.label}</TableText>
                       </Grid.Col>
                     </Grid>
                   </Accordion.Control>

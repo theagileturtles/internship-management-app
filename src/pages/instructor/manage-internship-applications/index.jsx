@@ -376,7 +376,7 @@ export default function Index({ data }) {
               sx={{ width: "fit-content" }}
               mt={"1rem"}
               radius={"xl"}
-              onClick={()=>{setModalVisible(false)}}
+              onClick={()=>{setModalVisible(false); setMessage("")}}
             >
               Cancel
             </Button>
