@@ -22,7 +22,7 @@ export default function Sidebar({role}) {
         { title: "Internship Applications", icon: <File/>, href: "/student/internship-applications"},
        // { title: "Completed Internships", icon: <CircleCheck/>, href: "/student/completed-internships"},
        { title: "Official Letter Requests", icon: <Mail/>, href:"/student/official-letter-requests"},
-        { title: "Internship Opportunuties", icon: <Briefcase/>, href:"/student/internship-opportunuties"},
+        { title: "Internship Opportunities", icon: <Briefcase/>, href:"/student/internship-opportunities"},
       ],
     },
     {
@@ -52,6 +52,24 @@ export default function Sidebar({role}) {
       ],
     },
   ];
+  const careerCenterAnchors =[
+    {
+      category: "Dashboard",
+      items: [
+       
+        { title: "Completed Internship Applications", icon: <FileExport/>, href: "/instructor/completed-internship-applications"},
+        { title: "Internship Opportunuties", icon: <MailForward/>, href: "/instructor/completed-official-letter-requests"},
+      ],
+    },
+    {
+      category: "Management",
+      items: [
+        { title: "Manage Internship Applications", icon: <File/>, href: "/instructor/manage-internship-applications"},
+        { title: "Manage Official Letter Requests", icon: <Mail/>, href: "/instructor/manage-official-letter-requests"},
+        { title: "Upload an Internship Application Form", icon: <FilePlus/>, id: 4, href:"/instructor/upload-an-internship-application-form"},
+      ],
+    },
+  ];
   let anchors = []
   
   switch (role) {
@@ -60,6 +78,9 @@ export default function Sidebar({role}) {
       break;
     case "instructor":
       anchors = [...instructorAnchors];
+      break;
+    case "career_center":
+      anchors = [...careerCenterAnchors];
       break;
     default:
       break;
