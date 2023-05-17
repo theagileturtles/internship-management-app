@@ -24,9 +24,9 @@ import {
       }
   
       // validate user_uuid
-      if (!isValidBinaryUUID(uuid)) {
-        return res.status(400).json({ message: 'Invalid user_uuid.' });
-      }
+      // if (!isValidBinaryUUID(uuid)) {
+      //   return res.status(400).json({ message: 'Invalid user_uuid.' });
+      // }
   
       // connect to the database
       const connection = createConnection();

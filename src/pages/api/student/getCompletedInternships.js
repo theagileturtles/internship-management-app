@@ -16,7 +16,6 @@ export default async function handler(req, res) {
   try {
     const user = sessionData.session.user;
     const uuid = user.uuid;
-    console.log(user)
 
     // check if user_uuid is provided
     if (!uuid) {
@@ -24,9 +23,9 @@ export default async function handler(req, res) {
     }
 
     // validate user_uuid
-    if (!isValidBinaryUUID(uuid)) {
-      return res.status(400).json({ message: 'Invalid user_uuid.' });
-    }
+    // if (!isValidBinaryUUID(uuid)) {
+    //   return res.status(400).json({ message: 'Invalid user_uuid.' });
+    // }
 
     // connect to the database
     const connection = createConnection();
@@ -35,7 +34,7 @@ export default async function handler(req, res) {
     const sql = `
       SELECT company,sgk_entry,type,status,created_at 
       FROM internship_management_app.internship_applications
-      WHERE status = 'approved' AND user_uuid = ?  
+      WHERE status = 'approved' AND user_uuid = UUID_TO_BIN(?);
     `;
     const q = query(connection);
     const rows = await q(sql, [uuid]);
