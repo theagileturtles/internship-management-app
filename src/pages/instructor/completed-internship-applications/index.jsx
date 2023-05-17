@@ -12,15 +12,14 @@ import {
   Button,
   Group,
   Pagination,
+  Tooltip,
+  Checkbox,
 } from "@mantine/core";
 
 import { Download } from "tabler-icons-react";
 
-
-
-
 function DetailsTitle(props) {
-  return <Text  size={"xs"} {...props} />;
+  return <Text size={"xs"} {...props} />;
 }
 
 function DetailsText(props) {
@@ -37,7 +36,9 @@ function TableHeader(props) {
 
 export default function Index({ data }) {
   const theme = useMantineTheme();
+  function checkboxHandler(event, alias){
 
+  }
   return (
     <Layout role={"instructor"}>
       <Box
@@ -48,10 +49,21 @@ export default function Index({ data }) {
           paddingRight: "5vw",
         }}
       >
-        <Title pb={5} ta={"left"} color="text">
-        COMPLETED INTERNSHIP APPLICATIONS
-        </Title>
 
+        <Grid sx={{alignItems:"center"}} pb grow gutter={0}>
+          <Grid.Col xs={6}>
+          <Title  ta={"left"} color="text">
+              COMPLETED INTERNSHIP APPLICATIONS
+            </Title>
+          </Grid.Col>
+          <Grid.Col pr={"1rem"} sx={{display:"flex", justifyContent:"end"}} xs={6}>
+        <Group>
+          <Checkbox onChange={(event)=>{checkboxHandler(event,"approved")}} defaultChecked label="Approved"/>
+          <Checkbox onChange={(event)=>{checkboxHandler(event,"pending_for_sgk")}} defaultChecked label="Pending For SGK Entry"/>
+        </Group>
+          </Grid.Col>
+        </Grid>
+            
         <Box
           sx={{
             backgroundColor: "white",
@@ -71,7 +83,7 @@ export default function Index({ data }) {
               <Grid.Col xs={12} md={6} lg={3}>
                 <TableHeader>Student</TableHeader>
               </Grid.Col>
-              <Grid.Col xs={12} md={6}lg={2}>
+              <Grid.Col xs={12} md={6} lg={2}>
                 <TableHeader>Company</TableHeader>
               </Grid.Col>
               <Grid.Col xs={12} md={6} lg={2}>
@@ -98,10 +110,16 @@ export default function Index({ data }) {
                   value={"accordion_item_" + index}
                 >
                   <Accordion.Control sx={{ width: "100%" }}>
-                    <Grid sx={{display:"flex",alignItems:"center"}} grow>
-                      <Grid.Col  xs={12} md={6} lg={2}>
-                        <TableText>{element.createdAt}</TableText>
-                      </Grid.Col>
+                    <Grid sx={{ display: "flex", alignItems: "center" }} grow>
+                      <Tooltip
+                        label={new Date(element.createdAt).toLocaleString()}
+                      >
+                        <Grid.Col xs={12} md={6} lg={2}>
+                          <TableText>
+                            {new Date(element.createdAt).toLocaleDateString()}
+                          </TableText>
+                        </Grid.Col>
+                      </Tooltip>
                       <Grid.Col xs={12} md={6} lg={3}>
                         <TableText>
                           {element.firstName + " " + element.lastName}
@@ -111,10 +129,10 @@ export default function Index({ data }) {
                         <TableText>{element.company}</TableText>
                       </Grid.Col>
                       <Grid.Col xs={12} md={6} lg={2}>
-                        <TableText>{element.type}</TableText>
+                        <TableText>{element.type.label}</TableText>
                       </Grid.Col>
                       <Grid.Col xs={12} md={12} lg={2}>
-                        <TableText>{element.status}</TableText>
+                        <TableText>{element.status.label}</TableText>
                       </Grid.Col>
                     </Grid>
                   </Accordion.Control>
@@ -156,7 +174,7 @@ export default function Index({ data }) {
                           ))}
                         </Stack>
                       </Grid.Col>
-                      <Grid.Col
+                      {/* <Grid.Col
                         sx={{
                           justifyContent: "center",
                           display: "flex",
@@ -166,7 +184,7 @@ export default function Index({ data }) {
                       >
                         <Stack spacing={0} ta={"center"}>
                           <DetailsTitle>Logs</DetailsTitle>
-                          {element.logs.map((log, index) => (
+                          {element.logs?.map((log, index) => (
                             <DetailsText
                               sx={{ color: "inherit" }}
                               key={element.uuid + "_log_" + index}
@@ -175,7 +193,7 @@ export default function Index({ data }) {
                             </DetailsText>
                           ))}
                         </Stack>
-                      </Grid.Col>
+                      </Grid.Col> */}
                       <Grid.Col
                         sx={{
                           justifyContent: "center",
@@ -186,7 +204,7 @@ export default function Index({ data }) {
                       >
                         <Box ta={"center"}>
                           <DetailsTitle>Student No</DetailsTitle>
-                          <DetailsText>{element.studentNo}</DetailsText>
+                          <DetailsText>{element.studentID}</DetailsText>
                         </Box>
                       </Grid.Col>
                     </Grid>
@@ -203,52 +221,9 @@ export default function Index({ data }) {
 }
 
 export async function getServerSideProps() {
-  const data = [
-    {
-      uuid: "0855eae4-eb8e-11ed-a05b-0242ac120003",
-      createdAt: "12.04.2023",
-      company: "Trendyol",
-      type: "Compulsory-2",
-      firstName: "Sinan",
-      lastName: "Sensev",
-      studentNo: "200209012",
-      status:"Pending for SGK Entry",
-      files: [
-        { name: "Transcript", link: "/" },
-        { name: "Application Form", link: "/" },
-      ],
-      logs: ["created at 12.04.2023 - 23:54"],
-    },
-    {
-      uuid: "12bc883e-e3a0-4231-9982-a8104e184d94",
-      createdAt: "15.04.2023",
-      company: "Microssoft",
-      type: "Voluntary",
-      firstName: "Mohammad",
-      lastName: "Hameedat",
-      studentNo: "0000000000",
-      status:"Done",
-      files: [
-        { name: "Transcript", link: "/" },
-        { name: "Application Form", link: "/" },
-      ],
-      logs: ["created at 12.04.2023 - 23:54"],
-    },
-    // {
-    //     uuid: "12bc883e-e3a0-4231-9982-a8104e184d94",
-    //     createdAt: "15.04.2023",
-    //     company: "Microssoft",
-    //     type: "Voluntary",
-    //     firstName: "Mohammad",
-    //     lastName: "Sabri",
-    //     studentNo: "0000000000",
-    //     status:"Pending for Approvment",
-    //     files: [
-    //       { name: "Transcript", link: "/" },
-    //       { name: "Application Form", link: "/" },
-    //     ],
-    //     logs: ["created at 12.04.2023 - 23:54"],
-    //   },
-  ];
+  const response = await fetch(
+    "http://localhost:3000/api/instructor/get/internship-applications?status=pending_for_sgk,approved"
+  ).then((res) => res.json());
+  const data = [...response.data];
   return { props: { data } };
 }

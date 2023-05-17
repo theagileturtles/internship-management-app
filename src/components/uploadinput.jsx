@@ -1,44 +1,59 @@
 import { Box, Center, FileInput, Group } from "@mantine/core";
 import { File, Pencil } from "tabler-icons-react";
 
-function Value({ file }) {
-    return (
-        <Box sx={{display:"flex"}}>
+function Value({ file, defaultName, alreadyUploaded }) {
+
+  return (
+    <Box sx={{ display: "flex" }}>
       <Box
         sx={(theme) => ({
-          color:theme.colors.text,
+          color: theme.colors.text,
           fontSize: theme.fontSizes.xs,
           borderRadius: theme.radius.sm,
-          alignItems:"center",
-          display:"flex",
-          width:"100%"
+          alignItems: "center",
+          display: "flex",
+          width: "100%",
         })}
       >
-        {file.name}
+        {typeof file === "undefined"
+          ? alreadyUploaded
+            ? defaultName
+            : ""
+          : file.name}
       </Box>
-      {typeof file !=="undefined" ? (<Pencil style={{alignSelf:"end", justifySelf:"end"}} color="gray" size={"1.3rem"} />):<></>}
-      
-      </Box>
-      
-    );
-  }
+      {typeof file !== "undefined" ? (
+        <Pencil
+          style={{ alignSelf: "center", justifySelf: "center" }}
+          color="gray"
+          size={"1.3rem"}
+        />
+      ) : (
+        <></>
+      )}
+    </Box>
+  );
+}
 
-  const ValueComponent = ({ value }) => {
-    if (Array.isArray(value)) {
-      return (
-        <Group spacing="sm" py="xs">
-          {value.map((file, index) => (
-            <Value file={file} key={index} />
-          ))}
-        </Group>
-      );
-    }
-  
-    return <Value file={value} />;
-  };
+const ValueComponent = ({ value, defaultName, alreadyUploaded = false }) => {
+  return (
+    <Value
+      file={value.value}
+      alreadyUploaded={alreadyUploaded}
+      defaultName={defaultName}
+    />
+  );
+};
 
-export default function UploadInput(props){
-return(
-    <FileInput {...props} valueComponent={ValueComponent} />
-)
-} 
+export default function UploadInput(props) {
+  return (
+    <FileInput
+      {...props}
+      valueComponent={(value) => <ValueComponent
+          value={value}
+          alreadyUploaded={props.alreadyuploaded}
+          defaultName={props.defaultname}
+        />
+      }
+    />
+  );
+}
