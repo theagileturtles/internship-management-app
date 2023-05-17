@@ -15,13 +15,21 @@
     "@mantine/hooks": "^6.0.9",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.11.16",
+    "aws-sdk": "^2.1377.0",
     "eslint": "8.37.0",
     "eslint-config-next": "13.2.4",
+    "filereader": "^0.10.3",
+    "fs": "^0.0.1-security",
     "mysql": "^2.18.1",
     "next": "13.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tabler-icons-react": "^1.56.0",
     "util": "^0.12.5"
+  },
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
   }
 }

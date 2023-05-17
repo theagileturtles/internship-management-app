@@ -1,4 +1,5 @@
 import Layout from "@/components/layout";
+import UploadInput from "@/components/uploadinput";
 import {
   Accordion,
   Box,
@@ -13,6 +14,7 @@ import {
   Group,
   Pagination,
   FileInput,
+  Tooltip
 } from "@mantine/core";
 
 import { Download, Upload } from "tabler-icons-react";
@@ -94,9 +96,15 @@ export default function Index({ data }) {
                 >
                   <Accordion.Control sx={{ width: "100%" }}>
                     <Grid>
-                      <Grid.Col xs={6} md={3}>
-                        <TableText>{element.createdAt}</TableText>
-                      </Grid.Col>
+                      <Tooltip
+                        label={new Date(element.createdAt).toLocaleString()}
+                      >
+                        <Grid.Col xs={6} md={3}>
+                          <TableText>
+                            {new Date(element.createdAt).toLocaleDateString()}
+                          </TableText>
+                        </Grid.Col>
+                      </Tooltip>
                       <Grid.Col xs={6} md={3}>
                         <TableText>
                           {element.firstName + " " + element.lastName}
@@ -106,7 +114,7 @@ export default function Index({ data }) {
                         <TableText>{element.company}</TableText>
                       </Grid.Col>
                       <Grid.Col xs={6} md={3}>
-                        <TableText>{element.type}</TableText>
+                        <TableText>{element.type?.label}</TableText>
                       </Grid.Col>
                     </Grid>
                   </Accordion.Control>
@@ -121,7 +129,6 @@ export default function Index({ data }) {
                           justifyContent: "center",
                           display: "flex",
                         }}
-
                         md={4}
                       >
                         <Stack
@@ -158,6 +165,25 @@ export default function Index({ data }) {
                         md={4}
                       >
                         <Stack spacing={0} ta={"center"}>
+                          <DetailsTitle>Number of Incomplete Internship(s)</DetailsTitle>
+                            <DetailsText
+                              sx={{ color: "inherit" }}
+                              key={element.uuid + "_no_of_incomplete_internships_" + index}
+                            >
+                              {element.incompleteInternships}
+                            </DetailsText>
+
+                        </Stack>
+                      </Grid.Col>
+                      {/* <Grid.Col
+                        sx={{
+                          justifyContent: "center",
+                          display: "flex",
+                          minWidth: "fit-content",
+                        }}
+                        md={4}
+                      >
+                        <Stack spacing={0} ta={"center"}>
                           <DetailsTitle>Logs</DetailsTitle>
                           {element.logs.map((log, index) => (
                             <DetailsText
@@ -168,7 +194,7 @@ export default function Index({ data }) {
                             </DetailsText>
                           ))}
                         </Stack>
-                      </Grid.Col>
+                      </Grid.Col> */}
                       <Grid.Col
                         sx={{
                           justifyContent: "center",
@@ -179,7 +205,7 @@ export default function Index({ data }) {
                       >
                         <Box ta={"center"}>
                           <DetailsTitle>Student No</DetailsTitle>
-                          <DetailsText>{element.studentNo}</DetailsText>
+                          <DetailsText>{element.studentID}</DetailsText>
                         </Box>
                       </Grid.Col>
                       <Grid.Col
@@ -192,14 +218,25 @@ export default function Index({ data }) {
                       >
                         <Box ta={"center"}>
                           <DetailsTitle>Message</DetailsTitle>
-                          <DetailsText>{element.message ?? "No message is provided"}</DetailsText>
+                          <DetailsText>
+                            {element.message ?? "No message is provided"}
+                          </DetailsText>
                         </Box>
                       </Grid.Col>
-
                     </Grid>
-                    <Stack sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                      <FileInput
-                        sx={{ minWidth: "150px", width: "100%", maxWidth: "250px" }}
+                    <Stack
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <UploadInput
+                        sx={{
+                          minWidth: "150px",
+                          width: "100%",
+                          maxWidth: "250px",
+                        }}
                         icon={<Upload size={"1.1rem"} />}
                         placeholder="Official Letter"
                         label="Official Letter"
@@ -230,34 +267,10 @@ export default function Index({ data }) {
 }
 
 export async function getServerSideProps() {
-  const data = [
-    {
-      uuid: "0855eae4-eb8e-11ed-a05b-0242ac120003",
-      createdAt: "12.04.2023",
-      company: "Trendyol",
-      type: "Compulsory-2",
-      firstName: "Sinan",
-      lastName: "Sensev",
-      studentNo: "200209012",
-      message: "Company wants to see an official letter.",
-      files: [
-        { name: "Transcript", link: "/" },
-      ],
-      logs: ["created at 12.04.2023 - 23:54"],
-    },
-    {
-      uuid: "12bc883e-e3a0-4231-9982-a8104e184d94",
-      createdAt: "15.04.2023",
-      company: "Microssoft",
-      type: "Voluntary",
-      firstName: "Mohammad",
-      lastName: "Hameedat",
-      studentNo: "0000000000",
-      files: [
-        { name: "Transcript", link: "/" },
-      ],
-      logs: ["created at 12.04.2023 - 23:54"],
-    },
-  ];
+  const response = await fetch(
+    "http://localhost:3000/api/instructor/get/letter-requests?status=pending"
+  ).then((res) => res.json());
+
+  const data = [...response.data];
   return { props: { data } };
 }
