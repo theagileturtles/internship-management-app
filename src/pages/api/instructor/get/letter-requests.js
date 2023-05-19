@@ -28,14 +28,12 @@ export default async function handler(req, res) {
     let sql = "SELECT BIN_TO_UUID(letter_requests.uuid) AS UUID, BIN_TO_UUID(users.uuid) AS userUUID, users.first_name AS firstName, " +
       "users.last_name AS lastName, company,school_id AS studentID, status, letter_requests.created_at AS createdAt, message, type, incomplete_internship AS incompleteInternships " +
       "FROM internship_management_app.users, internship_management_app.students, internship_management_app.letter_requests " +
-      "WHERE users.uuid = students.user_uuid AND letter_requests.user_uuid = users.uuid AND students.department_id = ?";
+      "WHERE users.uuid = students.user_uuid AND letter_requests.user_uuid = users.uuid AND students.department_id = ? "
 
     if (req.query.status) {
-      sql += " AND status = ?"
-    } else {
-      sql += ";"
+      sql += " AND status = ? "
     }
-
+    sql += "ORDER BY internship_management_app.letter_requests.created_at DESC;"
 
     let response = await query(connection)(sql,
       [session.user.departmentID, req.query.status?.split(",").map((element)=>element.trim())]);
