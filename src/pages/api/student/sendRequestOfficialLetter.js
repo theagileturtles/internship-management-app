@@ -26,16 +26,14 @@ export default async function handler(req, res) {
     }
   
     // validate user_uuid
-    if (!isValidBinaryUUID(uuid)) {
-        return res.status(400).json({ message: 'Invalid user_uuid.' });
-    }
+    // if (!isValidBinaryUUID(uuid)) {
+    //     return res.status(400).json({ message: 'Invalid user_uuid.' });
+    // }
 
     const reqBody = {
       company : req.body.company,
       type : req.body.type,
       message: req.body.message,
-      status: "pending",
-      created_at : new Date()
     }
 
     // connect to the database
@@ -43,11 +41,11 @@ export default async function handler(req, res) {
     
     const sql = `
       INSERT INTO internship_management_app.letter_requests 
-      (user_uuid,company,type,message,status,created_at)
-      values (?, ?, ?, ?, ?, ?)
+      (user_uuid,company,type,message)
+      values (UUID_TO_BIN(?), ?, ?, ?)
     `
     const q = query(connection);
-    const rows = await q(sql, [uuid, reqBody.company, reqBody.type, reqBody.message, reqBody.status, reqBody.created_at]);
+    const rows = await q(sql, [uuid, reqBody.company, reqBody.type, reqBody.message]);
     // close the database connection
     connection.end();
 

@@ -89,7 +89,7 @@ function Header(props) {
             <Mail />
           </ActionIcon>
         </div>
-        <div style={notificationStyle}>
+        {/* <div style={notificationStyle}>
           <ActionIcon
 
             color="text"
@@ -102,7 +102,7 @@ function Header(props) {
           >
             <Bell />
           </ActionIcon>
-        </div>
+        </div> */}
         <div style={userInfoStyle}>
           <div style={nameStyle}>
             <Text>{props.userName}</Text>
