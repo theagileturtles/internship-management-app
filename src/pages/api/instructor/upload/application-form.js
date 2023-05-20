@@ -17,6 +17,7 @@ export const config = {
 
 export default async function handler(req, res) {
   const session = sessionExample.session;
+  let connection;
   try {
     const s3 = new AWS.S3({
       accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
@@ -26,7 +27,7 @@ export default async function handler(req, res) {
 
     const base64 = req.body;
     const base64Data = Buffer.from(base64.replace(/^data:application\/\w+;base64,/, ""), "base64");
-    const connection = createConnection();
+    connection = createConnection();
     let uuid = await query(connection)(
       "SELECT UUID() as uuid")
       uuid = uuid[0].uuid
@@ -70,6 +71,10 @@ export default async function handler(req, res) {
       error: "Internal Server Error"
     });
     console.log(error)
+  } finally{
+    if(connection){
+      connection.end();
+    }
   }
 
 }
