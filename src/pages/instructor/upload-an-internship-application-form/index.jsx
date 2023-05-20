@@ -3,7 +3,7 @@ import UploadInput from "@/components/uploadinput";
 import { Title, Box, Stack, Button, Group, ActionIcon, Transition, Notification, Text } from "@mantine/core";
 
 import { useEffect, useState } from "react";
-import { Check, Cross, Download, Trash, Upload } from "tabler-icons-react";
+import { Check, Cross, Download, Trash, Upload, X } from "tabler-icons-react";
 
 export default function Index({ data }) {
   const [values, setValues] = useState(data);
@@ -34,7 +34,7 @@ export default function Index({ data }) {
           }
         );
       })
-      .then(() => {
+      .then((res) => {
         setFileLoading(false);
         getUUID().then((res) => {
           setValues(res);
@@ -44,26 +44,40 @@ export default function Index({ data }) {
         });
         setFileChanged(false);
         setFile(defaultFile);
-        setNotificationData({
-          title: "The Application Form is Uploaded!",
-          description: (
-            <Text>
-              You can check the form if it is correct by downloanding from the download button.
-            </Text>
-          ),
-          icon: <Check />,
-        });
+        if(res.status === 200){
+          setNotificationData({
+            title: "The Application Form is Uploaded!",
+            description: (
+              <Text>
+                You can check the form if it is correct by downloanding from the download button.
+              </Text>
+            ),
+            icon: <Check />,
+          });
+        }else{
+          setNotificationData({
+            title: "Error Occured",
+            description: (
+              <Text>
+               Please try again later.
+              </Text>
+            ),
+            color:"red",
+            icon: <X />,
+          });
+        }
+       
         setNotificationVisible(true);
       }).catch(()=>{
         setNotificationData({
-          title: "an Error Occured",
+          title: "Error Occured",
           description: (
             <Text>
              Please try again later.
             </Text>
           ),
           color:"red",
-          icon: <Cross />,
+          icon: <X />,
         });
         setNotificationVisible(true);
       });
@@ -253,7 +267,7 @@ export default function Index({ data }) {
               withCloseButton
               style={styles}
               sx={{ position: "fixed", bottom: "3rem", left: "3rem" }}
-              icon={<Check size="1.1rem" />}
+              icon={notificationData.icon}
               color={notificationData.color}
               title={notificationData.title}
             >

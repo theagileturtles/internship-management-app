@@ -7,6 +7,14 @@ import sessionExample from "../../../../../session-example.json"
 
 import AWS from "aws-sdk";
 
+export const config = {
+  api: {
+      bodyParser: {
+          sizeLimit: '4mb'
+      }
+  }
+}
+
 export default async function handler(req, res) {
   const session = sessionExample.session;
   try {
