@@ -19,6 +19,7 @@
     "eslint-config-next": "13.2.4",
     "filereader": "^0.10.3",
     "fs": "^0.0.1-security",
+    "moment": "^2.29.4",
     "mysql": "^2.18.1",
     "next": "13.2.4",
     "react": "18.2.0",

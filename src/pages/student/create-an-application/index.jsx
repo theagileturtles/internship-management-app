@@ -17,7 +17,9 @@ import {
   ActionIcon,
   Transition,
   Notification,
+  Tooltip,
 } from "@mantine/core";
+import moment from "moment/moment";
 import { useState } from "react";
 import {
   Check,
@@ -29,9 +31,8 @@ import {
   X,
 } from "tabler-icons-react";
 
-export default function Index() {
+export default function Index({ data }) {
   const theme = useMantineTheme();
-
   const [company, setCompany] = useState("");
   const [type, setType] = useState(null);
   const [transcript, setTranscript] = useState(null);
@@ -88,7 +89,7 @@ export default function Index() {
       }),
     })
       .then((res) => {
-        if(res.status === 200){
+        if (res.status === 200) {
           setNotificationData({
             title: "The Application is Created Successfully!",
             description: (
@@ -100,16 +101,16 @@ export default function Index() {
             ),
             icon: <Check />,
           });
-        }else{
+        } else {
           setNotificationData({
             title: "Error Occured",
             description: (
               <Text>
-                Error occured while you are creating your application. Please try
-                again later.
+                Error occured while you are creating your application. Please
+                try again later.
               </Text>
             ),
-            color:"red",
+            color: "red",
             icon: <X />,
           });
         }
@@ -122,8 +123,6 @@ export default function Index() {
         setTranscript(null);
         setApplicationForm(null);
       });
-
-
   }
   return (
     <>
@@ -174,25 +173,46 @@ export default function Index() {
                     information in the application form you downloaded and
                     uploaded, your application will be rejected.
                   </Text>
-                  <Anchor
-                    sx={{ display: "flex", justifyContent: "center" }}
-                    download
-                    href="https://stix.uskudar.edu.tr/student/download/047d0b80bc1310e8ff05478ffadc538a"
+                  <Stack
+                    spacing={3}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
                   >
                     <Button
+                      component="a"
+                      download={"application_form"}
+                      href={data?.href}
+                      disabled={!data}
                       leftIcon={<Download size={"1.1rem"} />}
                       ta={"center"}
                       radius={"xl"}
+                      sx={{ width: "fit-content" }}
                     >
                       Download
                     </Button>
-                  </Anchor>
+                    {data ? (
+                      <Tooltip position="bottom" label = {new Date(data.createdAt).toLocaleString()}>
+                        <Text fs={"italic"} size={"xs"} ta={"center"}>
+                          Uploaded {moment(data.createdAt).fromNow()}
+                        </Text>
+                      </Tooltip>
+                      
+                    ) : (
+                      <Text fs={"italic"} size={"xs"} ta={"center"}>
+                        The form is not uploaded yet. Wait for coordinator to start to process.
+                      </Text>
+                    )}
+                  </Stack>
                 </Box>
               </Grid.Col>
               <Grid.Col lg={12} xl={9}>
                 <Grid gutter={"xl"}>
                   <Grid.Col lg={12}>
                     <TextInput
+                    disabled={!data}
                       value={company}
                       sx={{ maxWidth: 250 }}
                       radius={"xl"}
@@ -205,6 +225,7 @@ export default function Index() {
 
                   <Grid.Col xs={12} sm={12} lg={6} xl={6}>
                     <Radio.Group
+                      
                       name="typeOfInternship"
                       label="Choose Internship Type"
                       withAsterisk
@@ -212,9 +233,9 @@ export default function Index() {
                       onChange={typeHandler}
                     >
                       <Stack mt="xs">
-                        <Radio value="compulsory1" label="Compulsary-1" />
-                        <Radio value="compulsory2" label="Compulsary-2" />
-                        <Radio value="voluntary" label="Voluntary" />
+                        <Radio disabled ={!data} value="compulsory1" label="Compulsary-1" />
+                        <Radio disabled ={!data} value="compulsory2" label="Compulsary-2" />
+                        <Radio disabled ={!data} value="voluntary" label="Voluntary" />
                       </Stack>
                     </Radio.Group>
                   </Grid.Col>
@@ -228,6 +249,7 @@ export default function Index() {
                         }}
                       >
                         <UploadInput
+                          disabled ={!data}
                           value={transcript}
                           withAsterisk
                           onChange={transcriptHandler}
@@ -275,6 +297,7 @@ export default function Index() {
                         }}
                       >
                         <UploadInput
+                         disabled ={!data}
                           value={applicationForm}
                           withAsterisk
                           onChange={applicationFormHandler}
@@ -376,4 +399,20 @@ function toBase64(blob) {
       res(reader.result);
     };
   });
+}
+
+export async function getServerSideProps() {
+  let data = null;
+  const response = await fetch(
+    "http://localhost:3000/api/student/get-form-uuid"
+  )
+    .then((res) => res.json())
+    .then((res) => res.data);
+  if (response.UUID) {
+    data = {
+      createdAt: response.createdAt,
+      href: "/api/student/download/application-form/" + response.UUID,
+    };
+  }
+  return { props: { data } };
 }
