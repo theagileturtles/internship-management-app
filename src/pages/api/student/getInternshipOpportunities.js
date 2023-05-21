@@ -19,9 +19,7 @@ import {
       console.log(user)
   
       // check if user_uuid is provided
-      if (!uuid) {
-        return res.status(400).json({ message: 'there is no user_uuid information inside session-example.json' });
-      }
+
   
       // validate user_uuid
       // if (!isValidBinaryUUID(uuid)) {
@@ -33,14 +31,20 @@ import {
   
       // TODO: Select internships that have not passed the application deadline
       const sql = `
-        SELECT header, company, location, department, explanation, start_date, end_date, salary, contact_infos, website
+        SELECT header, company, explanation, website, type, created_at AS createdAt
         FROM internship_management_app.internship_opportinutes
       `;
       const q = query(connection);
-      const rows = await q(sql);
+      let rows = await q(sql);
       // close the database connection
       connection.end();
   
+      rows = rows.map((element)=>{
+        return{
+          ...element,
+          createdAt:  new Date(new Date(element.createdAt).getTime() - (new Date(element.createdAt ).getTimezoneOffset() * 60000))
+        }
+      })
       return res.status(200).json(rows);
     } catch (error) {
       console.error(error);
