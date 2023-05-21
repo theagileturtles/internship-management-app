@@ -12,6 +12,17 @@ export function typeConverter(type){
     }
 }
 
+export function oppurtunityTypeConverter(type){
+  switch (type) {
+    case "summer":
+      return {alias:type, label: "Summer Term Internship"}
+    case "long":
+      return {alias:type, label: "Long Term Internship"}
+    default:
+      break;
+  }
+}
+
 export function internshipStatusConverter(status){
     switch (status) {
       case "pending_for_coordinator":

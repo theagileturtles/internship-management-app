@@ -1,3 +1,4 @@
+import { oppurtunityTypeConverter } from "@/utils/response-converter";
 import {
     createConnection,
     query
@@ -6,7 +7,7 @@ import {
   const sessionData = require('./../../../../session-example.json');
   
   export default async function handler(req, res) {
-  
+    const keyword = req.query.keyword
     if (req.method !== "GET") {
       res.status(405).json({
         error: "Method Not Allowed"
@@ -17,7 +18,7 @@ import {
       const user = sessionData.session.user;
       const uuid = user.uuid;
       console.log(user)
-  
+      const params = [];
       // check if user_uuid is provided
 
   
@@ -28,21 +29,30 @@ import {
   
       // connect to the database
       const connection = createConnection();
-  
+
       // TODO: Select internships that have not passed the application deadline
-      const sql = `
-        SELECT header, company, explanation, website, type, created_at AS createdAt
+      let sql = `
+        SELECT BIN_TO_UUID(uuid) AS uuid, header, company, explanation, website, type, created_at AS createdAt
         FROM internship_management_app.internship_opportinutes
       `;
+
+      if(keyword){
+        sql += " WHERE explanation LIKE ? OR header LIKE ?;"
+        params.push("%"+keyword+"%")
+        params.push("%"+keyword+"%")
+      }
+
       const q = query(connection);
-      let rows = await q(sql);
+      let rows = await q(sql,params);
       // close the database connection
       connection.end();
   
       rows = rows.map((element)=>{
         return{
           ...element,
-          createdAt:  new Date(new Date(element.createdAt).getTime() - (new Date(element.createdAt ).getTimezoneOffset() * 60000))
+          createdAt:  new Date(new Date(element.createdAt).getTime() - (new Date(element.createdAt ).getTimezoneOffset() * 60000)),
+          type: oppurtunityTypeConverter(element.type),
+          image: "https://internship-management-app.s3.eu-central-1.amazonaws.com/internship-opportunuties/"+element.uuid+"/image.png"
         }
       })
       return res.status(200).json(rows);
