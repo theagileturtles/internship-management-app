@@ -34,6 +34,10 @@ export default function Index() {
   const [loading, setLoading] = useState(false);
 
   const handlePublish = async () => {
+    if (!companyName || !type || !file || !description || !applicationPage) {
+      alert("Please fill in all fields.");
+      return;
+    }
     try {
       setLoading(true);
       const response = await fetch("http://localhost:3000/api/career-center/postInternshipOpportinutes", {
@@ -50,7 +54,7 @@ export default function Index() {
         }),
       });
       const data = await response.json();
-      console.log(data); // Handle the response from the API as needed
+      HandleUploadImage()
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -65,12 +69,7 @@ export default function Index() {
   function handleTypeChange(value) {
     setType(value);
   }
-  
 
-  function handleFileChange(files) {
-    setFile(files[0]);
-    setFileName(files[0].name);
-  }
 
   function handleDescriptionChange(event) {
     setDescription(event.target.value);
@@ -78,6 +77,39 @@ export default function Index() {
 
   function handleApplicationPageChange(event) {
     setApplicationPage(event.target.value);
+  }
+
+  function handleFileChange(files) {
+    const selectedFile = files[0];
+    setFile(selectedFile);
+
+    // Base64 formatına dönüştür
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64Data = reader.result;
+      const randomUUID = generateUUID(); // Random UUID oluştur
+      const extension = selectedFile.name.split(".").pop();
+      const fileName = `${randomUUID}.${extension}`; // UUID'yi dosya adına ekle
+      setFileName(fileName)
+      const imageData = {
+        fileName: fileName,
+        base64Data: base64Data,
+      };
+      console.log(imageData); // Base64 veri ve dosya adını kullanabilirsiniz
+    };
+    reader.readAsDataURL(selectedFile);
+  }
+
+  function generateUUID() {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+      var r = (Math.random() * 16) | 0,
+        v = c === "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
+
+  function HandleUploadImage() {
+    //handle upload image to the aws bucket
   }
 
   function preview() {
@@ -147,8 +179,8 @@ export default function Index() {
                   onChange={handleTypeChange}
                 >
                   <Stack mt="xs">
-                    <Radio value="longterm" label="Long Term" />
-                    <Radio value="summerterm" label="Summer Term" />
+                    <Radio value="long" label="Long Term" />
+                    <Radio value="summer" label="Summer Term" />
                   </Stack>
                 </Radio.Group>
               </Stack>
