@@ -15,11 +15,15 @@ import {
   Pagination,
   TextInput,
   Group,
+  LoadingOverlay,
+  Tooltip,
+  Loader,
 } from "@mantine/core";
+import moment from "moment/moment";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { Download } from "tabler-icons-react";
+import { useEffect, useState } from "react";
+import { Briefcase, BuildingFactory2, Ce, Download, Search } from "tabler-icons-react";
 
 // Custom Text component as Title for details part
 function DetailsTitle(props) {
@@ -43,26 +47,28 @@ function TableHeader(props) {
 
 // This function will be displayed (rendered) on the screen when http://localhost:3000/student/internship-applications called.
 export default function Index({ data }) {
-  
   const theme = useMantineTheme();
   const [values, setValues] = useState(data);
   const [keyword, setKeyword] = useState("");
   const [searchLoader, setSearchLoader] = useState(false);
 
-  function searchHandler(){
-  setSearchLoader(true)
-   fetchData(keyword).then((res)=>{
-    setValues(res);
-    setSearchLoader(false)
-   })
-  }
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchLoader(true);
+      fetchData(keyword).then((res) => {
+        setValues(res);
+        setSearchLoader(false);
+      });
+    }, 500);
 
-  function keywordHandler(event){
-    setKeyword(event.target.value)
+    return () => clearTimeout(delayDebounceFn);
+  }, [keyword]);
+
+  function keywordHandler(event) {
+    setKeyword(event.target.value);
   }
 
   return (
-  
     <Layout role={"student"}>
       {/* Parent div */}
       <Box
@@ -79,18 +85,15 @@ export default function Index({ data }) {
           INTERNSHIP OPPORTUNUTIES
         </Title>
 
-        <Grid pt={15} pb={15} grow>
-          <Grid.Col xs={8} lg={10.7}>
-            <TextInput value={keyword} onChange={keywordHandler} placeholder="Search" radius={"xl"} />
-          </Grid.Col>
-          <Grid.Col xs={4} lg={1.3}>
-            <Center>
-              <Button disabled={keyword.length === 0} loading={searchLoader} onClick={searchHandler} sx={{ maxWidth: "150px" }} fullWidth radius={"xl"}>
-                Search
-              </Button>
-            </Center>
-          </Grid.Col>
-        </Grid>
+        <TextInput
+          pb={10}
+          value={keyword}
+          onChange={keywordHandler}
+          placeholder="Search"
+          icon={<Search size={"1.1rem"} />}
+          radius={"xl"}
+        />
+
         {/* This box wraps the table and its content*/}
         <Box
           sx={{
@@ -101,9 +104,7 @@ export default function Index({ data }) {
             textAlign: "left",
             display: "flex",
             backgroundColor: "white",
-
             marginBottom: "50px",
-
             flexDirection: "column",
           }}
         >
@@ -154,15 +155,20 @@ export default function Index({ data }) {
                       <Grid.Col xs={3} lg={1}>
                         <Center>
                           <Avatar
-                            color="mainBlue"
+                            color="gray"
                             src={element.image}
                             alt={element.title}
-                          ></Avatar>
+                          >
+                            <BuildingFactory2/>
+                          </Avatar>
                         </Center>
                       </Grid.Col>
+                      <Tooltip label={new Date(element.createdAt).toLocaleString()}>
                       <Grid.Col xs={3} lg={3}>
-                        <TableText>{element.createdAt}</TableText>
+                        <TableText>{moment(element.createdAt).fromNow()}</TableText>
                       </Grid.Col>
+                      </Tooltip>
+                    
                       <Grid.Col xs={3} lg={4}>
                         <TableText>{element.company}</TableText>
                       </Grid.Col>
@@ -179,7 +185,7 @@ export default function Index({ data }) {
                       </Stack>
                       <Center>
                         <Button
-                        target="_blank"
+                          target="_blank"
                           component="a"
                           href={element.website}
                           radius={"xl"}
@@ -193,6 +199,21 @@ export default function Index({ data }) {
                 </Accordion.Item>
               ))}
             </Accordion>
+            <Center pl={"2.875rem"} pr={"1rem"}>
+              {searchLoader ? (
+                <Loader />
+              ) : (
+                <>
+                  {values.length === 0 ? (
+                    <Text fs={"italic"}>
+                      There is no opportunuties now. Keep looking!
+                    </Text>
+                  ) : (
+                    <></>
+                  )}
+                </>
+              )}
+            </Center>
           </Stack>
           <Pagination mb={"sm"} sx={{ alignSelf: "center" }} total={1} />
         </Box>
@@ -209,12 +230,17 @@ export async function getServerSideProps() {
   return { props: { data } };
 }
 
-async function fetchData(keyword){
-  if(keyword){
-    const res = await fetch("http://localhost:3000/api/student/getInternshipOpportunities?keyword="+keyword);
+async function fetchData(keyword) {
+  if (keyword) {
+    const res = await fetch(
+      "http://localhost:3000/api/student/getInternshipOpportunities?keyword=" +
+        keyword
+    );
     return await res.json();
-  }else{
-    const res = await fetch("http://localhost:3000/api/student/getInternshipOpportunities");
+  } else {
+    const res = await fetch(
+      "http://localhost:3000/api/student/getInternshipOpportunities"
+    );
     return await res.json();
   }
 }
