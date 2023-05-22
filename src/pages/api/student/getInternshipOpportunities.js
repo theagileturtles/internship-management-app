@@ -33,7 +33,7 @@ import {
       // TODO: Select internships that have not passed the application deadline
       let sql = `
         SELECT BIN_TO_UUID(uuid) AS uuid, header, company, explanation, website, type, created_at AS createdAt
-        FROM internship_management_app.internship_opportinutes
+        FROM internship_management_app.internship_opportunities
       `;
 
       if(keyword){
