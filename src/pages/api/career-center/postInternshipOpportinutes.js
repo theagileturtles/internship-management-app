@@ -43,15 +43,16 @@ export default async function handler(req, res) {
 
     const sql = `
     INSERT INTO internship_management_app.internship_opportunities
-    (header, company, explanation, website, type, created_at)
-    VALUES(?, ?, ?, ?, ?, ?);
+    (header, company, explanation, website, type, image_name, created_at)
+    VALUES(?, ?, ?, ?, ?, ?, ?);
   `;
     const q = query(connection);
     const rows = await q(sql, [postData.companyName, 
                             postData.companyName, 
                             postData.description,
                             postData.applicationPage, 
-                            postData.type, 
+                            postData.type,
+                            postData.fileName, 
                             postData.created_at]);
 
     // close the database connection
