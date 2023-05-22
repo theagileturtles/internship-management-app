@@ -13,7 +13,9 @@ import {
   Group,
   Pagination,
   FileInput,
+  Tooltip,
 } from "@mantine/core";
+import moment from "moment";
 
 import { Download, Upload } from "tabler-icons-react";
 
@@ -77,7 +79,7 @@ export default function Index({ data }) {
               </Grid.Col>
             </Grid>
             <Accordion color="mainBlue" variant="filled" chevronPosition="left">
-              {data.map((element, index) => (
+              {data.length > 0 ?data.map((element, index) => (
                 <Accordion.Item
                   key={element.uuid + "_accordion_item_" + index}
                   sx={{
@@ -94,17 +96,19 @@ export default function Index({ data }) {
                 >
                   <Accordion.Control sx={{ width: "100%" }}>
                     <Grid>
+                      <Tooltip label={new Date(element.createdAt).toLocaleString()}>
                       <Grid.Col xs={6} md={3}>
-                        <TableText>{element.createdAt}</TableText>
+                        <TableText>{moment(element.createdAt).fromNow()}</TableText>
                       </Grid.Col>
+                      </Tooltip>
                       <Grid.Col xs={6} md={3}>
                         <TableText>{element.company}</TableText>
                       </Grid.Col>
                       <Grid.Col xs={6} md={3}>
-                        <TableText>{element.type}</TableText>
+                        <TableText>{element.type.label}</TableText>
                       </Grid.Col>
                       <Grid.Col xs={6} md={3}>
-                        <TableText>{element.status}</TableText>
+                        <TableText>{element.status.label}</TableText>
                       </Grid.Col>
                     </Grid>
                   </Accordion.Control>
@@ -133,36 +137,16 @@ export default function Index({ data }) {
                           {element.files.map((file) => (
                             <Anchor
                               sx={{ justifyContent: "center", display: "flex" }}
-                              key={element.uuid + "_file_" + file.name}
+                              key={element.uuid + "_file_" + file.label}
                               target="_blank"
-                              href={file.link}
+                              href={file.href}
                               download
                             >
                               <Flex gap={3} direction={"row"}>
                                 <Download size={18} />
-                                <DetailsText>{file.name}</DetailsText>
+                                <DetailsText>{file.label}</DetailsText>
                               </Flex>
                             </Anchor>
-                          ))}
-                        </Stack>
-                      </Grid.Col>
-                      <Grid.Col
-                        sx={{
-                          justifyContent: "center",
-                          display: "flex",
-                          minWidth: "fit-content",
-                        }}
-                        md={6}
-                      >
-                        <Stack spacing={0} ta={"center"}>
-                          <DetailsTitle>Logs</DetailsTitle>
-                          {element.logs.map((log, index) => (
-                            <DetailsText
-                              sx={{ color: "inherit" }}
-                              key={element.uuid + "_log_" + index}
-                            >
-                              {log}
-                            </DetailsText>
                           ))}
                         </Stack>
                       </Grid.Col>
@@ -184,7 +168,7 @@ export default function Index({ data }) {
                     </Grid>
                   </Accordion.Panel>
                 </Accordion.Item>
-              ))}
+              )):<Text fs={"italic"} ta={"center"}>There are no any official letter requests now.</Text>}
             </Accordion>
           </Stack>
           <Pagination mb={"sm"} sx={{ alignSelf: "center" }} total={1} />
@@ -195,29 +179,10 @@ export default function Index({ data }) {
 }
 
 export async function getServerSideProps() {
-  const data = [
-    {
-      uuid: "0855eae4-eb8e-11ed-a05b-0242ac120003",
-      createdAt: "12.04.2023",
-      company: "Trendyol",
-      type: "Compulsory-2",
-      status: "Pending",
-      message: "Company wants to see an official letter.",
-      files: [{ name: "Transcript", link: "/" }],
-      officialLetter: "",
-      logs: ["created at 12.04.2023 - 23:54"],
-    },
-    {
-      uuid: "12bc883e-e3a0-4231-9982-a8104e184d94",
-      createdAt: "15.04.2023",
-      company: "Microssoft",
-      type: "Voluntary",
-      status: "Recieved",
-      studentNo: "0000000000",
-      files: [{ name: "Transcript", link: "/" },
-      { name: "Official Letter", link: "/" }],
-      logs: ["created at 12.04.2023 - 23:54"],
-    },
-  ];
+  const res = await fetch(
+    "http://localhost:3000/api/student/getOfficialLetterRequest"
+  );
+  const data = await res.json();
+ 
   return { props: { data } };
 }

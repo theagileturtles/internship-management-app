@@ -45,7 +45,7 @@ export default async function handler(req, res) {
      connection = createConnection();
 
     let response = await query(connection)("UPDATE internship_management_app.internship_applications " +
-      "SET status = ? WHERE uuid = UUID_TO_BIN(?)",
+      "SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE uuid = UUID_TO_BIN(?)",
       [status, uuid]);
 
    if(response.affectedRows === 1){

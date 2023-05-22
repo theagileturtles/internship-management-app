@@ -1,4 +1,4 @@
-import { internshipStatusConverter, typeConverter } from "@/utils/ResponseConverter";
+import { internshipStatusConverter, letterStatusConverter, typeConverter } from "@/utils/ResponseConverter";
 import {
   createConnection,
   query
@@ -33,8 +33,8 @@ export default async function handler(req, res) {
 
     // get student internship applications from the database
     const sql = `
-      SELECT BIN_TO_UUID(uuid) AS uuid, company,sgk_entry,type,status,created_at, updated_at
-      FROM internship_management_app.internship_applications
+      SELECT BIN_TO_UUID(uuid) AS uuid, company, type ,message, status, created_at, updated_at, incomplete_internship
+      FROM internship_management_app.letter_requests
       WHERE user_uuid = UUID_TO_BIN(?) ORDER BY created_at DESC;
     `;
     const q = query(connection);
@@ -47,20 +47,15 @@ export default async function handler(req, res) {
         UUID: element.uuid,
         company: element.company,
         type: typeConverter(element.type),
-        status: internshipStatusConverter(element.status),
+        status: letterStatusConverter(element.status),
         createdAt: new Date(new Date(element.created_at).getTime() - (new Date(element.created_at ).getTimezoneOffset() * 60000)),
         updatedAt: new Date(new Date(element.updated_at).getTime() - (new Date(element.updated_at ).getTimezoneOffset() * 60000)),
         files:[{
           label: "Transcript",
-          href: "/api/student/download/internship-application/transcript/"+element.uuid
-          
-        },
-        {
-          label: "Application Form",
-          href: "/api/student/download/internship-application/application-form/"+element.uuid
-          
-        }
-      ]
+          href: "/api/student/download/letter-request/transcript/"+element.uuid
+        }],
+        message: element.message,
+        officialLetter: "/api/student/download/letter-request/official-letter/"+element.uuid
       }
     })
 
