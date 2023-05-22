@@ -56,6 +56,13 @@ export default function Index() {
       const data = await response.json();
       HandleUploadImage()
       setLoading(false);
+      setCompanyName("")
+      setFile(null)
+      setDescription("")
+      setApplicationPage("")
+      setType("")
+      setFileName("")
+      alert("İnternship has been published")  
     } catch (error) {
       console.error(error);
       setLoading(false);
