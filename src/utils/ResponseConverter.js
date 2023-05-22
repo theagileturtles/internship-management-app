@@ -28,7 +28,7 @@ export function internshipStatusConverter(status){
       case "pending_for_coordinator":
         return {alias:status, label: "Pending for Coordinator"}
       case "rejected":
-        return {alias:status, label: "Rejected"}
+        return {alias:status, label: "Rejected", color:"red"}
       case "pending_for_sgk":
         return {alias:status, label: "Pending for SGK Entry"}
       case "approved":

@@ -19,6 +19,7 @@ import {
   Modal,
   Textarea,
 } from "@mantine/core";
+import moment from "moment";
 import { useState } from "react";
 
 import { Check, Download } from "tabler-icons-react";
@@ -144,7 +145,7 @@ export default function Index({ data }) {
             <Stack pb={20} sx={{ minHeight: "45vh", width: "100%" }}>
               <Grid pl={"2.875rem"} pr={"1rem"} pt={15}>
                 <Grid.Col xs={6} md={3}>
-                  <TableHeader>Created at</TableHeader>
+                  <TableHeader>Received at</TableHeader>
                 </Grid.Col>
                 <Grid.Col xs={6} md={3}>
                   <TableHeader>Student</TableHeader>
@@ -192,11 +193,11 @@ export default function Index({ data }) {
                     <Accordion.Control sx={{ width: "100%" }}>
                       <Grid>
                         <Tooltip
-                          label={new Date(element.createdAt).toLocaleString()}
+                          label={new Date(element.updatedAt).toLocaleString()}
                         >
                           <Grid.Col xs={6} md={3}>
                             <TableText>
-                              {new Date(element.createdAt).toLocaleDateString()}
+                              {moment(element.updatedAt).fromNow()}
                             </TableText>
                           </Grid.Col>
                         </Tooltip>

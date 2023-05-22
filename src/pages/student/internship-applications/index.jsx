@@ -10,9 +10,13 @@ import {
   Flex,
   Anchor,
   Center,
+  Tooltip,
+  Badge,
+  Button,
 } from "@mantine/core";
+import moment from "moment";
 import Link from "next/link";
-import { Download } from "tabler-icons-react";
+import { Ce, Download, ExclamationMark, Pencil } from "tabler-icons-react";
 
 // Custom Text component as Title for details part
 function DetailsTitle(props) {
@@ -93,10 +97,10 @@ export default function Index({ data }) {
             </Grid>
             {/* This helps to accordion display for the content rows. When the user clicks the row, it will be extented and display the details. */}
             {/* More info about the Accordion: https://mantine.dev/core/accordion/*/}
-            <Accordion color="mainBlue" variant="filled" chevronPosition="left">
+            <Accordion variant="filled" chevronPosition="left">
               {/* data variable is an Array which contains the information about the internship-application. We are using map function to render each element as a row component.*/}
               {/* More info about Array.prototype.map function: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map */}
-              {data.map((element, index) => (
+              {data.length>0 ? data.map((element, index) => (
                 <Accordion.Item
                   key={element.uuid + "_accordion_item_" + index}
                   sx={{
@@ -113,91 +117,82 @@ export default function Index({ data }) {
                 >
                   <Accordion.Control sx={{ width: "100%" }}>
                     <Grid>
+                      <Tooltip
+                        label={new Date(element.createdAt).toLocaleString()}
+                      >
+                        <Grid.Col xs={3}>
+                          <TableText color={element.status.color}>
+                            {moment(element.createdAt).fromNow()}
+                          </TableText>
+                        </Grid.Col>
+                      </Tooltip>
                       <Grid.Col xs={3}>
-                        <TableText>{element.createdAt}</TableText>
+                        <TableText color={element.status.color}>
+                          {element.company}
+                        </TableText>
                       </Grid.Col>
                       <Grid.Col xs={3}>
-                        <TableText>{element.company}</TableText>
+                        <TableText color={element.status.color}>
+                          {element.type.label}
+                        </TableText>
                       </Grid.Col>
                       <Grid.Col xs={3}>
-                        <TableText>{element.type}</TableText>
-                      </Grid.Col>
-                      <Grid.Col xs={3}>
-                        <TableText>{element.status}</TableText>
+                        <TableText color={element.status.color}>
+                          {element.status.label}
+                        </TableText>
                       </Grid.Col>
                     </Grid>
                   </Accordion.Control>
                   <Accordion.Panel sx={{ color: theme.colors.mainBlue[6] }}>
-                    <Grid grow pl={"2.875rem"} pr={"1rem"} columns={12}>
-                      <Grid.Col
+                    <Stack pb={20}>
+                      <Stack
+                        spacing={0}
                         sx={{
-                          justifyContent: "center",
-                          display: "flex",
+                          textAlign: "center",
+                          color: "inherit",
                         }}
-                        span={4}
                       >
-                        <Stack
-                          spacing={0}
-                          sx={{
-                            textAlign: "center",
-                            color: "inherit",
-                          }}
-                        >
-                          <DetailsTitle>Files</DetailsTitle>
+                        <DetailsTitle>Files</DetailsTitle>
 
-                          {element.files.map((file) => (
-                            <Anchor
-                              sx={{ justifyContent: "center", display: "flex" }}
-                              key={element.uuid + "_file_" + file.name}
-                              target="_blank"
-                              href={file.link}
-                              download
-                            >
-                              <Flex gap={3} direction={"row"}>
-                                <Download size={18} />
-                                <DetailsText>{file.name}</DetailsText>
-                              </Flex>
-                            </Anchor>
-                          ))}
+                        {element.files.map((file) => (
+                          <Anchor
+                            sx={{ justifyContent: "center", display: "flex" }}
+                            key={element.uuid + "_file_" + file.label}
+                            target="_blank"
+                            href={file.href}
+                            download
+                          >
+                            <Flex gap={3} direction={"row"}>
+                              <Download size={18} />
+                              <DetailsText>{file.label}</DetailsText>
+                            </Flex>
+                          </Anchor>
+                        ))}
+                      </Stack>
+                      {element.status.alias === "rejected" ? (
+                        <Stack sx={{justifyContent:"center", alignItems:"center"}}>
+                          <Box
+                            sx={{
+                              backgroundColor: theme.colors.info[3],
+                              color: theme.colors.info[11],
+                              maxWidth: "500px",
+                              borderRadius:"15px"
+                            }}
+                          >
+                              <Text size={"sm"} p={5} ta={"center"} color="yellow">This application is rejected by the coordinator. You need to edit your application to restart the internship application process.</Text>
+                          </Box>
+
+                          <Center>
+                            <Button radius={"xl"}>Edit Your Application</Button>
+                          </Center>
                         </Stack>
-                      </Grid.Col>
-                      <Grid.Col
-                        sx={{
-                          justifyContent: "center",
-                          display: "flex",
-                          minWidth: "fit-content",
-                        }}
-                        span={4}
-                      >
-                        <Stack spacing={0} ta={"center"}>
-                          <DetailsTitle>Logs</DetailsTitle>
-                          {element.logs.map((log, index) => (
-                            <DetailsText
-                              sx={{ color: "inherit" }}
-                              key={element.uuid + "_log_" + index}
-                            >
-                              {log}
-                            </DetailsText>
-                          ))}
-                        </Stack>
-                      </Grid.Col>
-                      <Grid.Col
-                        sx={{
-                          justifyContent: "center",
-                          display: "flex",
-                          minWidth: "fit-content",
-                        }}
-                        span={4}
-                      >
-                        <Box ta={"center"}>
-                          <DetailsTitle>Department</DetailsTitle>
-                          <DetailsText>{element.department}</DetailsText>
-                        </Box>
-                      </Grid.Col>
-                    </Grid>
+                      ) : (
+                        <></>
+                      )}
+                    </Stack>
                   </Accordion.Panel>
                 </Accordion.Item>
-              ))}
+              )):<Text fs={"italic"} ta={"center"}>There are no any internship applications now.</Text>}
             </Accordion>
           </Stack>
         </Box>
@@ -210,54 +205,10 @@ export default function Index({ data }) {
 // In future, we will implement the API endpoints here. Then we will get information from the endpoint.
 // Now I just hardcodded the data here.
 export async function getServerSideProps() {
-  // Fetch data from external API
-  // const res = await fetch(`https://.../data`);
-  // const data = await res.json();
+  const res = await fetch(
+    "http://localhost:3000/api/student/getInternshipApplications"
+  );
+  const data = await res.json();
 
-  const data = [
-    {
-      uuid: "e16f6b76-2e97-48ba-bcf0-52d209bdc0c1",
-      createdAt: "15.04.2023",
-      company: "Turkcell",
-      type: "Voluntary",
-      status: "Pending for SGK Entry",
-      department: "Software Engineering",
-      files: [
-        { name: "Transcript", link: "/" },
-        { name: "Application Form", link: "/" },
-      ],
-      logs: [
-        "created at 15.04.2023 - 23:54",
-        "approved by coordinator 16.04.2023 - 14:02",
-      ],
-    },
-    {
-      uuid: "0855eae4-eb8e-11ed-a05b-0242ac120003",
-      createdAt: "12.04.2023",
-      company: "Trendyol",
-      type: "Compulsory-2",
-      status: "Pending for Approvment",
-      department: "Software Engineering",
-      files: [
-        { name: "Transcript", link: "/" },
-        { name: "Application Form", link: "/" },
-      ],
-      logs: ["created at 12.04.2023 - 23:54"],
-    },
-    {
-      uuid: "0823eae4-eb8e-11ed-a05b-0242ac120003",
-      createdAt: "12.04.2023",
-      company: "Getir",
-      type: "Compulsory-1",
-      status: "Done",
-      department: "Software Engineering",
-      files: [
-        { name: "Transcript", link: "/" },
-        { name: "Application Form", link: "/" },
-      ],
-      logs: ["created at 12.04.2023 - 23:54"],
-    },
-  ];
-  // Pass data to the page via props
   return { props: { data } };
 }
