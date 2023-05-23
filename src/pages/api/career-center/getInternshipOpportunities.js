@@ -63,9 +63,3 @@ import {
     }
   }
   
-  function isValidBinaryUUID(uuid) {
-    const uuidRegex = /^[a-f\d]{32}$/i;
-    const hex = Buffer.from(uuid, 'binary').toString('hex');
-    return uuidRegex.test(hex);
-  }
-  
