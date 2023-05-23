@@ -40,10 +40,10 @@ export default async function handler(req, res) {
         ContentType: "application/pdf"
       })
       .promise().catch((err) => {
-        res.status(500).json({
+        console.log(err);
+        return res.status(500).json({
           error: "An error occured while file is uploading."
         });
-        console.log(err);
       })
 
 
@@ -62,15 +62,14 @@ export default async function handler(req, res) {
     await query(connection)("INSERT INTO internship_management_app.application_forms (uuid, department_id) VALUES (UUID_TO_BIN(?),?);",
       [uuid, session.user.departmentID,]);
 
-    res.status(200).json({
+    return res.status(200).json({
       uploadedPDF
     })
 
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       error: "Internal Server Error"
     });
-    console.log(error)
   } finally{
     if(connection){
       connection.end();
