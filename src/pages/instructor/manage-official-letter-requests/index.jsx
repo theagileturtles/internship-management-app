@@ -1,5 +1,7 @@
+import { useState } from "react";
 import Layout from "@/components/layout";
 import UploadInput from "@/components/uploadinput";
+import generateFile from "@/utils/GenerateLetter";
 import {
   Accordion,
   Box,
@@ -38,6 +40,20 @@ function TableHeader(props) {
 
 export default function Index({ data }) {
   const theme = useMantineTheme();
+  const [generatedFile, setGeneratedFile] = useState(null);
+  const [isGenerateClicked, setIsGenerateClicked] = useState(false);
+  const [isGenereatedFinished, setIsGeneratedFinished] = useState(true)
+
+  const handleGenerateClick = async (element) => {
+    // generateFile fonksiyonunu burada çağırabilirsiniz.
+    console.log(element)
+    setIsGenerateClicked(true);
+    setIsGeneratedFinished(false)
+    setGeneratedFile(true)
+    const generatedFileData = await generateFile(element);
+    console.log(generatedFileData)
+    setGeneratedFile(generatedFileData)
+  };
 
   return (
     <Layout role={"instructor"}>
@@ -176,26 +192,6 @@ export default function Index({ data }) {
 
                         </Stack>
                       </Grid.Col>
-                      {/* <Grid.Col
-                        sx={{
-                          justifyContent: "center",
-                          display: "flex",
-                          minWidth: "fit-content",
-                        }}
-                        md={4}
-                      >
-                        <Stack spacing={0} ta={"center"}>
-                          <DetailsTitle>Logs</DetailsTitle>
-                          {element.logs.map((log, index) => (
-                            <DetailsText
-                              sx={{ color: "inherit" }}
-                              key={element.uuid + "_log_" + index}
-                            >
-                              {log}
-                            </DetailsText>
-                          ))}
-                        </Stack>
-                      </Grid.Col> */}
                       <Grid.Col
                         sx={{
                           justifyContent: "center",
@@ -226,35 +222,47 @@ export default function Index({ data }) {
                       </Grid.Col>
                     </Grid>
                     <Stack
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <UploadInput
-                        sx={{
-                          minWidth: "150px",
-                          width: "100%",
-                          maxWidth: "250px",
-                        }}
-                        icon={<Upload size={"1.1rem"} />}
-                        placeholder="Official Letter"
-                        label="Official Letter"
-                        variant="filled"
-                        radius="xl"
-                        withAsterisk
-                      />
-                      <Button
-                        radius={"xl"}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                        }}
-                        sx={{ width: "100px" }}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {isGenerateClicked && (
+                      <>
+                    {generatedFile && (
+                      <Anchor
+                        sx={{ justifyContent: "center", display: "flex" }}
+                        href={generatedFile.url} // Replace 'url' with the actual property that holds the file URL or data
+                        download
                       >
-                        Send
-                      </Button>
-                    </Stack>
+                        <Flex gap={3} direction="row">
+                          <Download size={18} />
+                          <DetailsText>{generatedFile.name}</DetailsText>
+                        </Flex>
+                      </Anchor>
+                    )}
+                        <Button
+                          radius={"xl"}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                          }}
+                          sx={{ width: "100px" }}
+                        >
+                          Send
+                        </Button>
+                      </>
+                    )}
+                    {isGenereatedFinished && (
+                    <Button
+                    radius={"xl"}
+                    onClick={() => handleGenerateClick(element)}
+                    sx={{ width: "100px" }}
+                    >
+                              Generate File
+                    </Button>
+                    )}
+                  </Stack>
                   </Accordion.Panel>
                 </Accordion.Item>
               ))}
