@@ -73,11 +73,12 @@ export default function Index() {
           setApplicationPage("")
           setType("")
           setFileName("")
+          setHeader("")
           setNotificationData({
-            title: "The Application Form is Uploaded!",
+            title: "The Internship Oppurtnuity is Published!",
             description: (
               <Text>
-                You can check the form if it is correct by downloanding from the download button.
+                You can display and delete the opportunity via <span style={{fontWeight:700}}>Internship Opportunuties</span> tab on the sidebar. 
               </Text>
             ),
             icon: <Check />,
