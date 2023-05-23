@@ -26,14 +26,102 @@ const MAX_LETTER = 1024;
 export default function Index() {
   const theme = useMantineTheme();
   const [file, setFile] = useState();
-  const [companyName, setCompanyName] = useState();
-  const [type, setType] = useState();
-  const [transcript, setTranscript] = useState();
+  const [companyName, setCompanyName] = useState("");
+  const [type, setType] = useState("");
+  const [fileName, setFileName] = useState("");
   const [description, setDescription] = useState("");
+  const [applicationPage, setApplicationPage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handlePublish = async () => {
+    if (!companyName || !type || !file || !description || !applicationPage) {
+      alert("Please fill in all fields.");
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:3000/api/career-center/postInternshipOpportinutes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          companyName,
+          type,
+          fileName,
+          description,
+          applicationPage
+        }),
+      });
+      const data = await response.json();
+      HandleUploadImage()
+      setLoading(false);
+      setCompanyName("")
+      setFile(null)
+      setDescription("")
+      setApplicationPage("")
+      setType("")
+      setFileName("")
+      alert("İnternship has been published")  
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
+  function handleCompanyNameChange(event) {
+    setCompanyName(event.target.value);
+  }
+
+  function handleTypeChange(value) {
+    setType(value);
+  }
+
+
+  function handleDescriptionChange(event) {
+    setDescription(event.target.value);
+  }
+
+  function handleApplicationPageChange(event) {
+    setApplicationPage(event.target.value);
+  }
+
+  function handleFileChange(files) {
+    const selectedFile = files[0];
+    setFile(selectedFile);
+
+    // Base64 formatına dönüştür
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64Data = reader.result;
+      const randomUUID = generateUUID(); // Random UUID oluştur
+      const extension = selectedFile.name.split(".").pop();
+      const fileName = `${randomUUID}.${extension}`; // UUID'yi dosya adına ekle
+      setFileName(fileName)
+      const imageData = {
+        fileName: fileName,
+        base64Data: base64Data,
+      };
+      console.log(imageData); // Base64 veri ve dosya adını kullanabilirsiniz
+    };
+    reader.readAsDataURL(selectedFile);
+  }
+
+  function generateUUID() {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+      var r = (Math.random() * 16) | 0,
+        v = c === "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
+
+  function HandleUploadImage() {
+    //handle upload image to the aws bucket
+  }
 
   function preview() {
     if (file) {
-      const imageUrl = window.URL.createObjectURL(file[0]);
+      const imageUrl = window.URL.createObjectURL(file);
       return (
         <Image
           alt={"logo"}
@@ -49,10 +137,6 @@ export default function Index() {
     }
   }
 
-  function messageHandler(event) {
-    setDescription(event.target.value);
-  }
-
   return (
     <Layout role={"career_center"}>
       <Box
@@ -63,8 +147,6 @@ export default function Index() {
           paddingRight: "5vw",
         }}
       >
-        {/* Title for the page. pb means padding bottom which creates space between bottom part. ta means text align. Also you can define
-        these features in sx prop which helps to create custom css on the specific mantine component*/}
         <Title pb={5} ta={"left"} color="text">
           PUBLISH INTERNSHIP OPPORTUNITY
         </Title>
@@ -93,15 +175,19 @@ export default function Index() {
                   placeholder="Company Name You Applied"
                   label="Company Name"
                   withAsterisk
+                  value={companyName}
+                  onChange={handleCompanyNameChange}
                 />
-                <Radio.Group
+               <Radio.Group
                   name="typeOfInternship"
                   label="Choose Internship Type"
                   withAsterisk
+                  value={type}
+                  onChange={handleTypeChange}
                 >
                   <Stack mt="xs">
-                    <Radio value="longterm" label="Long Term" />
-                    <Radio value="summerterm" label="Summer Term" />
+                    <Radio value="long" label="Long Term" />
+                    <Radio value="summer" label="Summer Term" />
                   </Stack>
                 </Radio.Group>
               </Stack>
@@ -115,7 +201,7 @@ export default function Index() {
                   alignItems: "center",
                 }}
                 accept={IMAGE_MIME_TYPE}
-                onDrop={setFile}
+                onDrop={handleFileChange}
               >
                 <Group sx={{ justifyContent: "center" }}>
                   <PhotoPlus />
@@ -127,7 +213,7 @@ export default function Index() {
             <Grid.Col xs={12}>
               <Stack display={"flex"} spacing={2}>
                 <Textarea
-                  onChange={messageHandler}
+                  onChange={handleDescriptionChange}
                   autosize
                   minRows={6}
                   maxRows={8}
@@ -135,6 +221,7 @@ export default function Index() {
                   maxLength={MAX_LETTER}
                   placeholder="Additional Information"
                   label="Description"
+                  value={description}
                 />
                 <Text size={"sm"} sx={{ alignSelf: "end" }} color="dimmed">
                   {description.length}/{MAX_LETTER}
@@ -142,17 +229,24 @@ export default function Index() {
               </Stack>
             </Grid.Col>
             <Grid.Col xl={12}>
-            <TextInput
-                  radius={"xl"}
-                  placeholder="https://...."
-                  label="Application page"
-                  withAsterisk
-                />
+              <TextInput
+                radius={"xl"}
+                placeholder="https://...."
+                label="Application page"
+                withAsterisk
+                value={applicationPage}
+                onChange={handleApplicationPageChange}
+              />
             </Grid.Col>
             <Grid.Col xl={12}>
               <Center>
-                <Button sx={{ width: "100%", maxWidth: 200 }} radius={"xl"}>
-                  Publish
+                <Button
+                  sx={{ width: "100%", maxWidth: 200 }}
+                  radius={"xl"}
+                  onClick={handlePublish}
+                  disabled={loading}
+                >
+                  {loading ? "Publishing..." : "Publish"}
                 </Button>
               </Center>
             </Grid.Col>
