@@ -16,11 +16,13 @@ import {
   AspectRatio,
   Group,
   Flex,
+  Transition,
+  Notification,
 } from "@mantine/core";
 import { useState } from "react";
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from "@mantine/dropzone";
 import Image from "next/image";
-import { PhotoPlus } from "tabler-icons-react";
+import { Check, PhotoPlus, X } from "tabler-icons-react";
 
 const MAX_LETTER = 1024;
 export default function Index() {
@@ -30,8 +32,17 @@ export default function Index() {
   const [type, setType] = useState("");
   const [fileName, setFileName] = useState("");
   const [description, setDescription] = useState("");
+  const [header, setHeader] = useState("");
   const [applicationPage, setApplicationPage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [imageData, setImageData] = useState()
+  const [notificationVisible, setNotificationVisible] = useState(false);
+  const [notificationData, setNotificationData] = useState({
+    title: "",
+    description: "",
+    icon: <Check />,
+  });
+  const [hrefDownload, setHrefDownload] = useState()
 
   const handlePublish = async () => {
     if (!companyName || !type || !file || !description || !applicationPage) {
@@ -50,27 +61,66 @@ export default function Index() {
           type,
           fileName,
           description,
-          applicationPage
+          applicationPage,
+          imageData,
+          header
         }),
+      }).then((res)=>{
+        if(res.status === 200){
+          setCompanyName("")
+          setFile(null)
+          setDescription("")
+          setApplicationPage("")
+          setType("")
+          setFileName("")
+          setNotificationData({
+            title: "The Application Form is Uploaded!",
+            description: (
+              <Text>
+                You can check the form if it is correct by downloanding from the download button.
+              </Text>
+            ),
+            icon: <Check />,
+          });
+        }else{
+          setNotificationData({
+            title: "Error Occured",
+            description: (
+              <Text>
+               Please try again later.
+              </Text>
+            ),
+            color:"red",
+            icon: <X />,
+          });
+        }
+        setNotificationVisible(true);
       });
-      const data = await response.json();
-      HandleUploadImage()
-      setLoading(false);
-      setCompanyName("")
-      setFile(null)
-      setDescription("")
-      setApplicationPage("")
-      setType("")
-      setFileName("")
-      alert("İnternship has been published")  
     } catch (error) {
       console.error(error);
+      setNotificationData({
+        title: "Error Occured",
+        description: (
+          <Text>
+           Please try again later.
+          </Text>
+        ),
+        color:"red",
+        icon: <X />,
+      });
+    }finally{
       setLoading(false);
+      setNotificationVisible(true);
     }
-  };
+    
+  }
 
   function handleCompanyNameChange(event) {
     setCompanyName(event.target.value);
+  }
+
+  function handleHeaderChange(event) {
+    setHeader(event.target.value);
   }
 
   function handleTypeChange(value) {
@@ -92,32 +142,20 @@ export default function Index() {
 
     // Base64 formatına dönüştür
     const reader = new FileReader();
+    
     reader.onload = () => {
       const base64Data = reader.result;
-      const randomUUID = generateUUID(); // Random UUID oluştur
-      const extension = selectedFile.name.split(".").pop();
-      const fileName = `${randomUUID}.${extension}`; // UUID'yi dosya adına ekle
+      const extension = selectedFile.name.split(".").slice(-1)[0];
       setFileName(fileName)
       const imageData = {
-        fileName: fileName,
+        extension:extension,
         base64Data: base64Data,
-      };
-      console.log(imageData); // Base64 veri ve dosya adını kullanabilirsiniz
+      }
+      setImageData(imageData)
     };
     reader.readAsDataURL(selectedFile);
   }
 
-  function generateUUID() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-      var r = (Math.random() * 16) | 0,
-        v = c === "x" ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
-  }
-
-  function HandleUploadImage() {
-    //handle upload image to the aws bucket
-  }
 
   function preview() {
     if (file) {
@@ -138,6 +176,7 @@ export default function Index() {
   }
 
   return (
+    <>
     <Layout role={"career_center"}>
       <Box
         sx={{
@@ -205,14 +244,25 @@ export default function Index() {
               >
                 <Group sx={{ justifyContent: "center" }}>
                   <PhotoPlus />
-                  <Text> Drop image here</Text>
+                  <Text> Drop image here <span style={{color:"red"}}>*</span> </Text>
                 </Group>
                 <Flex sx={{ justifyContent: "center" }}>{preview()}</Flex>
               </Dropzone>
             </Grid.Col>
+            <Grid.Col xl={12}>
+              <TextInput
+                radius={"xl"}
+                placeholder="Header"
+                label="Header"
+                withAsterisk
+                value={header}
+                onChange={handleHeaderChange}
+              />
+            </Grid.Col>
             <Grid.Col xs={12}>
               <Stack display={"flex"} spacing={2}>
                 <Textarea
+                withAsterisk
                   onChange={handleDescriptionChange}
                   autosize
                   minRows={6}
@@ -241,12 +291,13 @@ export default function Index() {
             <Grid.Col xl={12}>
               <Center>
                 <Button
+                loading={loading}
                   sx={{ width: "100%", maxWidth: 200 }}
                   radius={"xl"}
                   onClick={handlePublish}
-                  disabled={loading}
+                  disabled={!(companyName.length>0 && type && file && header.length>0 && description.length >0 && applicationPage.length > 0)}
                 >
-                  {loading ? "Publishing..." : "Publish"}
+                  Publish
                 </Button>
               </Center>
             </Grid.Col>
@@ -254,5 +305,39 @@ export default function Index() {
         </Box>
       </Box>
     </Layout>
+      <Transition
+      mounted={notificationVisible}
+      transition="fade"
+      duration={200}
+      timingFunction="ease"
+    >
+      {(styles) => (
+        <Notification
+          onClose={() => {
+            setNotificationVisible(false);
+          }}
+          withCloseButton
+          style={styles}
+          sx={{ position: "fixed", bottom: "3rem", left: "3rem" }}
+          icon={notificationData.icon}
+          color={notificationData.color}
+          title={notificationData.title}
+        >
+          {notificationData.description}
+        </Notification>
+      )}
+    </Transition>
+    </>
   );
+}
+
+
+function toBase64(blob) {
+  const reader = new FileReader();
+  return new Promise((res, rej) => {
+    reader.readAsDataURL(blob);
+    reader.onload = function () {
+      res(reader.result);
+    };
+  });
 }

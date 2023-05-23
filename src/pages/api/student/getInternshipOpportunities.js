@@ -52,7 +52,7 @@ import {
           ...element,
           createdAt:  new Date(new Date(element.createdAt).getTime() - (new Date(element.createdAt ).getTimezoneOffset() * 60000)),
           type: oppurtunityTypeConverter(element.type),
-          image: "https://internship-management-app.s3.eu-central-1.amazonaws.com/internship-opportunuties/"+element.uuid+"/image.png"
+          image: "/api/career-center/download/internship-opportunity/image/"+element.uuid
         }
       })
       return res.status(200).json(rows);
