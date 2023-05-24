@@ -7,7 +7,7 @@ import {
   Title,
   useMantineTheme,
 } from "@mantine/core";
-import { Files,CircleCheck,Briefcase,FilePlus, File, FileCheck, Mail, MailForward, FileDescription, FileExport, Tie } from 'tabler-icons-react';
+import { Files,CircleCheck,Briefcase,FilePlus, File, FileCheck, Mail, MailForward, FileDescription, FileExport, Tie, Users } from 'tabler-icons-react';
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -75,8 +75,8 @@ export default function Sidebar({role}) {
     {
       category: "Management",
       items: [
-        { title: "Manage Instructors", icon: <File/>, href: "/admin/manage-instructors"},
-        { title: "Manage Career Center Staff", icon: <Tie/>, href: "/admin/manage-career-center-staff"},
+        { title: "Manage Instructors", icon: <Users/>, href: "/admin/manage-instructors"},
+        { title: "Manage Career Center Staff", icon: <Users/>, href: "/admin/manage-career-center-staff"},
       ],
     },
   ];
