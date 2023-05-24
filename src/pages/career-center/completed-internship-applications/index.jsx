@@ -15,6 +15,7 @@ import {
   Tooltip,
   Checkbox,
 } from "@mantine/core";
+import moment from "moment";
 
 import { Download } from "tabler-icons-react";
 
@@ -47,13 +48,10 @@ export default function Index({ data }) {
           paddingRight: "5vw",
         }}
       >
+        <Title ta={"left"} color="text">
+          COMPLETED INTERNSHIP APPLICATIONS
+        </Title>
 
-
-          <Title  ta={"left"} color="text">
-              COMPLETED INTERNSHIP APPLICATIONS
-            </Title>
-
-            
         <Box
           sx={{
             backgroundColor: "white",
@@ -68,7 +66,7 @@ export default function Index({ data }) {
           <Stack pb={20} sx={{ minHeight: "45vh", width: "100%" }}>
             <Grid grow pl={"2.875rem"} pr={"1rem"} pt={15}>
               <Grid.Col xs={12} md={6} lg={2}>
-                <TableHeader>Created at</TableHeader>
+                <TableHeader>Updated at</TableHeader>
               </Grid.Col>
               <Grid.Col xs={12} md={6} lg={3}>
                 <TableHeader>Student</TableHeader>
@@ -99,11 +97,11 @@ export default function Index({ data }) {
                   <Accordion.Control sx={{ width: "100%" }}>
                     <Grid sx={{ display: "flex", alignItems: "center" }} grow>
                       <Tooltip
-                        label={new Date(element.createdAt).toLocaleString()}
+                        label={new Date(element.updatedAt).toLocaleString()}
                       >
                         <Grid.Col xs={12} md={6} lg={2}>
                           <TableText>
-                            {new Date(element.createdAt).toLocaleDateString()}
+                            {moment(element.updatedAt).fromNow()}
                           </TableText>
                         </Grid.Col>
                       </Tooltip>
@@ -158,26 +156,6 @@ export default function Index({ data }) {
                           ))}
                         </Stack>
                       </Grid.Col>
-                      {/* <Grid.Col
-                        sx={{
-                          justifyContent: "center",
-                          display: "flex",
-                          minWidth: "fit-content",
-                        }}
-                        span={4}
-                      >
-                        <Stack spacing={0} ta={"center"}>
-                          <DetailsTitle>Logs</DetailsTitle>
-                          {element.logs?.map((log, index) => (
-                            <DetailsText
-                              sx={{ color: "inherit" }}
-                              key={element.uuid + "_log_" + index}
-                            >
-                              {log}
-                            </DetailsText>
-                          ))}
-                        </Stack>
-                      </Grid.Col> */}
                       <Grid.Col
                         sx={{
                           justifyContent: "center",
@@ -189,6 +167,20 @@ export default function Index({ data }) {
                         <Box ta={"center"}>
                           <DetailsTitle>Student No</DetailsTitle>
                           <DetailsText>{element.studentID}</DetailsText>
+                        </Box>
+                      </Grid.Col>
+                      <Grid.Col span={12}>
+                        <Box sx={{ display: "flex", justifyContent: "center" }}>
+                          <Button
+                            disabled={!element.sgkForm}
+                            component="a"
+                            href={element.sgkForm}
+                            download={"sgk-form.pdf"}
+                            leftIcon={<Download size={"1.2rem"} />}
+                            radius={"xl"}
+                          >
+                            SGK Form
+                          </Button>
                         </Box>
                       </Grid.Col>
                     </Grid>
@@ -205,64 +197,9 @@ export default function Index({ data }) {
 }
 
 export async function getServerSideProps() {
-  // const response = await fetch(
-  //   "http://localhost:3000/api/instructor/get/internship-applications?status=pending_for_sgk,approved"
-  // ).then((res) => res.json());
-
-
-  const data = [{
-      "UUID": "33353831-3834-6362-2d66-3432312d3131",
-      "userUUID": "33313938-6266-6263-2d66-3164392d3131",
-      "firstName": "İlayda",
-      "lastName": "Bakırcıoğlu",
-      "company": "Halkbank",
-      "studentID": "180209023",
-      "status": {
-        "alias": "pending_for_sgk",
-        "label": "Rejected"
-      },
-      "createdAt": "2023-05-16T19:38:18.000Z",
-      "type": {
-        "alias": "voluntary",
-        "label": "Voluntary"
-      },
-      "files": [
-        {
-          "name": "Transcript",
-          "link": "http://localhost:3000/api/instructor/download/transcript/33353831-3834-6362-2d66-3432312d3131"
-        },
-        {
-          "name": "Application Form",
-          "link": "http://localhost:3000/api/instructor/download/application-form/33353831-3834-6362-2d66-3432312d3131"
-        }
-      ]
-    },
-    {
-      "UUID": "37366364-3765-6264-2d66-3237352d3131",
-      "userUUID": "33316231-3532-3764-2d66-3164392d3131",
-      "firstName": "Burak",
-      "lastName": "Taşçı",
-      "company": "Wi",
-      "studentID": "190209031",
-      "status": {
-        "alias": "pending_for_sgk",
-        "label": "Pending for SGK Entry"
-      },
-      "createdAt": "2023-05-14T16:36:23.000Z",
-      "type": {
-        "alias": "compulsory1",
-        "label": "Compulsary 1"
-      },
-      "files": [
-        {
-          "name": "Transcript",
-          "link": "http://localhost:3000/api/instructor/download/transcript/37366364-3765-6264-2d66-3237352d3131"
-        },
-        {
-          "name": "Application Form",
-          "link": "http://localhost:3000/api/instructor/download/application-form/37366364-3765-6264-2d66-3237352d3131"
-        }
-      ]
-    }];
+  const response = await fetch(
+    "http://localhost:3000/api/career-center/get-internship-applications?status=approved"
+  ).then((res) => res.json());
+  const data = [...response.data];
   return { props: { data } };
 }

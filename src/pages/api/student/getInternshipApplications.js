@@ -50,6 +50,7 @@ export default async function handler(req, res) {
         status: internshipStatusConverter(element.status),
         createdAt: new Date(new Date(element.created_at).getTime() - (new Date(element.created_at ).getTimezoneOffset() * 60000)),
         updatedAt: new Date(new Date(element.updated_at).getTime() - (new Date(element.updated_at ).getTimezoneOffset() * 60000)),
+        sgkForm: element.status === "approved" ? "http://localhost:3000/api/student/download/internship-application/sgk-form/"+element.UUID:undefined,
         files:[{
           label: "Transcript",
           href: "/api/student/download/internship-application/transcript/"+element.uuid

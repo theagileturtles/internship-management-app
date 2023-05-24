@@ -1,4 +1,5 @@
 import Layout from "@/components/layout";
+import UploadInput from "@/components/uploadinput";
 import {
   Accordion,
   Box,
@@ -18,10 +19,12 @@ import {
   Transition,
   Modal,
   Textarea,
+  ActionIcon,
 } from "@mantine/core";
+import moment from "moment";
 import { useState } from "react";
 
-import { Check, Download } from "tabler-icons-react";
+import { Check, Download, Trash, Upload, X } from "tabler-icons-react";
 
 function DetailsTitle(props) {
   return <Text size={"xs"} {...props} />;
@@ -43,78 +46,79 @@ export default function Index({ data }) {
   const theme = useMantineTheme();
   const [values, setValues] = useState(data);
   const [notificationVisible, setNotificationVisible] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const [notificationData, setNotificationData] = useState({
     title: "",
     description: "",
     icon: <Check />,
   });
-  const [message, setMessage] = useState("")
-  const [rejectUUID, setRejectUUID] = useState()
 
-  function messageHandler(event){
-    setMessage(event.target.value)
-  }
+  const [file, setFile] = useState(values.uuid ? defaultFile : null);
+  const [fileLoading, setFileLoading] = useState(false);
+  const [hrefDownload, setHrefDownload] = useState();
 
-  function approveHandler(event, uuid) {
-  //   event.stopPropagation();
-  //   fetch(
-  //     `/api/instructor/manage/internship-application/${uuid}?action=approve`,
-  //     {
-  //       method: "PUT",
-  //     }
-  //   ).then((res) => {
-  //     if (res.status === 200) {
-  //       fetchData().then((response) => setValues(response));
-  //       setNotificationData({
-  //         title: "The Application is Approved!",
-  //         description: (
-  //           <Text>
-  //             You can track the application from{" "}
-  //             <span style={{ fontWeight: 700 }}>
-  //               Completed Internship Applications
-  //             </span>{" "}
-  //             tab in the sidebar.
-  //           </Text>
-  //         ),
-  //         icon: <Check />,
-  //       });
-  //       setNotificationVisible(true);
-  //     }
-  //   });
-  }
 
-  function rejectHandler(event, uuid) {
-    event.stopPropagation();
-    setModalVisible(true)
-    setRejectUUID(uuid);
-  }
+    function fileHandler(file){
+      if (file) {
+        toBase64(file).then((blob) => {
+          setHrefDownload(blob);
+        });
+        setFile(file);
+      }
+    }
 
-  function rejectAndSendHandler(){
-    // fetch(
-    //   `/api/instructor/manage/internship-application/${rejectUUID}?action=reject`,
-    //   {
-    //     method: "PUT",
-    //   }
-    // ).then((res) => {
-    //   if (res.status === 200) {
-    //     fetchData().then((response) => setValues(response));
-    //     setNotificationData({
-    //       title: "The Application is Rejected!",
-    //       description: (
-    //         <Text>
-    //           The application was sent back to the student. The student will get
-    //           a notification about that.
-    //         </Text>
-    //       ),
-    //       icon: <Check />,
-    //     });
-    //     setNotificationVisible(true);
-    //     setModalVisible(false)
-    //     setMessage("")
-    //   }
-    // });
-  }
+    function cancelHandler(){
+      setFile(null)
+    }
+
+    function uploadHandler(uuid){
+      setFileLoading(true)
+      fetch("http://localhost:3000/api/career-center/manage/internship-application/"+uuid,{
+        method:"PUT",
+        body:hrefDownload,
+      }).then((res)=>{
+        if(res.status === 200){
+          setNotificationData({
+            title: "The SGK Form Uploaded Successfully!",
+            description: (
+              <Text>
+                You can display the application via <span style={{fontWeight:700}}>Internship Applications</span> tab on the sidebar. 
+              </Text>
+            ),
+            icon: <Check />,
+          });
+        }else{
+          setNotificationData({
+            title: "Error Occured",
+            description: (
+              <Text>
+               Please try again later.
+              </Text>
+            ),
+            color:"red",
+            icon: <X />,
+          });
+        }
+      }).catch(()=>{
+        setNotificationData({
+          title: "Error Occured",
+          description: (
+            <Text>
+             Please try again later.
+            </Text>
+          ),
+          color:"red",
+          icon: <X />,
+        });
+      }).finally(()=>{
+        setFileLoading(false);
+        setNotificationVisible(true);
+        fetchData().then((res)=>{
+          setValues(res)
+        })
+      })
+    
+    }
+
   return (
     <>
       <Layout role={"career_center"}>
@@ -144,7 +148,7 @@ export default function Index({ data }) {
             <Stack pb={20} sx={{ minHeight: "45vh", width: "100%" }}>
               <Grid pl={"2.875rem"} pr={"1rem"} pt={15}>
                 <Grid.Col xs={6} md={3}>
-                  <TableHeader>Created at</TableHeader>
+                  <TableHeader>Received at</TableHeader>
                 </Grid.Col>
                 <Grid.Col xs={6} md={3}>
                   <TableHeader>Student</TableHeader>
@@ -192,11 +196,11 @@ export default function Index({ data }) {
                     <Accordion.Control sx={{ width: "100%" }}>
                       <Grid>
                         <Tooltip
-                          label={new Date(element.createdAt).toLocaleString()}
+                          label={new Date(element.updatedAt).toLocaleString()}
                         >
                           <Grid.Col xs={6} md={3}>
                             <TableText>
-                              {new Date(element.createdAt).toLocaleDateString()}
+                              {moment(element.updatedAt).fromNow()}
                             </TableText>
                           </Grid.Col>
                         </Tooltip>
@@ -254,26 +258,6 @@ export default function Index({ data }) {
                             ))}
                           </Stack>
                         </Grid.Col>
-                        {/* <Grid.Col
-                        sx={{
-                          justifyContent: "center",
-                          display: "flex",
-                          minWidth: "fit-content",
-                        }}
-                        span={4}
-                      >
-                        <Stack spacing={0} ta={"center"}>
-                          <DetailsTitle>Logs</DetailsTitle>
-                          {element.logs?.map((log, index) => (
-                            <DetailsText
-                              sx={{ color: "inherit" }}
-                              key={element.uuid + "_log_" + index}
-                            >
-                              {log}
-                            </DetailsText>
-                          ))}
-                        </Stack>
-                      </Grid.Col> */}
                         <Grid.Col
                           sx={{
                             justifyContent: "center",
@@ -288,29 +272,78 @@ export default function Index({ data }) {
                           </Box>
                         </Grid.Col>
                       </Grid>
-                      <Flex sx={{ justifyContent: "center" }}>
-                        <Group>
-                          <Button
-                            radius={"xl"}
-                            onClick={(event) =>
-                              approveHandler(event, element.UUID)
+                      <Flex pb={15} sx={{ justifyContent: "center" }}>
+                        <Group
+                          spacing={2}
+                          sx={{
+                            width: "100%",
+                            alignItems: "end",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <UploadInput
+                          accept="application/pdf"
+                            description={
+                              typeof values.createdAt !== "undefined"
+                                ? "Last Update: " +
+                                  new Date(
+                                    values.createdAt
+                                  ).toLocaleTimeString() +
+                                  " - " +
+                                  new Date(
+                                    values.createdAt
+                                  ).toLocaleDateString()
+                                : ""
                             }
-                            sx={{ width: "100px" }}
-                          >
-                            Approve
-                          </Button>
-                          <Button
-                            color="red"
+                            value={file}
+                            onChange={fileHandler}
+                            variant="filled"
+                            icon={<Upload size={"1.1rem"} />}
+                            placeholder="Upload an Application Form"
+                            label={"Application Form"}
                             radius={"xl"}
-                            onClick={(event) =>
-                              rejectHandler(event, element.UUID)
-                            }
-                            sx={{ width: "100px" }}
-                          >
-                            Reject
-                          </Button>
+                            sx={{ width: "100%", maxWidth: "300px" }}
+                          />
+                          {file ? (
+                            <ActionIcon
+                              color="mainBlue"
+                              component="a"
+                              download={file?.name}
+                              href={hrefDownload}
+                              target="_blank"
+                              mb={"0.3rem"}
+                              radius={"xl"}
+                            >
+                              <Download size={"1.3rem"} />
+                            </ActionIcon>
+                          ) : (
+                            <></>
+                          )}
                         </Group>
                       </Flex>
+                      <Group sx={{ justifyContent: "center" }}>
+                        <Button
+                          disabled={!file}
+                          loading={fileLoading}
+                          onClick={()=>{uploadHandler(element.UUID)}}
+                          radius={"xl"}
+                          sx={{ width: "fit-content" }}
+                        >
+                          Upload
+                        </Button>
+                        {file ? (
+                          <Button
+                            onClick={cancelHandler}
+                            sx={{ width: "fit-content" }}
+                            color="gray"
+                            radius={"xl"}
+                          >
+                            Cancel
+                          </Button>
+                        ) : (
+                          <></>
+                        )}
+                      </Group>
                     </Accordion.Panel>
                   </Accordion.Item>
                 ))}
@@ -342,114 +375,27 @@ export default function Index({ data }) {
           </Notification>
         )}
       </Transition>
-      <Modal
-        centered
-        opened={modalVisible}
-        onClose={()=>setModalVisible(false)}
-        title={"Feedback"}
-      >
-        <Flex
-          direction={"column"}
-          sx={{ justifyContent: "center", alignItems: "center" }}
-          p={5}
-        >
-          <Textarea
-            w={"100%"}
-            label="Message"
-            withAsterisk
-            placeholder="Message about the rejection."
-            onChange={messageHandler}
-          />
-          <Group>
-            <Button
-              color="red"
-              sx={{ width: "fit-content" }}
-              mt={"1rem"}
-              radius={"xl"}
-              disabled = {message.length === 0}
-              onClick={rejectAndSendHandler}
-            >
-              Reject the Application
-            </Button>
-            <Button
-              color="gray"
-              sx={{ width: "fit-content" }}
-              mt={"1rem"}
-              radius={"xl"}
-              onClick={()=>{setModalVisible(false); setMessage("")}}
-            >
-              Cancel
-            </Button>
-          </Group>
-        </Flex>
-      </Modal>
     </>
   );
 }
 
 export async function getServerSideProps() {
-  // const data = await fetchData();
-  const data = [{
-    "UUID": "33353831-3834-6362-2d66-3432312d3131",
-    "userUUID": "33313938-6266-6263-2d66-3164392d3131",
-    "firstName": "İlayda",
-    "lastName": "Bakırcıoğlu",
-    "company": "Halkbank",
-    "studentID": "180209023",
-    "status": {
-      "alias": "pending_for_sgk",
-      "label": "Rejected"
-    },
-    "createdAt": "2023-05-16T19:38:18.000Z",
-    "type": {
-      "alias": "voluntary",
-      "label": "Voluntary"
-    },
-    "files": [
-      {
-        "name": "Transcript",
-        "link": "http://localhost:3000/api/instructor/download/transcript/33353831-3834-6362-2d66-3432312d3131"
-      },
-      {
-        "name": "Application Form",
-        "link": "http://localhost:3000/api/instructor/download/application-form/33353831-3834-6362-2d66-3432312d3131"
-      }
-    ]
-  },
-  {
-    "UUID": "37366364-3765-6264-2d66-3237352d3131",
-    "userUUID": "33316231-3532-3764-2d66-3164392d3131",
-    "firstName": "Burak",
-    "lastName": "Taşçı",
-    "company": "Wi",
-    "studentID": "190209031",
-    "status": {
-      "alias": "pending_for_sgk",
-      "label": "Pending for SGK Entry"
-    },
-    "createdAt": "2023-05-14T16:36:23.000Z",
-    "type": {
-      "alias": "compulsory1",
-      "label": "Compulsary 1"
-    },
-    "files": [
-      {
-        "name": "Transcript",
-        "link": "http://localhost:3000/api/instructor/download/transcript/37366364-3765-6264-2d66-3237352d3131"
-      },
-      {
-        "name": "Application Form",
-        "link": "http://localhost:3000/api/instructor/download/application-form/37366364-3765-6264-2d66-3237352d3131"
-      }
-    ]
-  }];
+  const data = await fetchData()
   return { props: { data } };
 }
 
-async function fetchData() {
-  const response = await fetch(
-    "http://localhost:3000/api/instructor/get/internship-applications?status=pending_for_coordinator"
-  ).then((res) => res.json());
+async function fetchData(){
+  return fetch(
+    "http://localhost:3000/api/career-center/get-internship-applications?status=pending_for_sgk"
+  ).then((res) => res.json()).then((res)=>res.data);
+}
 
-  return [...response.data];
+function toBase64(blob) {
+  const reader = new FileReader();
+  return new Promise((res, rej) => {
+    reader.readAsDataURL(blob);
+    reader.onload = function () {
+      res(reader.result);
+    };
+  });
 }

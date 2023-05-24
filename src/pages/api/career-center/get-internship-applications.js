@@ -1,9 +1,9 @@
 import {
   createConnection,
   query
-} from "../../data_access/database";
+} from "../../api/data_access/database";
 
-import sessionExample from "../../../../../session-example.json"
+import sessionExample from "../../../../session-example.json"
 import { internshipStatusConverter, typeConverter } from "@/utils/ResponseConverter";
 
 export default async function handler(req, res) {
@@ -32,9 +32,9 @@ export default async function handler(req, res) {
 
     if (req.query.status) {
       sql += "AND status IN (?)"
-    } else {
-      sql += ";"
-    }
+    } 
+
+    sql+=" ORDER BY internship_applications.updated_at DESC"
 
     let response = await query(connection)(sql,
       [session.user.departmentID, req.query.status?.split(",").map((element)=>element.trim())]);
@@ -46,14 +46,14 @@ export default async function handler(req, res) {
         updatedAt: new Date(new Date(element.updated_at).getTime() - (new Date(element.updated_at ).getTimezoneOffset() * 60000)),
         status:internshipStatusConverter(element.status),
         type: typeConverter(element.type),
-        sgkForm: element.status === "approved" ? "http://localhost:3000/api/instructor/download/internship-application/sgk-form/"+element.UUID:undefined,
+        sgkForm: element.status === "approved" ? "http://localhost:3000/api/career-center/download/internship-application/sgk-form/"+element.UUID:undefined,
         files: [{
             name: "Transcript",
-            link: "http://localhost:3000/api/instructor/download/internship-application/transcript/"+element.UUID,
+            link: "http://localhost:3000/api/career-center/download/internship-application/transcript/"+element.UUID,
           },
           {
             name: "Application Form",
-            link: "http://localhost:3000/api/instructor/download/internship-application/application-form/"+element.UUID,
+            link: "http://localhost:3000/api/career-center/download/internship-application/application-form/"+element.UUID,
           }
         ]
       }
