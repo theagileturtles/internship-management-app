@@ -169,6 +169,13 @@ export default function Index({ data }) {
                           </Anchor>
                         ))}
                       </Stack>
+
+                        {element.status.alias === "approved"  ?(<Box sx={{display:"flex",justifyContent:"center"}}>
+                        <Button component="a" href={element.sgkForm} download={"sgk-form.pdf"} leftIcon={<Download size={"1.2rem"}/>} radius={"xl"}>
+                              SGK Form
+                            </Button>
+                        </Box>) :<></>}
+
                       {element.status.alias === "rejected" ? (
                         <Stack sx={{justifyContent:"center", alignItems:"center"}}>
                           <Box
