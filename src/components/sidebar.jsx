@@ -70,6 +70,17 @@ export default function Sidebar({role}) {
       ],
     },
   ];
+
+  const adminAnchors = [
+    {
+      category: "Management",
+      items: [
+        { title: "Manage Instructors", icon: <File/>, href: "/admin/manage-instructors"},
+        { title: "Manage Career Center Staff", icon: <Tie/>, href: "/admin/manage-career-center-staff"},
+      ],
+    },
+  ];
+
   let anchors = []
   
   switch (role) {
@@ -81,6 +92,9 @@ export default function Sidebar({role}) {
       break;
     case "career_center":
       anchors = [...careerCenterAnchors];
+      break;
+    case "admin":
+      anchors = [...adminAnchors];
       break;
     default:
       break;
