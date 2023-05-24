@@ -14,6 +14,7 @@ import {
   Pagination,
   FileInput,
   Tooltip,
+  Center,
 } from "@mantine/core";
 import moment from "moment";
 
@@ -78,6 +79,7 @@ export default function Index({ data }) {
               </Grid.Col>
             </Grid>
             <Accordion color="mainBlue" variant="filled" chevronPosition="left">
+              {data.length===0?<Center><Text fw={700}>There is no record now.</Text></Center>:<></>}
               {data.map((element, index) => (
                 <Accordion.Item
                   key={element.uuid + "_accordion_item_" + index}
