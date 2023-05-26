@@ -16,11 +16,12 @@ import {
   Group,
   Pagination,
   FileInput,
-  Tooltip
+  Tooltip,
+  ActionIcon,
 } from "@mantine/core";
 import moment from "moment";
 
-import { Download, Upload } from "tabler-icons-react";
+import { Download, Trash, Upload } from "tabler-icons-react";
 
 function DetailsTitle(props) {
   return <Text size={"xs"} {...props} />;
@@ -40,20 +41,62 @@ function TableHeader(props) {
 
 export default function Index({ data }) {
   const theme = useMantineTheme();
-  const [generatedFile, setGeneratedFile] = useState(null);
-  const [isGenerateClicked, setIsGenerateClicked] = useState(false);
-  const [isGenereatedFinished, setIsGeneratedFinished] = useState(true)
+
+  const [values, setValues] = useState(data);
+  const [fileLoading, setFileLoading] = useState(false);
 
   const handleGenerateClick = async (element) => {
-    // generateFile fonksiyonunu burada çağırabilirsiniz.
-    console.log(element)
-    setIsGenerateClicked(true);
-    setIsGeneratedFinished(false)
-    setGeneratedFile(true)
     const generatedFileData = await generateFile(element);
-    console.log(generatedFileData)
-    setGeneratedFile(generatedFileData)
+    const temp = values.map((value) => {
+      if (value.UUID === element.UUID) {
+        return {
+          ...value,
+          file: generatedFileData,
+          hrefDownload: generatedFileData.url,
+        };
+      } else {
+        return value;
+      }
+    });
+    setValues(temp);
   };
+
+  function fileHandler(file, UUID) {
+    if (file) {
+      toBase64(file).then((blob) => {
+        const temp = values.map((value) => {
+          if (value.UUID === UUID) {
+            return { ...value, file: file, hrefDownload: blob };
+          } else {
+            return value;
+          }
+        });
+        setValues(temp);
+      });
+    }
+  }
+
+  function uploadHandler(UUID) {
+    const temp = values.map((value) => {
+      if (value.UUID === UUID) {
+        return { ...value, file: null };
+      } else {
+        return value;
+      }
+    });
+    setValues(temp);
+  }
+
+  function cancelHandler(UUID) {
+    const temp = values.map((value) => {
+      if (value.UUID === UUID) {
+        return { ...value, file: null };
+      } else {
+        return value;
+      }
+    });
+    setValues(temp);
+  }
 
   return (
     <Layout role={"instructor"}>
@@ -96,7 +139,7 @@ export default function Index({ data }) {
               </Grid.Col>
             </Grid>
             <Accordion color="mainBlue" variant="filled" chevronPosition="left">
-              {data.map((element, index) => (
+              {values.map((element, index) => (
                 <Accordion.Item
                   key={element.uuid + "_accordion_item_" + index}
                   sx={{
@@ -182,14 +225,19 @@ export default function Index({ data }) {
                         md={4}
                       >
                         <Stack spacing={0} ta={"center"}>
-                          <DetailsTitle>Number of Incomplete Internship(s)</DetailsTitle>
-                            <DetailsText
-                              sx={{ color: "inherit" }}
-                              key={element.uuid + "_no_of_incomplete_internships_" + index}
-                            >
-                              {element.incompleteInternships}
-                            </DetailsText>
-
+                          <DetailsTitle>
+                            Number of Incomplete Internship(s)
+                          </DetailsTitle>
+                          <DetailsText
+                            sx={{ color: "inherit" }}
+                            key={
+                              element.uuid +
+                              "_no_of_incomplete_internships_" +
+                              index
+                            }
+                          >
+                            {element.incompleteInternships}
+                          </DetailsText>
                         </Stack>
                       </Grid.Col>
                       <Grid.Col
@@ -222,47 +270,82 @@ export default function Index({ data }) {
                       </Grid.Col>
                     </Grid>
                     <Stack
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    {isGenerateClicked && (
-                      <>
-                    {generatedFile && (
-                      <Anchor
-                        sx={{ justifyContent: "center", display: "flex" }}
-                        href={generatedFile.url} // Replace 'url' with the actual property that holds the file URL or data
-                        download
-                      >
-                        <Flex gap={3} direction="row">
-                          <Download size={18} />
-                          <DetailsText>{generatedFile.name}</DetailsText>
-                        </Flex>
-                      </Anchor>
-                    )}
-                        <Button
-                          radius={"xl"}
-                          onClick={(event) => {
-                            event.stopPropagation();
-                          }}
-                          sx={{ width: "100px" }}
-                        >
-                          Send
-                        </Button>
-                      </>
-                    )}
-                    {isGenereatedFinished && (
-                    <Button
-                    radius={"xl"}
-                    onClick={() => handleGenerateClick(element)}
-                    sx={{ width: "100px" }}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
                     >
-                              Generate File
-                    </Button>
-                    )}
-                  </Stack>
+                      <Group
+                        spacing={2}
+                        sx={{
+                          width: "100%",
+                          alignItems: "end",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <UploadInput
+                          value={element.file}
+                          onChange={(event) => fileHandler(event, element.UUID)}
+                          variant="filled"
+                          icon={<Upload size={"1.1rem"} />}
+                          placeholder="Upload or Generate an Official Letter"
+                          label={"Official Letter"}
+                          radius={"xl"}
+                          sx={{ width: "100%", maxWidth: "300px" }}
+                        />
+                        <Group spacing={2}>
+                          {element.file ? (
+                            <ActionIcon
+                              color="mainBlue"
+                              component="a"
+                              download={element.file?.name}
+                              href={element.hrefDownload}
+                              target="_blank"
+                              mb={"0.3rem"}
+                              radius={"xl"}
+                            >
+                              <Download size={"1.3rem"} />
+                            </ActionIcon>
+                          ) : (
+                            <></>
+                          )}
+                        </Group>
+                      </Group>
+                      <Group>
+                        <Button
+                          disabled={!element.file}
+                          loading={fileLoading}
+                          onClick={() => uploadHandler(element.UUID)}
+                          radius={"xl"}
+                          sx={{ width: "fit-content" }}
+                        >
+                          Upload
+                        </Button>
+                        {element.file ? (
+                          <Button
+                            onClick={() => {
+                              cancelHandler(element.UUID);
+                            }}
+                            sx={{ width: "fit-content" }}
+                            color="gray"
+                            radius={"xl"}
+                          >
+                            Cancel
+                          </Button>
+                        ) : (
+                          <></>
+                        )}
+                      </Group>
+                      <Button
+                        disabled={element.file}
+                        radius={"xl"}
+                        onClick={() => handleGenerateClick(element)}
+                        sx={{ width: "fit-content" }}
+                      >
+                        Generate an Official Letter
+                      </Button>
+                    </Stack>
                   </Accordion.Panel>
                 </Accordion.Item>
               ))}
@@ -282,4 +365,14 @@ export async function getServerSideProps() {
 
   const data = [...response.data];
   return { props: { data } };
+}
+
+function toBase64(blob) {
+  const reader = new FileReader();
+  return new Promise((res, rej) => {
+    reader.readAsDataURL(blob);
+    reader.onload = function () {
+      res(reader.result);
+    };
+  });
 }
