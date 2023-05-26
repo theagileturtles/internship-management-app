@@ -1,4 +1,8 @@
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import {
+  PDFDocument,
+  StandardFonts,
+  rgb
+} from 'pdf-lib';
 import generateUUID from './GenerateUUID';
 
 const generateFile = async (element) => {
@@ -92,10 +96,12 @@ const generateFile = async (element) => {
   const pdfBytes = await pdfDoc.save();
   const uuid = generateUUID()
   // Generate a unique file name
-  const fileName = `official_letter_${uuid}.pdf`; // Example file name based on element values and UUID
+  const fileName = "generated_official_letter.pdf"; // Example file name based on element values and UUID
 
   // Create a Blob with the PDF bytes
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  const blob = new Blob([pdfBytes], {
+    type: 'application/pdf'
+  });
 
   // Create a URL for the Blob
   const url = URL.createObjectURL(blob);
@@ -108,32 +114,32 @@ const generateFile = async (element) => {
 };
 
 function convertTurkishToEnglish(text) {
-    const turkishCharacters = 'ÇçĞğİıÖöŞşÜü';
-    const englishCharacters = 'CcGgIiOoSsUu';
-  
-    let convertedText = '';
-    for (let i = 0; i < text.length; i++) {
-      const char = text[i];
-      const turkishIndex = turkishCharacters.indexOf(char);
-  
-      if (turkishIndex !== -1) {
-        const englishChar = englishCharacters[turkishIndex];
-        convertedText += englishChar;
-      } else {
-        convertedText += char;
-      }
+  const turkishCharacters = 'ÇçĞğİıÖöŞşÜü';
+  const englishCharacters = 'CcGgIiOoSsUu';
+
+  let convertedText = '';
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const turkishIndex = turkishCharacters.indexOf(char);
+
+    if (turkishIndex !== -1) {
+      const englishChar = englishCharacters[turkishIndex];
+      convertedText += englishChar;
+    } else {
+      convertedText += char;
     }
-  
-    return convertedText;
+  }
+
+  return convertedText;
 }
-  
+
 function getCurrentDate() {
-    const date = new Date();
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = String(date.getFullYear());
-  
-    return `${day}/${month}/${year}`;
+  const date = new Date();
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = String(date.getFullYear());
+
+  return `${day}/${month}/${year}`;
 }
 
 export default generateFile;
