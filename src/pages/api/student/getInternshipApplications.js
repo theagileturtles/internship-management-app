@@ -71,9 +71,3 @@ export default async function handler(req, res) {
     return res.status(500).json({ message: 'Internal Server Error.' });
   }
 }
-
-function isValidBinaryUUID(uuid) {
-  const uuidRegex = /^[a-f\d]{32}$/i;
-  const hex = Buffer.from(uuid, 'binary').toString('hex');
-  return uuidRegex.test(hex);
-}

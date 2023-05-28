@@ -104,7 +104,7 @@ const generateFile = async (element) => {
   });
 
   // Create a URL for the Blob
-  const url = URL.createObjectURL(blob);
+  const url = await toBase64(blob)
 
   // Return the generated file data
   return {
@@ -143,3 +143,14 @@ function getCurrentDate() {
 }
 
 export default generateFile;
+
+
+function toBase64(blob) {
+  const reader = new FileReader();
+  return new Promise((res, rej) => {
+    reader.readAsDataURL(blob);
+    reader.onload = function () {
+      res(reader.result);
+    };
+  });
+}

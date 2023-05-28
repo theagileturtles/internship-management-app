@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     if (req.query.status) {
       sql += " AND status = ? "
     }
-    sql += "ORDER BY internship_management_app.letter_requests.created_at DESC;"
+    sql += "ORDER BY internship_management_app.letter_requests.updated_at DESC;"
 
     let response = await query(connection)(sql,
       [session.user.departmentID, req.query.status?.split(",").map((element)=>element.trim())]);
