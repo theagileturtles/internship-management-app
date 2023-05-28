@@ -190,7 +190,7 @@ export default function Index({ data }) {
                           </Box>
 
                           <Center>
-                            <Button radius={"xl"}>Edit Your Application</Button>
+                            <Button component="a" href={"/student/edit-the-application/"+element.UUID} radius={"xl"}>Edit Your Application</Button>
                           </Center>
                         </Stack>
                       ) : (
@@ -216,6 +216,6 @@ export async function getServerSideProps() {
     "http://localhost:3000/api/student/getInternshipApplications"
   );
   const data = await res.json();
-
+    console.log("data:" + data)
   return { props: { data } };
 }

@@ -79,96 +79,129 @@ export default function Index({ data }) {
               </Grid.Col>
             </Grid>
             <Accordion color="mainBlue" variant="filled" chevronPosition="left">
-              {data.length > 0 ?data.map((element, index) => (
-                <Accordion.Item
-                  key={element.uuid + "_accordion_item_" + index}
-                  sx={{
-                    width: "100%",
-                    transition: "0.3s",
-                    ":hover": {
-                      backgroundColor: "#f9f9f9",
-                    },
-                    "&[data-active]": {
-                      backgroundColor: theme.colors.mainBlue[0],
-                    },
-                  }}
-                  value={"accordion_item_" + index}
-                >
-                  <Accordion.Control sx={{ width: "100%" }}>
-                    <Grid>
-                      <Tooltip label={new Date(element.createdAt).toLocaleString()}>
-                      <Grid.Col xs={6} md={3}>
-                        <TableText>{moment(element.createdAt).fromNow()}</TableText>
-                      </Grid.Col>
-                      </Tooltip>
-                      <Grid.Col xs={6} md={3}>
-                        <TableText>{element.company}</TableText>
-                      </Grid.Col>
-                      <Grid.Col xs={6} md={3}>
-                        <TableText>{element.type.label}</TableText>
-                      </Grid.Col>
-                      <Grid.Col xs={6} md={3}>
-                        <TableText>{element.status.label}</TableText>
-                      </Grid.Col>
-                    </Grid>
-                  </Accordion.Control>
-                  <Accordion.Panel
-                    pl={"2.875rem"}
-                    pr={"1rem"}
-                    sx={{ color: theme.colors.mainBlue[6] }}
+              {data.length > 0 ? (
+                data.map((element, index) => (
+                  <Accordion.Item
+                    key={element.uuid + "_accordion_item_" + index}
+                    sx={{
+                      width: "100%",
+                      transition: "0.3s",
+                      ":hover": {
+                        backgroundColor: "#f9f9f9",
+                      },
+                      "&[data-active]": {
+                        backgroundColor: theme.colors.mainBlue[0],
+                      },
+                    }}
+                    value={"accordion_item_" + index}
                   >
-                    <Grid grow columns={12}>
-                      <Grid.Col
-                        sx={{
-                          justifyContent: "center",
-                          display: "flex",
-                        }}
-                        md={6}
-                      >
-                        <Stack
-                          spacing={0}
-                          sx={{
-                            textAlign: "center",
-                            color: "inherit",
-                          }}
+                    <Accordion.Control sx={{ width: "100%" }}>
+                      <Grid>
+                        <Tooltip
+                          label={new Date(element.createdAt).toLocaleString()}
                         >
-                          <DetailsTitle>Files</DetailsTitle>
+                          <Grid.Col xs={6} md={3}>
+                            <TableText>
+                              {moment(element.createdAt).fromNow()}
+                            </TableText>
+                          </Grid.Col>
+                        </Tooltip>
+                        <Grid.Col xs={6} md={3}>
+                          <TableText>{element.company}</TableText>
+                        </Grid.Col>
+                        <Grid.Col xs={6} md={3}>
+                          <TableText>{element.type.label}</TableText>
+                        </Grid.Col>
+                        <Grid.Col xs={6} md={3}>
+                          <TableText>{element.status.label}</TableText>
+                        </Grid.Col>
+                      </Grid>
+                    </Accordion.Control>
+                    <Accordion.Panel
+                      pl={"2.875rem"}
+                      pr={"1rem"}
+                      sx={{ color: theme.colors.mainBlue[6] }}
+                    >
+                      <Grid grow columns={12}>
+                        <Grid.Col
+                          sx={{
+                            justifyContent: "center",
+                            display: "flex",
+                          }}
+                          md={6}
+                        >
+                          <Stack
+                            spacing={0}
+                            sx={{
+                              textAlign: "center",
+                              color: "inherit",
+                            }}
+                          >
+                            <DetailsTitle>Files</DetailsTitle>
 
-                          {element.files.map((file) => (
-                            <Anchor
-                              sx={{ justifyContent: "center", display: "flex" }}
-                              key={element.uuid + "_file_" + file.label}
+                            {element.files.map((file) => (
+                              <Anchor
+                                sx={{
+                                  justifyContent: "center",
+                                  display: "flex",
+                                }}
+                                key={element.uuid + "_file_" + file.label}
+                                target="_blank"
+                                href={file.href}
+                                download
+                              >
+                                <Flex gap={3} direction={"row"}>
+                                  <Download size={18} />
+                                  <DetailsText>{file.label}</DetailsText>
+                                </Flex>
+                              </Anchor>
+                            ))}
+                          </Stack>
+                        </Grid.Col>
+                        {element.message.length>0 ? <Grid.Col
+                          sx={{
+                            justifyContent: "center",
+                            display: "flex",
+                            minWidth: "fit-content",
+                          }}
+                          span={12}
+                        >
+                          <Box ta={"center"}>
+                            <DetailsTitle>Message</DetailsTitle>
+                            <DetailsText>
+                              {element.message}
+                            </DetailsText>
+                          </Box>
+                        </Grid.Col> :<></>}
+                        {element.officialLetter ? <Grid.Col span={12}>
+                          <Group
+                            sx={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Button
+                              download={"official-letter"}
+                              component="a"
                               target="_blank"
-                              href={file.href}
-                              download
+                              href={element.officialLetter}
+                              radius={"xl"}
+                              leftIcon={<Download size={"1.2rem"} />}
                             >
-                              <Flex gap={3} direction={"row"}>
-                                <Download size={18} />
-                                <DetailsText>{file.label}</DetailsText>
-                              </Flex>
-                            </Anchor>
-                          ))}
-                        </Stack>
-                      </Grid.Col>
-                      <Grid.Col
-                        sx={{
-                          justifyContent: "center",
-                          display: "flex",
-                          minWidth: "fit-content",
-                        }}
-                        span={12}
-                      >
-                        <Box ta={"center"}>
-                          <DetailsTitle>Message</DetailsTitle>
-                          <DetailsText>
-                            {element.message ?? "No message is provided"}
-                          </DetailsText>
-                        </Box>
-                      </Grid.Col>
-                    </Grid>
-                  </Accordion.Panel>
-                </Accordion.Item>
-              )):<Text fs={"italic"} ta={"center"}>There are no any official letter requests now.</Text>}
+                              Official Letter
+                            </Button>
+                          </Group>
+                        </Grid.Col> : <></>} 
+                      </Grid>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                ))
+              ) : (
+                <Text fs={"italic"} ta={"center"}>
+                  There are no any official letter requests now.
+                </Text>
+              )}
             </Accordion>
           </Stack>
           <Pagination mb={"sm"} sx={{ alignSelf: "center" }} total={1} />
@@ -183,6 +216,6 @@ export async function getServerSideProps() {
     "http://localhost:3000/api/student/getOfficialLetterRequest"
   );
   const data = await res.json();
- 
+
   return { props: { data } };
 }

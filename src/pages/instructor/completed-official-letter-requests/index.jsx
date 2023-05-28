@@ -209,21 +209,21 @@ export default function Index({ data }) {
                           <DetailsText>{element.studentID}</DetailsText>
                         </Box>
                       </Grid.Col>
-                      <Grid.Col
-                        sx={{
-                          justifyContent: "center",
-                          display: "flex",
-                          minWidth: "fit-content",
-                        }}
-                        span={12}
-                      >
-                        <Box ta={"center"}>
-                          <DetailsTitle>Message</DetailsTitle>
-                          <DetailsText>
-                            {element.message ?? "No message is provided"}
-                          </DetailsText>
-                        </Box>
-                      </Grid.Col>
+                      {element.message.length>0 ? <Grid.Col
+                          sx={{
+                            justifyContent: "center",
+                            display: "flex",
+                            minWidth: "fit-content",
+                          }}
+                          span={12}
+                        >
+                          <Box ta={"center"}>
+                            <DetailsTitle>Message</DetailsTitle>
+                            <DetailsText>
+                              {element.message}
+                            </DetailsText>
+                          </Box>
+                        </Grid.Col> :<></>}
                     </Grid>
                     <Group
                       sx={{
@@ -232,7 +232,7 @@ export default function Index({ data }) {
                         alignItems: "center",
                       }}
                     >
-                      <Button component="a" target="_blank" href={element.officialLetter} radius={"xl"} leftIcon={<Download size={"1.2rem"}/>}>Official Letter</Button>
+                      <Button download={"official-letter"} component="a" target="_blank" href={element.officialLetter} radius={"xl"} leftIcon={<Download size={"1.2rem"}/>}>Official Letter</Button>
                     </Group>
                   </Accordion.Panel>
                 </Accordion.Item>
