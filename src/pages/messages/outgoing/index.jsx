@@ -23,6 +23,7 @@ export default function Index({ data }) {
         spacing={30}
         p={"1.5rem"}
         sx={{ backgroundColor: "white", borderRadius: "25px" }}
+        mb={"3rem"}
       >
         {values.length === 0 ? <Center><Text fw={700}>There is no outgoing messages so far.</Text></Center> :values.map((element) => (
           <Grid
