@@ -4,11 +4,14 @@ import {
   ActionIcon,
   Avatar,
   Box,
+  Center,
   Grid,
   Stack,
   Text,
   Title,
+  Tooltip,
 } from "@mantine/core";
+import moment from "moment";
 import { useState } from "react";
 import { Search } from "tabler-icons-react";
 
@@ -21,13 +24,14 @@ export default function Index({ data }) {
         p={"1.5rem"}
         sx={{ backgroundColor: "white", borderRadius: "25px" }}
       >
-        {values.map((element) => (
+        {values.length === 0 ? <Center><Text fw={700}>There is no incoming messages so far.</Text></Center> :values.map((element) => (
           <Grid
             grow
-            key={"incoming_messages_" + element.uuid}
+            key={"incoming_messages_" + element.senderUUID}
             p={"sm"}
             justify="center"
             align="center"
+            fw={element.read ? 400 : 700 }
             sx={{
               backgroundColor: "#f9f9f9",
               borderRadius: "25px",
@@ -45,17 +49,19 @@ export default function Index({ data }) {
             </Grid.Col>
             <Grid.Col md={10} lg={3}>
               <Stack spacing={0}>
-                <Text>{element.firstName + " " + element.lastName}</Text>
+                <Text>{element.name}</Text>
               </Stack>
             </Grid.Col>
             <Grid.Col md={6} lg={4}>
               <Text>{element.subject}</Text>
             </Grid.Col>
+            <Tooltip label={new Date(element.createdAt).toLocaleString()}>
             <Grid.Col md={6} lg={3}>
-              <Text>{new Date(element.createdAt).toLocaleString()}</Text>
+              <Text>{moment(element.createdAt).fromNow()}</Text>
             </Grid.Col>
+            </Tooltip>
             <Grid.Col md={6} lg={1}>
-              <ActionIcon size={"1.3rem"}>
+              <ActionIcon component="a" href={"/messages/incoming/"+element.messageUUID} size={"1.3rem"}>
                 <Search />
               </ActionIcon>
             </Grid.Col>
@@ -67,25 +73,6 @@ export default function Index({ data }) {
 }
 
 export async function getServerSideProps() {
-  const data = [
-    {
-      UUID: "2978fff6-ca4d-4183-b6a6-94b3a73f4542",
-      firstName: "Müberra",
-      lastName: "Yerinde",
-      email: "muberra.yerinde@st.uskudar.edu.tr",
-      subject: "About absences at internship",
-      createdAt: "2023-05-14T16:36:23.000Z",
-      unread: true
-    },
-    {
-      UUID: "d76de5f0-f45f-11ed-a05b-0242ac120003",
-      firstName: "Sinan",
-      lastName: "Sensev",
-      email: "sinan.sensev@st.uskudar.edu.tr",
-      subject: "About absences at internship",
-      createdAt: "2023-05-14T16:36:23.000Z",
-      unread: false
-    },
-  ];
+  const data = await fetch("http://localhost:3000/api/messages/incoming").then((res)=>res.json()).then((res)=>res.data)
   return { props: { data } };
 }
