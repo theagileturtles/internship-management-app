@@ -30,7 +30,13 @@ console.log("sessionn: " + session.user.uuid)
       >
         <Stack>
           <Group>
-            <Avatar /> <Title order={5}> <span style={{fontStyle:"italic"}}>to:</span> {data.name}</Title>{" "}
+            <Avatar />
+            <Stack spacing={0}>
+              <Title order={5}><span style={{fontStyle:"italic"}}>to:</span> {data.name}</Title>
+              <Text color="dimmed" size={"xs"}>
+                {data.description}
+              </Text>
+            </Stack>
           </Group>
           <Box pb={20}>
             <Text>{data.message}</Text>
