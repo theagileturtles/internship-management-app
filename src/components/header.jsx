@@ -1,9 +1,9 @@
-import React from "react";
-import { Mail, Bell } from "tabler-icons-react";
-import { ActionIcon, Avatar, Text } from "@mantine/core";
+import React, { useEffect, useState } from "react";
+import { Mail, Bell, } from "tabler-icons-react";
+import { ActionIcon, Avatar, Text, Badge, Indicator, Loader } from "@mantine/core";
 import { useRouter } from "next/router";
 
-function Header(props) {
+export default function Header(props) {
   const router = useRouter()
   const headerStyle = {
     paddingTop: "10px",
@@ -70,11 +70,23 @@ function Header(props) {
     fontWeight: "normal",
   };
 
+  const [counter, setCounter] = useState();
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetch("http://localhost:3000/api/messages/unread-counter")
+      .then((res) => res.json())
+      .then((res) => {setCounter(res.data.count)});
+    }
+    fetchData();
+ 
+  },[])
   return (
     <header style={headerStyle}>
       <div style={leftStyle}></div>
       <div style={rightStyle}>
         <div style={messageStyle}>
+        <Indicator inline label={counter ?? <Loader color="white" size={"10px"}/>} size={16}>
           <ActionIcon
               component="a"
               href="/messages/incoming"
@@ -88,6 +100,7 @@ function Header(props) {
           >
             <Mail />
           </ActionIcon>
+          </Indicator>
         </div>
         {/* <div style={notificationStyle}>
           <ActionIcon
@@ -119,4 +132,11 @@ function Header(props) {
   );
 }
 
-export default Header;
+
+export async function getServerSideProps() {
+  const data = await fetch("http://localhost:3000/api/messages/unread-counter")
+    .then((res) => res.json())
+    .then((res) => res.data);
+ 
+  return { props: { data } };
+}

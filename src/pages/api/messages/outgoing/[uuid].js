@@ -41,7 +41,7 @@ export default async function handler(req, res) {
             receiver: element.receiver,
             read: element.read,
             name: `${element.title??""} ${element.first_name} ${element.last_name}`.trim(),
-            description: `${element.department??""} ${element.studentID??""} ${element.role}`.trim() ,
+            description: `${element.department??""} ${element.role} ${" - "+element.studentID??""}`.trim() ,
             createdAt: new Date(new Date(element.created_at).getTime() - (new Date(element.created_at).getTimezoneOffset() * 60000)),
         }
 
