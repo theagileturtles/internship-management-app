@@ -56,7 +56,7 @@ export default function Index({ data }) {
             </Grid.Col>
             <Tooltip label={new Date(element.createdAt).toLocaleString()}>
             <Grid.Col md={6} lg={3}>
-              <Text>{moment(element.createdAt).fromNow()}</Text>
+              <Text ta={"center"}>{moment(element.createdAt).fromNow()}</Text>
             </Grid.Col>
             </Tooltip>
            

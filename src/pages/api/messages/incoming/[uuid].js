@@ -20,9 +20,15 @@ export default async function handler(req, res) {
     try {
         connection = createConnection();
         let response = await query(connection)(
-            "SELECT BIN_TO_UUID(messages.uuid) UUID,messages.message,  BIN_TO_UUID(messages.sender_uuid) AS senderUUID,  first_name, last_name, title, subject, messages.created_at, messages.read FROM internship_management_app.messages " +
-            "JOIN internship_management_app.users ON users.UUID = messages.sender_uuid " +
-            "LEFT JOIN internship_management_app.instructors ON  users.UUID = instructors.user_uuid " +
+           "SELECT BIN_TO_UUID(messages.uuid) UUID,messages.message,  BIN_TO_UUID(messages.sender_uuid) AS senderUUID, "+ 
+            "first_name, last_name, title, subject, messages.created_at, messages.read, "+
+            "school_id AS studentID, departments.name AS department, roles.name AS role "+
+            "FROM internship_management_app.messages "+
+            "JOIN internship_management_app.users ON users.UUID = messages.sender_uuid "+
+            "LEFT JOIN internship_management_app.instructors ON  users.UUID = instructors.user_uuid "+
+            "LEFT JOIN internship_management_app.students ON users.UUID = students.user_uuid "+
+            "LEFT JOIN internship_management_app.departments ON instructors.department_id = departments.id OR students.department_id = departments.id "+
+            "LEFT JOIN internship_management_app.roles ON users.role_id = roles.id "+
             "WHERE ? = BIN_TO_UUID(messages.uuid) " +
             "ORDER BY created_at DESC",
             [uuid]);
@@ -35,6 +41,7 @@ export default async function handler(req, res) {
             senderUUID: element.senderUUID,
             read: element.read,
             name: `${element.title??""} ${element.first_name} ${element.last_name}`.trim(),
+            description: `${element.department??""} ${element.studentID??""} ${element.role}`.trim() ,
             createdAt: new Date(new Date(element.created_at).getTime() - (new Date(element.created_at).getTimezoneOffset() * 60000)),
         }
 

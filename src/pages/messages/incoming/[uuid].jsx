@@ -12,9 +12,7 @@ import {
 } from "@mantine/core";
 import { useState } from "react";
 
-
 export default function Index({ data }) {
-
   const [reply, setReply] = useState("");
   function replyHandler(event) {
     setReply(event.target.value);
@@ -29,7 +27,13 @@ export default function Index({ data }) {
       >
         <Stack>
           <Group>
-            <Avatar /> <Title order={5}>{data.name}</Title>{" "}
+            <Avatar />
+            <Stack spacing={0}>
+              <Title order={5}>{data.name}</Title>
+              <Text color="dimmed" size={"xs"}>
+                {data.description}
+              </Text>
+            </Stack>
           </Group>
           <Box pb={20}>
             <Text>{data.message}</Text>
@@ -39,19 +43,19 @@ export default function Index({ data }) {
               </Text>
             </Box>
           </Box>
-            <Stack>
-              <Textarea
-                value={reply}
-                onChange={replyHandler}
-                label={"Reply"}
-                placeholder="Reply"
-              />
-              <Center>
-                <Button disabled={reply.trim().length === 0} radius={"xl"}>
-                  Reply
-                </Button>
-              </Center>
-            </Stack>
+          <Stack>
+            <Textarea
+              value={reply}
+              onChange={replyHandler}
+              label={"Reply"}
+              placeholder="Reply"
+            />
+            <Center>
+              <Button disabled={reply.trim().length === 0} radius={"xl"}>
+                Reply
+              </Button>
+            </Center>
+          </Stack>
         </Stack>
       </Stack>
     </MessagesLayout>
@@ -60,7 +64,9 @@ export default function Index({ data }) {
 
 export async function getServerSideProps(req, res) {
   const { uuid } = req.query;
-  const data = await fetch("http://localhost:3000/api/messages/incoming/" + uuid)
+  const data = await fetch(
+    "http://localhost:3000/api/messages/incoming/" + uuid
+  )
     .then((res) => res.json())
     .then((res) => res.data);
   console.log(uuid, data);
