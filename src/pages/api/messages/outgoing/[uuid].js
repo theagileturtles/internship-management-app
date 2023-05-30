@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     } = req.query
     console.log(uuid)
     if (!session) {
-        res.status(402).json({
+        res.status(401).json({
             error: "Unaouthorized"
         })
     }

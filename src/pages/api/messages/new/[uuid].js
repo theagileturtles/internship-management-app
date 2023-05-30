@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     const {uuid} = req.query
     const body = JSON.parse(req.body)
     if(!session){
-        res.status(402).json({error:"Unaouthorized"})
+        res.status(401).json({error:"Unaouthorized"})
     }
     console.log(req.body)
     let connection
