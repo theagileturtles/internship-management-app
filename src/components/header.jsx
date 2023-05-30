@@ -70,7 +70,7 @@ export default function Header(props) {
     fontWeight: "normal",
   };
 
-  const [counter, setCounter] = useState();
+  const [counter, setCounter] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
@@ -86,7 +86,7 @@ export default function Header(props) {
       <div style={leftStyle}></div>
       <div style={rightStyle}>
         <div style={messageStyle}>
-        <Indicator inline label={counter ?? <Loader color="white" size={"10px"}/>} size={16}>
+        {counter > 0 ? <Indicator inline label={counter} size={16}>
           <ActionIcon
               component="a"
               href="/messages/incoming"
@@ -100,7 +100,19 @@ export default function Header(props) {
           >
             <Mail />
           </ActionIcon>
-          </Indicator>
+          </Indicator> :<ActionIcon
+              component="a"
+              href="/messages/incoming"
+            color="text"
+            variant={
+              router.pathname.includes("/messages/")
+                  ? "filled"
+                  : "subtle"
+            }
+            radius={"xl"}
+          >
+            <Mail />
+          </ActionIcon>}
         </div>
         {/* <div style={notificationStyle}>
           <ActionIcon
