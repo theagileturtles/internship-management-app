@@ -2,6 +2,7 @@ import Layout from "@/components/layout";
 import {
   Avatar,
   Box,
+  Button,
   Center,
   Flex,
   Grid,
@@ -12,6 +13,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useState } from "react";
+import { Check } from "tabler-icons-react";
 
 function TableHeader(props) {
   return <Text ta={"center"} {...props} />;
@@ -24,9 +26,53 @@ function TableText(props) {
 export default function Index({ data }) {
   const [values, setValues] = useState(data);
   const selectData = [
-    { value: "career_center", label: "Career Center" },
-    { value: "employee", label: "Employee" },
+    { value: 4, label: "Career Center" },
+    { value: 5, label: "Employee" },
   ];
+  const [updateds, setUpdates] = useState({});
+  const [notificationVisible, setNotificationVisible] = useState(false);
+  const [notificationData, setNotificationData] = useState({
+    title: "",
+    description: "",
+    icon: <Check />,
+  });
+  const [saveLoader, setSaveLoader] = useState(false);
+
+  function selectHandler(event, uuid) {
+    let temp = updateds;
+    let tempValues = values;
+    let response = [];
+    tempValues = values.map((element) => {
+      if (element.UUID === uuid) {
+        if (element.roleID === event) {
+          delete temp[uuid];
+          response.push(element);
+        }
+        return { ...element, roleID: event };
+      } else {
+        return element;
+      }
+    });
+    if (response.length === 0) {
+      temp[uuid] = event;
+    }
+    setUpdates(temp);
+    setValues(tempValues);
+  }
+  async function saveHandler() {
+    const body = Object.entries(updateds).map(([key, value]) => {
+      return {
+        UUID: key,
+        roleID: value,
+      };
+    });
+    console.log(body                                     )
+  }
+  function cancelHandler() {
+    setValues(data);
+    setUpdates({});
+  }
+
 
   return (
     <Layout role={"admin"}>
@@ -56,17 +102,14 @@ export default function Index({ data }) {
           <Stack pb={20} sx={{ minHeight: "45vh", width: "100%" }}>
             <Grid pl={"1rem"} pr={"1rem"} pt={15}>
               <Grid.Col span={1}></Grid.Col>
-              <Grid.Col xs={6} md={4} lg={3}>
+              <Grid.Col xs={12} md={4} lg={3}>
                 <TableHeader>Instructor</TableHeader>
               </Grid.Col>
-              <Grid.Col xs={6} md={4} lg={4}>
+              <Grid.Col xs={12} md={4} lg={4}>
                 <TableHeader>Role</TableHeader>
               </Grid.Col>
-              <Grid.Col xs={6} md={2} lg={2}>
+              <Grid.Col xs={12} md={3} lg={4}>
                 <TableHeader>Created at</TableHeader>
-              </Grid.Col>
-              <Grid.Col xs={6} md={2} lg={2}>
-                <TableHeader>Last Login</TableHeader>
               </Grid.Col>
             </Grid>
             {values.map((element) => (
@@ -82,25 +125,48 @@ export default function Index({ data }) {
                     <Avatar></Avatar>
                   </Center>
                 </Grid.Col>
-                <Grid.Col xs={6} md={4} lg={3}>
-                  <TableText>{`${element.firstName} ${element.lastName}`}</TableText>
+                <Grid.Col xs={12} md={4} lg={3}>
+                  <TableText>{element.label}</TableText>
                 </Grid.Col>
-                <Grid.Col xs={6} md={4} lg={4}>
+                <Grid.Col xs={12} md={4} lg={4}>
                   <Select
+                  onChange={(event)=>selectHandler(event, element.UUID)}
                     placeholder="Role"
                     data={selectData}
-                    defaultValue={element.role || "employee"}
+                    value={element.roleID}
                   />
                 </Grid.Col>
-                <Grid.Col xs={6} md={2} lg={2}>
-                  <TableText>{element.createdAt}</TableText>
-                </Grid.Col>
-                <Grid.Col xs={6} md={2} lg={2}>
-                  <TableText>{element.lastLogin}</TableText>
+                <Grid.Col xs={12} md={3} lg={4}>
+                  <TableText>{new Date(element.createdAt).toLocaleString()}</TableText>
                 </Grid.Col>
               </Grid>
             ))}
           </Stack>
+          <Center>
+            <Group>
+              <Button
+                onClick={saveHandler}
+                disabled={Object.keys(updateds).length === 0}
+                radius={"xl"}
+                sx={{ width: "fit-content" }}
+                loading={saveLoader}
+              >
+                Save the Changes
+              </Button>
+              {Object.keys(updateds).length !== 0 ? (
+                <Button
+                  color="gray"
+                  radius={"xl"}
+                  sx={{ width: "fit-content" }}
+                  onClick={cancelHandler}
+                >
+                  Cancel
+                </Button>
+              ) : (
+                <></>
+              )}
+            </Group>
+          </Center>
         </Box>
       </Box>
     </Layout>
@@ -108,31 +174,10 @@ export default function Index({ data }) {
 }
 
 export async function getServerSideProps() {
-  //const data = await fetchData()
+  const data = await fetch("http://localhost:3000/api/admin/get-career-center-staff")
+    .then((res) => res.json())
+    .then((res) => res.data);
 
-  const data = [
-    {
-      UUID: "1231",
-      createdAt: "12.03.2013",
-      lastLogin: "12.13.2013",
-      firstName: "Recep",
-      lastName: "Niyaz",
-      role: "career_center",
-    },
-    {
-      UUID: "121",
-      createdAt: "12.03.2013",
-      lastLogin: "12.13.2013",
-      firstName: "Gökhan Süzen",
-      lastName: "Pektaş",
-    },
-    {
-      UUID: "12",
-      createdAt: "12.03.2013",
-      lastLogin: "12.13.2013",
-      firstName: "Hasan",
-      lastName: "Türk",
-    },
-  ];
   return { props: { data } };
 }
+
