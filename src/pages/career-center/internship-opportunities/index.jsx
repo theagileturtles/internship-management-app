@@ -143,7 +143,7 @@ export default function Index({ data }) {
       <Box pr={"0.5rem"} sx={{ display: "flex", alignItems: "center" }}>
         <Accordion.Control {...props} />
           <ActionIcon
-            onClick={(event) => trashButtonHandler(event, props.UUID)}
+            onClick={(event) => trashButtonHandler(event, props.uuid)}
             radius={"xl"}
           >
             <Trash color="red" size={"1.1rem"} />
@@ -240,7 +240,7 @@ export default function Index({ data }) {
                     value={"accordion_item_" + index}
                   >
                     <AccordionControl
-                      UUID={element.uuid}
+                      uuid={element.uuid}
                       sx={{ width: "100%" }}
                     >
                       <Grid sx={{ alignItems: "center" }} grow>
