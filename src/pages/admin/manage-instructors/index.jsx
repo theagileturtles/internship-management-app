@@ -2,16 +2,20 @@ import Layout from "@/components/layout";
 import {
   Avatar,
   Box,
+  Button,
   Center,
   Flex,
   Grid,
   Group,
+  Notification,
   Select,
   Stack,
   Text,
   Title,
+  Transition,
 } from "@mantine/core";
 import { useState } from "react";
+import { Check, X } from "tabler-icons-react";
 
 function TableHeader(props) {
   return <Text ta={"center"} {...props} />;
@@ -21,20 +25,82 @@ function TableText(props) {
   return <Text fw={700} ta={"center"} {...props} />;
 }
 
-export default function Index({ data }) {
+export default function Index({ data, selectData }) {
   const [values, setValues] = useState(data);
-  const selectData = [
-    { value: "se_english", label: "Software Engineering (English)" },
-    { value: "ce_english", label: "Computer Engineering (English)" },
-    { value: "ie_english", label: "Industrial Engineering (English)" },
-    { value: "eee_english", label: "Bioengineering (English)" },
-    { value: "be_english", label: "Forensic Science (Turkish)" },
-    { value: "mbg_english", label: "Molecular Biology and Genetics (English)" },
-    { value: "che_english", label: "Chemical Engineering (English)" },
-    { value: "mbg_turkish", label: "Molecular Biology and Genetics (Turkish)" },
-  ];
+  const [updateds, setUpdates] = useState({});
+  const [notificationVisible, setNotificationVisible] = useState(false);
+  const [notificationData, setNotificationData] = useState({
+    title: "",
+    description: "",
+    icon: <Check />,
+  });
+  const [saveLoader, setSaveLoader] = useState(false);
+
+
+  function selectHandler(event, uuid) {
+    let temp = updateds;
+    let tempValues = values;
+    let response = [];
+    tempValues = values.map((element) => {
+      if (element.UUID === uuid) {
+        if (element.departmentID === event) {
+          delete temp[uuid];
+          response.push(element);
+        }
+        return { ...element, departmentID: event };
+      } else {
+        return element;
+      }
+    });
+    if (response.length === 0) {
+      temp[uuid] = event;
+    }
+    setUpdates(temp);
+    setValues(tempValues);
+  }
+
+  function cancelHandler() {
+    setValues(data);
+    setUpdates({});
+  }
+
+  async function saveHandler() {
+    setSaveLoader(true)
+    const body = Object.entries(updateds).map(([key, value]) => {
+      return {
+        UUID: key,
+        departmentID: value,
+      };
+    });
+    await fetch("http://localhost:3000/api/admin/manage_instructors", {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }).then((res) => {
+      if (res.status===200) {
+        data = values;
+        setUpdates({})
+        setNotificationData({
+          title: "Saved Successfully!",
+          icon: <Check />,
+        })
+      }else{
+        setNotificationData({
+          title: "Error Occured",
+          description:"Please try again later.",
+          color:"red",
+          icon: <X />,
+        })
+      }
+    }).catch((err)=>{
+      console.log(err)
+    }).finally(()=>{
+      setNotificationVisible(true);
+      setSaveLoader(false)
+    });
+  }
 
   return (
+    <>
     <Layout role={"admin"}>
       <Box
         sx={{
@@ -61,87 +127,112 @@ export default function Index({ data }) {
         >
           <Stack pb={20} sx={{ minHeight: "45vh", width: "100%" }}>
             <Grid pl={"1rem"} pr={"1rem"} pt={15}>
-                <Grid.Col span={1}>
-
-                </Grid.Col>
-              <Grid.Col xs={6} md={4} lg={3}>
+              <Grid.Col span={1}></Grid.Col>
+              <Grid.Col xs={12} md={4} lg={3}>
                 <TableHeader>Instructor</TableHeader>
               </Grid.Col>
-              <Grid.Col xs={6} md={4} lg={4}>
+              <Grid.Col xs={12} md={4} lg={4}>
                 <TableHeader>Department</TableHeader>
               </Grid.Col>
-              <Grid.Col xs={6} md={2} lg={2}>
+              <Grid.Col xs={12} md={3} lg={4}>
                 <TableHeader>Created at</TableHeader>
-              </Grid.Col>
-              <Grid.Col xs={6} md={2} lg={2}>
-                <TableHeader>Last Login</TableHeader>
               </Grid.Col>
             </Grid>
             {values.map((element) => (
-              <Grid justify="center" align="center" pl={"1rem"} pr={"1rem"} key={"user_admin" + element.UUID}>
+              <Grid
+                justify="center"
+                align="center"
+                pl={"1rem"}
+                pr={"1rem"}
+                key={"user_admin" + element.UUID}
+              >
                 <Grid.Col span={1}>
-                    <Center>
+                  <Center>
                     <Avatar></Avatar>
-
-                    </Center>
+                  </Center>
                 </Grid.Col>
-                <Grid.Col xs={6} md={4} lg={3}>
-
-                    <TableText>{`${element.title} ${element.firstName} ${element.lastName}`}</TableText>
-
+                <Grid.Col xs={12} md={4} lg={3}>
+                  <TableText>{element.label}</TableText>
                 </Grid.Col>
-                <Grid.Col xs={6} md={4} lg={4}>
+                <Grid.Col xs={12} md={4} lg={4}>
                   <Select
                     placeholder="Department"
                     data={selectData}
-                    defaultValue={element.department}
+                    onChange={(event) => selectHandler(event, element.UUID)}
+                    value={element.departmentID}
                   />
                 </Grid.Col>
-                <Grid.Col xs={6} md={2} lg={2}>
-                  <TableText>{element.createdAt}</TableText>
-                </Grid.Col>
-                <Grid.Col xs={6} md={2} lg={2}>
-                  <TableText>{element.lastLogin}</TableText>
+                <Grid.Col xs={12} md={3} lg={4}>
+                  <TableText>
+                    {new Date(element.createdAt).toLocaleString()}
+                  </TableText>
                 </Grid.Col>
               </Grid>
             ))}
           </Stack>
+          <Center>
+            <Group>
+              <Button
+                onClick={saveHandler}
+                disabled={Object.keys(updateds).length === 0}
+                radius={"xl"}
+                sx={{ width: "fit-content" }}
+                loading={saveLoader}
+              >
+                Save the Changes
+              </Button>
+              {Object.keys(updateds).length !== 0 ? (
+                <Button
+                  color="gray"
+                  radius={"xl"}
+                  sx={{ width: "fit-content" }}
+                  onClick={cancelHandler}
+                >
+                  Cancel
+                </Button>
+              ) : (
+                <></>
+              )}
+            </Group>
+          </Center>
         </Box>
       </Box>
     </Layout>
+        <Transition
+        mounted={notificationVisible}
+        transition="fade"
+        duration={200}
+        timingFunction="ease"
+      >
+        {(styles) => (
+          <Notification
+            onClose={() => {
+              setNotificationVisible(false);
+            }}
+            withCloseButton
+            style={styles}
+            sx={{ position: "fixed", bottom: "3rem", left: "3rem" }}
+            icon={notificationData.icon}
+            color={notificationData.color}
+            title={notificationData.title}
+          >
+            {notificationData.description}
+          </Notification>
+        )}
+      </Transition>
+      </>
   );
 }
 
 export async function getServerSideProps() {
-  //const data = await fetchData()
+  const data = await fetch("http://localhost:3000/api/admin/get-instructors")
+    .then((res) => res.json())
+    .then((res) => res.data);
+  const selectData = await fetch(
+    "http://localhost:3000/api/admin/get-departments"
+  )
+    .then((res) => res.json())
+    .then((res) => res.data);
 
-  const data = [
-    {
-      UUID: "1231",
-      createdAt: "12.03.2013",
-      lastLogin: "12.13.2013",
-      title: "Dr",
-      firstName: "Kristin",
-      lastName: "Benli",
-      department: "se_english",
-    },
-    {
-        UUID: "121",
-        createdAt: "12.03.2013",
-        lastLogin: "12.13.2013",
-        title: "Prof Dr",
-        firstName: "Burhan",
-        lastName: "Pektaş",
-        department: "ce_english",
-      },
-      {
-        UUID: "12",
-        createdAt: "12.03.2013",
-        lastLogin: "12.13.2013",
-        title: "Dr",
-        firstName: "Tuğçe",
-        lastName: "Ballı",
-      },
-  ];
-  return { props: { data } };
+  return { props: { data, selectData } };
 }
