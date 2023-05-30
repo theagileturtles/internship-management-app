@@ -52,6 +52,8 @@ export default function Index({ data }) {
   });
   const [message, setMessage] = useState("")
   const [rejectUUID, setRejectUUID] = useState()
+  const [rejectCompany, setRejectCompany] = useState()
+  const [rejectUserUUID, setRejectUserUUID] = useState()
 
   function messageHandler(event){
     setMessage(event.target.value)
@@ -85,10 +87,12 @@ export default function Index({ data }) {
     });
   }
 
-  function rejectHandler(event, uuid) {
+  function rejectHandler(event, uuid, company, userUUID ) {
     event.stopPropagation();
     setModalVisible(true)
     setRejectUUID(uuid);
+    setRejectCompany(company)
+    setRejectUserUUID(userUUID)
   }
 
   function rejectAndSendHandler(){
@@ -99,20 +103,29 @@ export default function Index({ data }) {
       }
     ).then((res) => {
       if (res.status === 200) {
-        fetchData().then((response) => setValues(response));
-        setNotificationData({
-          title: "The Application is Rejected!",
-          description: (
-            <Text>
-              The application was sent back to the student. The student will get
-              a notification about that.
-            </Text>
-          ),
-          icon: <Check />,
-        });
-        setNotificationVisible(true);
-        setModalVisible(false)
-        setMessage("")
+
+        fetch("http://localhost:3000/api/messages/new/"+rejectUserUUID, {
+        method: "POST",
+        body: JSON.stringify({
+          subject: "Internship Application to " + rejectCompany + " is Rejected",
+          message: message,
+      }),
+    }).then(()=>{
+      fetchData().then((response) => setValues(response));
+      setNotificationData({
+        title: "The Application is Rejected!",
+        description: (
+          <Text>
+            The application was sent back to the student. The student will get
+            a notification about that.
+          </Text>
+        ),
+        icon: <Check />,
+      });
+      setNotificationVisible(true);
+      setModalVisible(false)
+      setMessage("")
+    })
       }
     });
   }
@@ -304,7 +317,7 @@ export default function Index({ data }) {
                             color="red"
                             radius={"xl"}
                             onClick={(event) =>
-                              rejectHandler(event, element.UUID)
+                              rejectHandler(event, element.UUID, element.company, element.userUUID)
                             }
                             sx={{ width: "100px" }}
                           >
