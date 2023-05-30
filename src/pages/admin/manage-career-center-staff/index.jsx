@@ -7,13 +7,15 @@ import {
   Flex,
   Grid,
   Group,
+  Notification,
   Select,
   Stack,
   Text,
   Title,
+  Transition,
 } from "@mantine/core";
 import { useState } from "react";
-import { Check } from "tabler-icons-react";
+import { Check, X } from "tabler-icons-react";
 
 function TableHeader(props) {
   return <Text ta={"center"} {...props} />;
@@ -66,7 +68,31 @@ export default function Index({ data }) {
         roleID: value,
       };
     });
-    console.log(body                                     )
+    await fetch("http://localhost:3000/api/admin/manage_instructors", {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }).then((res) => {
+      if (res.status===200) {
+        data = values;
+        setUpdates({})
+        setNotificationData({
+          title: "Saved Successfully!",
+          icon: <Check />,
+        })
+      }else{
+        setNotificationData({
+          title: "Error Occured",
+          description:"Please try again later.",
+          color:"red",
+          icon: <X />,
+        })
+      }
+    }).catch((err)=>{
+      console.log(err)
+    }).finally(()=>{
+      setNotificationVisible(true);
+      setSaveLoader(false)
+    });
   }
   function cancelHandler() {
     setValues(data);
@@ -74,7 +100,7 @@ export default function Index({ data }) {
   }
 
 
-  return (
+  return (<>
     <Layout role={"admin"}>
       <Box
         sx={{
@@ -170,6 +196,29 @@ export default function Index({ data }) {
         </Box>
       </Box>
     </Layout>
+            <Transition
+            mounted={notificationVisible}
+            transition="fade"
+            duration={200}
+            timingFunction="ease"
+          >
+            {(styles) => (
+              <Notification
+                onClose={() => {
+                  setNotificationVisible(false);
+                }}
+                withCloseButton
+                style={styles}
+                sx={{ position: "fixed", bottom: "3rem", left: "3rem" }}
+                icon={notificationData.icon}
+                color={notificationData.color}
+                title={notificationData.title}
+              >
+                {notificationData.description}
+              </Notification>
+            )}
+          </Transition>
+          </>
   );
 }
 
