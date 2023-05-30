@@ -8,7 +8,7 @@ export default async function handler(req,res){
     const session = sessionData.session;
 
     if(!session){
-        return res.status(402).json({error:"Unauthorized"})
+        return res.status(401).json({error:"Unauthorized"})
     }
 
     let connection;
