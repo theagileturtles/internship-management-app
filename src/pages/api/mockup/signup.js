@@ -15,26 +15,21 @@ export default async function handler(req, res) {
     const connection = createConnection();
     try {
         await query(connection)(
-            "INSERT INTO mockup_database.users (first_name, last_name, email, password, role) values(?,?,?,MD5(?),?);",
+            "INSERT INTO mockup_database.users (first_name, last_name, email, password, role_id) values(?,?,?,MD5(?),?);",
             [body.firstName, body.lastName, body.email, body.password, body.role])
 
-        body.departments.map(async (department) => {
-            await query(connection)(
-                "INSERT INTO mockup_database.department_relations (user_uuid,department) values(@last_uuid, ?);",
-                [department])
-        })
 
         switch (body.role) {
-            case "student":
+            case 2:
                 await query(connection)(
-                    "INSERT INTO mockup_database.students (user_uuid,school_id) values(@last_uuid,?);",
-                    [body.schoolID]
+                    "INSERT INTO mockup_database.students (user_uuid,school_id, department_id) values(@last_user_uuid,?,?);",
+                    [body.schoolID, body.departmentID]
                 )
                 break;
-            case "instructor":
+            case 3:
                 await query(connection)(
-                    "INSERT INTO mockup_database.instructors (user_uuid,title) values(@last_uuid,?);",
-                    [body.title]
+                    "INSERT INTO mockup_database.instructors (user_uuid,title, department_id) values(@last_user_uuid,?,?);",
+                    [body.title, body.departmentID]
                 )
                 break;
             default:

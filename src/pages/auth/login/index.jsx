@@ -15,6 +15,7 @@ import {
 import logo from "../../../assets/uulogo.png";
 // Importing Image component from Next.js library for optimized image rendering
 import Image from "next/image";
+import {signIn } from "next-auth/react"
 
 // LoginPage function component definition
 function LoginPage() {
@@ -49,7 +50,7 @@ function LoginPage() {
   const handleLogin = (event) => {
     event.preventDefault();
     console.log("Login with:", email, password, rememberMe);
-    document.location.href = "/"
+    signIn("credentials", {email:email, password:password})
   };
 
   // Return JSX to render login page

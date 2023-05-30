@@ -22,6 +22,7 @@
     "moment": "^2.29.4",
     "mysql": "^2.18.1",
     "next": "13.2.4",
+    "next-auth": "^4.22.1",
     "pdf-lib": "^1.17.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -33,5 +34,8 @@
     "fs": false,
     "os": false,
     "path": false
+  },
+  "devDependencies": {
+    "@types/node": "20.2.5"
   }
 }

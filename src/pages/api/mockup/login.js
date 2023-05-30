@@ -10,13 +10,15 @@ export default async function handler(req, res) {
     });
     return;
   }
+
+  const body = JSON.parse(req.body)
   const connection = createConnection();
   let users = await query(connection)(
     "SELECT BIN_TO_UUID(uuid) AS uuid, first_name AS firstName, " +
-    "last_name AS lastName, email, role " +
+    "last_name AS lastName, email, role_id AS roleID " +
     "FROM mockup_database.users " +
     "WHERE email = ? AND password = MD5(?);",
-    [req.body.email, req.body.password]
+    [body.email, body.password]
   );
   if (typeof users[0] === "undefined") {
     res.status(404).json({
@@ -27,18 +29,12 @@ export default async function handler(req, res) {
   }
   let userDetails;
   let userDepartments = []
-  const dbResponse = await query(connection)(
-    "SELECT department FROM mockup_database.department_relations WHERE user_uuid = UUID_TO_BIN(?)",
-    [users[0].uuid]
-  )
-  for (let i = 0; i < dbResponse.length; i++) {
-    userDepartments.push(dbResponse[i].department)
-  }
 
-  switch (users[0].role) {
-    case "student":
+
+  switch (users[0].roleID) {
+    case 2:
       userDetails = await query(connection)(
-        "SELECT school_id AS schoolID FROM mockup_database.students WHERE user_uuid = UUID_TO_BIN(?)",
+        "SELECT school_id AS schoolID, department_id AS departmentID FROM mockup_database.students WHERE user_uuid = UUID_TO_BIN(?)",
         [users[0].uuid]
       )
       if (typeof userDetails[0] === "undefined") {
@@ -49,9 +45,9 @@ export default async function handler(req, res) {
         return
       }
       break;
-    case "instructor":
+    case 3:
       userDetails = await query(connection)(
-        "SELECT title FROM mockup_database.instructors WHERE user_uuid = UUID_TO_BIN(?)",
+        "SELECT title, department_id AS departmentID FROM mockup_database.instructors WHERE user_uuid = UUID_TO_BIN(?)",
         [users[0].uuid]
       )
       if (typeof userDetails[0] === "undefined") {
@@ -70,6 +66,5 @@ export default async function handler(req, res) {
     ...users[0],
     ...userDetails[0],
     uuid: undefined,
-    departments: userDepartments
   });
 }
