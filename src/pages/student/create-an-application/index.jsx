@@ -23,8 +23,6 @@ import moment from "moment/moment";
 import { useState } from "react";
 import {
   Check,
-  Checkbox,
-  Cross,
   Download,
   Trash,
   Upload,

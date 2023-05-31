@@ -1,10 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Mail, Bell, } from "tabler-icons-react";
-import { ActionIcon, Avatar, Text, Badge, Indicator, Loader } from "@mantine/core";
+import { Mail, Bell } from "tabler-icons-react";
+import {
+  ActionIcon,
+  Avatar,
+  Text,
+  Badge,
+  Indicator,
+  Loader,
+} from "@mantine/core";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import { Logout, Menu } from "tabler-icons-react/dist";
 
 export default function Header(props) {
-  const router = useRouter()
+  const router = useRouter();
+  const { data: session } = useSession();
+  let user;
+  if (session) {
+    user = session.user;
+  }
+
   const headerStyle = {
     paddingTop: "10px",
     paddingBottom: "10px",
@@ -74,45 +89,48 @@ export default function Header(props) {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await fetch("http://localhost:3000/api/messages/unread-counter")
-      .then((res) => res.json())
-      .then((res) => {setCounter(res.data.count)});
+      const data = await fetch(
+        "http://localhost:3000/api/messages/unread-counter"
+      )
+        .then((res) => res.json())
+        .then((res) => {
+          setCounter(res.data.count);
+        });
     }
     fetchData();
- 
-  },[])
+  }, []);
   return (
     <header style={headerStyle}>
       <div style={leftStyle}></div>
       <div style={rightStyle}>
         <div style={messageStyle}>
-        {counter > 0 ? <Indicator inline label={counter} size={16}>
-          <ActionIcon
+          {counter > 0 ? (
+            <Indicator inline label={counter} size={16}>
+              <ActionIcon
+                component="a"
+                href="/messages/incoming"
+                color="text"
+                variant={
+                  router.pathname.includes("/messages/") ? "filled" : "subtle"
+                }
+                radius={"xl"}
+              >
+                <Mail />
+              </ActionIcon>
+            </Indicator>
+          ) : (
+            <ActionIcon
               component="a"
               href="/messages/incoming"
-            color="text"
-            variant={
-              router.pathname.includes("/messages/")
-                  ? "filled"
-                  : "subtle"
-            }
-            radius={"xl"}
-          >
-            <Mail />
-          </ActionIcon>
-          </Indicator> :<ActionIcon
-              component="a"
-              href="/messages/incoming"
-            color="text"
-            variant={
-              router.pathname.includes("/messages/")
-                  ? "filled"
-                  : "subtle"
-            }
-            radius={"xl"}
-          >
-            <Mail />
-          </ActionIcon>}
+              color="text"
+              variant={
+                router.pathname.includes("/messages/") ? "filled" : "subtle"
+              }
+              radius={"xl"}
+            >
+              <Mail />
+            </ActionIcon>
+          )}
         </div>
         {/* <div style={notificationStyle}>
           <ActionIcon
@@ -130,13 +148,30 @@ export default function Header(props) {
         </div> */}
         <div style={userInfoStyle}>
           <div style={nameStyle}>
-            <Text>{props.userName}</Text>
+            <Text>
+              {user.title ?? "" + " " + user.firstName + " " + user.lastName}
+            </Text>
             <div style={idStyle}>
-              <Text>{props.userId}</Text>
+              <Text>{user.schoolID ?? ""}</Text>
             </div>
           </div>
           <div style={avatarContainerStyle}>
-            <Avatar color="dark" sx={avatarStyle} alt={props.userName} />
+            <Menu shadow="md" width={200}>
+              <Menu.Target>
+                <Avatar
+                  color="dark"
+                  sx={avatarStyle}
+                  alt={
+                    user?.title ??
+                    "" + " " + user.firstName + " " + user.lastName
+                  }
+                />
+              </Menu.Target>
+
+              <Menu.Dropdown>
+                <Menu.Item icon={<Logout size={14} />}>Log out</Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
           </div>
         </div>
       </div>
@@ -144,11 +179,10 @@ export default function Header(props) {
   );
 }
 
-
 export async function getServerSideProps() {
   const data = await fetch("http://localhost:3000/api/messages/unread-counter")
     .then((res) => res.json())
     .then((res) => res.data);
- 
+
   return { props: { data } };
 }
