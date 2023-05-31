@@ -1,3 +1,4 @@
+import { getServerSession } from "next-auth";
 import {
   createConnection,
   query
@@ -5,8 +6,9 @@ import {
 
 const sessionData = require('./../../../../session-example.json');
 import AWS from "aws-sdk";
+import { authOptions } from "../auth/[...nextauth]";
 export default async function handler(req, res) {
-  const session = sessionData.session
+  const session = await getServerSession(req, res, authOptions)
   if (req.method !== "POST") {
     res.status(405).json({
       error: "Method Not Allowed"

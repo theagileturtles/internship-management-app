@@ -1,8 +1,10 @@
+import { getServerSession } from "next-auth";
 import sessionExample from "../../../../../../../session-example.json"
 import AWS from "aws-sdk";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export default async function handler(req, res) {
-    const session = sessionExample.session;
+    const session = await getServerSession(req, res, authOptions)
     const { uuid } = req.query;
     const extension = req.query.extension || "png"
     if (!session) {

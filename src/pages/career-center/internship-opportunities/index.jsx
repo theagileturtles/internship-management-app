@@ -280,7 +280,7 @@ export default function Index({ data }) {
                           <Button
                             target="_blank"
                             component="a"
-                            href={element.href}
+                            href={element.website}
                             radius={"xl"}
                             sx={{ width: "fit-content" }}
                           >
@@ -377,12 +377,13 @@ export default function Index({ data }) {
 // Next js offered several render options. Server Side Rendering is one of them. It means, this part of the code runs on the server.
 // In future, we will implement the API endpoints here. Then we will get information from the endpoint.
 // Now I just hardcodded the data here.
-export async function getServerSideProps() {
-  const data = await fetchData();
+export async function getServerSideProps(context) {
+  const data = await fetchData(context);
+  console.log(data)
   return { props: { data } };
 }
 
-async function fetchData(keyword) {
+async function fetchData(context, keyword) {
   if (keyword) {
     const res = await fetch(
       "http://localhost:3000/api/career-center/getInternshipOpportunities?keyword=" +
@@ -391,7 +392,11 @@ async function fetchData(keyword) {
     return await res.json();
   } else {
     const res = await fetch(
-      "http://localhost:3000/api/career-center/getInternshipOpportunities"
+      "http://localhost:3000/api/career-center/getInternshipOpportunities",{
+        headers:{
+          "Cookie": context?.req?.headers?.cookie||"",
+        }
+      }
     );
     return await res.json();
   }
