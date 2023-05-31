@@ -198,8 +198,12 @@ export default function Index({ data }) {
   );
 }
 
-export async function getServerSideProps() {
-  const res = await fetch("http://localhost:3000/api/messages/get-contacts");
+export async function getServerSideProps(context) {
+  const res = await fetch("http://localhost:3000/api/messages/get-contacts",{
+    headers:{
+      "Cookie": context.req.headers.cookie||"",
+    }
+  });
   const data = await res.json();
 
   return { props: { data } };

@@ -1,22 +1,24 @@
 const sessionData = require('./../../../../../session-example.json');
+import { getServerSession } from "next-auth";
 import {
     createConnection,
     query
 } from "../../data_access/database"
+import { authOptions } from "../../auth/[...nextauth]";
 
 export default async function handler(req, res) {
-    const session = sessionData.session
+    const session = await getServerSession(req, res, authOptions)
     const {
         uuid
     } = req.query
     console.log(uuid)
     if (!session) {
-        res.status(401).json({
+        return res.status(401).json({
             error: "Unaouthorized"
         })
     }
 
-    let connection
+    let connection;
     try {
         connection = createConnection();
         let response = await query(connection)(
@@ -41,20 +43,21 @@ export default async function handler(req, res) {
             receiver: element.receiver,
             read: element.read,
             name: `${element.title??""} ${element.first_name} ${element.last_name}`.trim(),
-            description: `${element.department??""} ${element.role} ${" - "+element.studentID??""}`.trim() ,
+            description: `${element.department??""} ${element.role} ${ (element.studentID ?? "")}`.trim() ,
             createdAt: new Date(new Date(element.created_at).getTime() - (new Date(element.created_at).getTimezoneOffset() * 60000)),
         }
 
 
-        res.status(200).json({
+       return res.status(200).json({
             data: response
         })
 
     } catch (error) {
-        res.status(500).json({
+        console.log(error)
+        return res.status(500).json({
             message: "Internal Server Error"
         });
-        console.log(error)
+        
     } finally {
         if (connection) {
             connection.end();

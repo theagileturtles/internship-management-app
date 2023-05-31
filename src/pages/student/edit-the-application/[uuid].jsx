@@ -446,7 +446,7 @@ function toBase64(blob) {
 export async function getServerSideProps(req, res, context) {
 
 
-  const UUID = req.query.uuid;
+  const { uuid } = context.query;
   let data = null;
   const formResponse = await fetch(
     "http://localhost:3000/api/student/get-form-uuid",{
@@ -461,7 +461,7 @@ export async function getServerSideProps(req, res, context) {
     .catch((err) => console.log(err));
 
   const applicationResponse = await fetch(
-    "http://localhost:3000/api/student/get-internship-application?uuid=" + UUID,{
+    "http://localhost:3000/api/student/get-internship-application?uuid=" + uuid,{
       headers:{
         "Cookie": context.req.headers.cookie||"",
       }

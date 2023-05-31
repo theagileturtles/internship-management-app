@@ -73,7 +73,11 @@ export default function Index({ data }) {
   );
 }
 
-export async function getServerSideProps() {
-  const data = await fetch("http://localhost:3000/api/messages/incoming").then((res)=>res.json()).then((res)=>res.data)
+export async function getServerSideProps(context) {
+  const data = await fetch("http://localhost:3000/api/messages/incoming",{
+    headers:{
+      "Cookie": context.req.headers.cookie||"",
+    }
+  }).then((res)=>res.json()).then((res)=>res.data)
   return { props: { data } };
 }

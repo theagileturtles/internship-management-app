@@ -104,7 +104,7 @@ export default function Header(props) {
       <div style={leftStyle}></div>
       <div style={rightStyle}>
         <div style={messageStyle}>
-          {counter > 0 ? (
+          {session?.user?.roleID !== 1 &&  session?.user?.roleID !== 5 ?counter > 0 ? (
             <Indicator inline label={counter} size={16}>
               <ActionIcon
                 component="a"
@@ -130,7 +130,8 @@ export default function Header(props) {
             >
               <Mail />
             </ActionIcon>
-          )}
+          ) :<></>}
+          
         </div>
         {/* <div style={notificationStyle}>
           <ActionIcon

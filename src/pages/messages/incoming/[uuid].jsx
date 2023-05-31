@@ -147,10 +147,14 @@ export default function Index({ data }) {
   );
 }
 
-export async function getServerSideProps(req, res) {
-  const { uuid } = req.query;
+export async function getServerSideProps(context) {
+  const { uuid } = context.query;
   const data = await fetch(
-    "http://localhost:3000/api/messages/incoming/" + uuid
+    "http://localhost:3000/api/messages/incoming/" + uuid,{
+      headers:{
+        "Cookie": context.req.headers.cookie||"",
+      }
+    }
   )
     .then((res) => res.json())
     .then((res) => res.data);

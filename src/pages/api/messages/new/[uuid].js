@@ -1,11 +1,13 @@
 const sessionData = require('./../../../../../session-example.json');
+import { getServerSession } from "next-auth";
 import {
     createConnection,
     query
 } from "../../data_access/database"
+import { authOptions } from "../../auth/[...nextauth]";
 
 export default async function handler(req, res) {
-    const session = sessionData.session
+    const session = await getServerSession(req, res, authOptions)
     const {uuid} = req.query
     const body = JSON.parse(req.body)
     if(!session){
