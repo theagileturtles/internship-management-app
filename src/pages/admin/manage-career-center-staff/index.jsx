@@ -68,7 +68,7 @@ export default function Index({ data }) {
         roleID: value,
       };
     });
-    await fetch("http://localhost:3000/api/admin/manage_instructors", {
+    await fetch("http://localhost:3000/api/admin/manage_career-center-staff", {
       method: "PUT",
       body: JSON.stringify(body),
     }).then((res) => {
@@ -222,8 +222,12 @@ export default function Index({ data }) {
   );
 }
 
-export async function getServerSideProps() {
-  const data = await fetch("http://localhost:3000/api/admin/get-career-center-staff")
+export async function getServerSideProps(context) {
+  const data = await fetch("http://localhost:3000/api/admin/get-career-center-staff",{
+    headers:{
+      "Cookie": context.req.headers.cookie||"",
+    }
+  })
     .then((res) => res.json())
     .then((res) => res.data);
 

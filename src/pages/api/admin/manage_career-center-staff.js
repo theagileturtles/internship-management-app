@@ -4,9 +4,11 @@ import {
   } from "../data_access/database";
   
 import sessionExample from "../../../../session-example.json"
+import { authOptions } from "../auth/[...nextauth]";
+import { getServerSession } from "next-auth";
 
 export default async function handler(req,res){
-    const session = sessionExample.session;
+    const session = await getServerSession(req, res, authOptions)
 
     if(!session){
         res.status(401)
@@ -21,7 +23,7 @@ export default async function handler(req,res){
     try {
         connection =  createConnection();
         body.forEach(async (element)=>{
-            promises.push(await query(connection)("UPDATE internship_management_app.users SET role_id = ? WHERE user_uuid = UUID_TO_BIN(?)",
+            promises.push(await query(connection)("UPDATE internship_management_app.users SET role_id = ? WHERE UUID = UUID_TO_BIN(?);",
             [element.roleID, element.UUID]))
         })
         Promise.all(promises).then(()=>{
