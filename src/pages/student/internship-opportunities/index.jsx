@@ -1,3 +1,4 @@
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import Layout from '../../../components/layout';
 import {
   Accordion,
@@ -20,6 +21,7 @@ import {
   Loader,
 } from "@mantine/core";
 import moment from "moment/moment";
+import { getServerSession } from 'next-auth';
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -225,7 +227,15 @@ export default function Index({ data }) {
 // Next js offered several render options. Server Side Rendering is one of them. It means, this part of the code runs on the server.
 // In future, we will implement the API endpoints here. Then we will get information from the endpoint.
 // Now I just hardcodded the data here.
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (!session) {
+    return { redirect: { destination: "/auth/login" } };
+  }else if(session.user?.roleID!==2){
+    return { redirect: { destination: "/" } };
+  }
+
   const data = await fetchData();
   return { props: { data } };
 }

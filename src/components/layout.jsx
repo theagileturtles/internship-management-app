@@ -9,7 +9,7 @@ export default function Layout({ children,role }) {
   return (
       <Grid sx={{height:"100vh"}} gutter={0}>
         <Grid.Col  xs={12} sm={4} md={3} xl={2}>
-          <Sidebar role={role}/>
+          <Sidebar role={session?.user?.roleID}/>
         </Grid.Col>
         <Grid.Col bg={"#f2f2f2"} xs={12} sm={8} md={9} xl={10}>
             <Header></Header>

@@ -9,7 +9,7 @@ import {
   Loader,Menu
 } from "@mantine/core";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Header(props) {
   const router = useRouter();
@@ -53,6 +53,7 @@ export default function Header(props) {
   };
 
   const avatarContainerStyle = {
+    cursor:"pointer",
     display: "flex",
     alignItems: "center",
     marginLeft: "20px",
@@ -167,7 +168,7 @@ export default function Header(props) {
                 />
               </Menu.Target>
               <Menu.Dropdown>
-                <Menu.Item icon={<Logout size={14} />}>Log out</Menu.Item>
+                <Menu.Item onClick={()=>signOut()} icon={<Logout size={14} />}>Log out</Menu.Item>
               </Menu.Dropdown>
             </Menu>
           </div>
