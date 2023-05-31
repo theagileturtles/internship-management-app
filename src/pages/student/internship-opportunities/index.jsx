@@ -229,12 +229,6 @@ export default function Index({ data }) {
 // Now I just hardcodded the data here.
 export async function getServerSideProps(context) {
 
-  const session = await getServerSession(context.req, context.res, authOptions);
-  if (!session) {
-    return { redirect: { destination: "/auth/login" } };
-  }else if(session.user?.roleID!==2){
-    return { redirect: { destination: "/" } };
-  }
 
   const data = await fetchData();
   return { props: { data } };

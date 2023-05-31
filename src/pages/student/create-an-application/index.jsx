@@ -405,12 +405,6 @@ function toBase64(blob) {
 
 export async function getServerSideProps(context) {
 
-  const session = await getServerSession(context.req, context.res, authOptions);
-  if (!session) {
-    return { redirect: { destination: "/auth/login" } };
-  }else if(session.user?.roleID!==2){
-    return { redirect: { destination: "/" } };
-  }
 
   let data = null;
   const response = await fetch(

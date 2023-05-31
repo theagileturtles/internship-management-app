@@ -214,12 +214,7 @@ export default function Index({ data }) {
 // In future, we will implement the API endpoints here. Then we will get information from the endpoint.
 // Now I just hardcodded the data here.
 export async function getServerSideProps(context) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-  if (!session) {
-    return { redirect: { destination: "/auth/login" } };
-  }else if(session.user?.roleID!==2){
-    return { redirect: { destination: "/" } };
-  }
+
   const res = await fetch(
     "http://localhost:3000/api/student/getInternshipApplications"
   );

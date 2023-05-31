@@ -215,12 +215,7 @@ export default function Index({ data }) {
 
 export async function getServerSideProps(context) {
 
-  const session = await getServerSession(context.req, context.res, authOptions);
-  if (!session) {
-    return { redirect: { destination: "/auth/login" } };
-  }else if(session.user?.roleID!==2){
-    return { redirect: { destination: "/" } };
-  }
+
 
   const res = await fetch(
     "http://localhost:3000/api/student/getOfficialLetterRequest"
