@@ -224,8 +224,12 @@ export default function Index({ data, selectData }) {
   );
 }
 
-export async function getServerSideProps() {
-  const data = await fetch("http://localhost:3000/api/admin/get-instructors")
+export async function getServerSideProps(context) {
+  const data = await fetch("http://localhost:3000/api/admin/get-instructors",{
+    headers:{
+      "Cookie": context.req.headers.cookie||"",
+    }
+  })
     .then((res) => res.json())
     .then((res) => res.data);
   const selectData = await fetch(

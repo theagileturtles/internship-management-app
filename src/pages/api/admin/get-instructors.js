@@ -4,9 +4,11 @@ import {
   } from "../../api/data_access/database";
   
 import sessionExample from "../../../../session-example.json"
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req,res){
-    const session = sessionExample.session;
+    const session = await getServerSession(req, res, authOptions)
     if(!session){
         res.status(401)
     }
