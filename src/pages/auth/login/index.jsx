@@ -58,7 +58,7 @@ function LoginPage() {
     if(result.error){
       setLoginError(true)
     }else{
-      switch (session.user.roleID) {
+      switch (session?.user?.roleID) {
         case 1:
           router.push("/admin/manage-career-center-staff");
           break;

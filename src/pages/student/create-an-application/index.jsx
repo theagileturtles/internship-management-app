@@ -1,3 +1,4 @@
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import Layout from '../../../components/layout';
 import UploadInput from "../../../components/uploadinput";
 import {
@@ -20,6 +21,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import moment from "moment/moment";
+import { getServerSession } from 'next-auth';
 import { useState } from "react";
 import {
   Check,
@@ -28,6 +30,8 @@ import {
   Upload,
   X,
 } from "tabler-icons-react";
+import { useRouter } from 'next/router';
+
 
 export default function Index({ data }) {
   const theme = useMantineTheme();
@@ -399,7 +403,15 @@ function toBase64(blob) {
   });
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (!session) {
+    return { redirect: { destination: "/auth/login" } };
+  }else if(session.user?.roleID!==2){
+    return { redirect: { destination: "/" } };
+  }
+
   let data = null;
   const response = await fetch(
     "http://localhost:3000/api/student/get-form-uuid"

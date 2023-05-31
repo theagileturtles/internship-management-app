@@ -1,3 +1,4 @@
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import Layout from '../../../components/layout';
 import UploadInput from "../../../components/uploadinput";
 import {
@@ -20,6 +21,7 @@ import {
   Transition,
   Notification,
 } from "@mantine/core";
+import { getServerSession } from 'next-auth';
 import { useState } from "react";
 import {
   Check,
@@ -311,6 +313,20 @@ export default function Index() {
     </>
   );
 }
+
+export async function getServerSideProps(context) {
+
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (!session) {
+    return { redirect: { destination: "/auth/login" } };
+  }else if(session.user?.roleID!==2){
+    return { redirect: { destination: "/" } };
+  }
+
+
+  return { props: {  } };
+}
+
 
 function toBase64(blob) {
   const reader = new FileReader();

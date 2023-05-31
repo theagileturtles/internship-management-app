@@ -84,18 +84,19 @@ export default function Sidebar({role}) {
   let anchors = []
   
   switch (role) {
-    case "student":
-      anchors = [...studentAnchors];
-      break;
-    case "instructor":
-      anchors = [...instructorAnchors];
-      break;
-    case "career_center":
-      anchors = [...careerCenterAnchors];
-      break;
-    case "admin":
+    case 1:
       anchors = [...adminAnchors];
       break;
+    case 2:
+      anchors = [...studentAnchors];
+      break;
+    case 3:
+      anchors = [...instructorAnchors];
+      break;
+    case 4:
+      anchors = [...careerCenterAnchors];
+      break;
+    
     default:
       break;
   }
