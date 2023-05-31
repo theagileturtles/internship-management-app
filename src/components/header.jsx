@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Mail, Bell } from "tabler-icons-react";
+import { Mail, Bell,Logout } from "tabler-icons-react";
 import {
   ActionIcon,
   Avatar,
   Text,
   Badge,
   Indicator,
-  Loader,
+  Loader,Menu
 } from "@mantine/core";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import { Logout, Menu } from "tabler-icons-react/dist";
 
 export default function Header(props) {
   const router = useRouter();
@@ -27,7 +26,7 @@ export default function Header(props) {
     justifyContent: "space-between",
     alignItems: "center",
     height: "85px",
-    paddingRight: "20px",
+    paddingRight: "5vw",
   };
 
   const leftStyle = {
@@ -149,10 +148,10 @@ export default function Header(props) {
         <div style={userInfoStyle}>
           <div style={nameStyle}>
             <Text>
-              {user.title ?? "" + " " + user.firstName + " " + user.lastName}
+              {user?.title ?? "" + " " + user?.firstName + " " + user?.lastName}
             </Text>
             <div style={idStyle}>
-              <Text>{user.schoolID ?? ""}</Text>
+              <Text>{user?.schoolID ?? ""}</Text>
             </div>
           </div>
           <div style={avatarContainerStyle}>
@@ -163,11 +162,10 @@ export default function Header(props) {
                   sx={avatarStyle}
                   alt={
                     user?.title ??
-                    "" + " " + user.firstName + " " + user.lastName
+                    "" + " " + user?.firstName + " " + user?.lastName
                   }
                 />
               </Menu.Target>
-
               <Menu.Dropdown>
                 <Menu.Item icon={<Logout size={14} />}>Log out</Menu.Item>
               </Menu.Dropdown>
