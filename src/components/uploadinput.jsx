@@ -48,6 +48,7 @@ export default function UploadInput(props) {
   return (
     <FileInput
       {...props}
+      accept="application/pdf"
       valueComponent={(value) => <ValueComponent
           value={value}
           alreadyUploaded={props.alreadyuploaded}

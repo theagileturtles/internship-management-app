@@ -441,9 +441,13 @@ export default function Index({ data }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   const response = await fetch(
-    "http://localhost:3000/api/instructor/get/letter-requests?status=pending"
+    "http://localhost:3000/api/instructor/get/letter-requests?status=pending",{
+      headers:{
+        "Cookie": context.req.headers.cookie||"",
+      }
+    }
   ).then((res) => res.json());
 
   const data = [...response.data];

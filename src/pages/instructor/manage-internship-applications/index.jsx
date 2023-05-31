@@ -401,14 +401,18 @@ export default function Index({ data }) {
   );
 }
 
-export async function getServerSideProps() {
-  const data = await fetchData();
+export async function getServerSideProps(context) {
+  const data = await fetchData(context);
   return { props: { data } };
 }
 
-async function fetchData() {
+async function fetchData(context) {
   const response = await fetch(
-    "http://localhost:3000/api/instructor/get/internship-applications?status=pending_for_coordinator"
+    "http://localhost:3000/api/instructor/get/internship-applications?status=pending_for_coordinator",{
+      headers:{
+        "Cookie": context.req.headers.cookie||"",
+      }
+    }
   ).then((res) => res.json());
 
   return [...response.data];

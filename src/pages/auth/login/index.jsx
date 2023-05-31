@@ -56,7 +56,7 @@ function LoginPage() {
   const handleLogin = async (event) => {
     setLoginLoader(true)
     event.preventDefault();
-    let promise;
+    let promises=[]
 
     const result = await signIn("credentials", {email:email, password:password, redirect:false})
     if(result.error){
@@ -64,24 +64,24 @@ function LoginPage() {
     }else{
       switch (session?.user?.roleID) {
         case 1:
-          promise = router.push("/admin/manage-career-center-staff");
+          promises.push(router.push("/admin/manage-career-center-staff"));
           break;
         case 2:
-          promise = router.push("/student/internship-applications");
+          promises.push(router.push("/student/internship-applications"));
           break;
         case 3:
-          promise = router.push("/instructor/completed-internship-applications");
+          promises.push(router.push("/instructor/completed-internship-applications"));
           break;
         case 4:
-          promise = router.push("/career-center/completed-internship-applications");
+          promises.push(router.push("/career-center/completed-internship-applications"));
           break;
         case 5:
           return false;
         default:
           break;
       }
+    Promise.all(promises).catch(()=>setLoginError(true)).finally(()=>{setLoginLoader(false)})
     }
-    promise.catch(()=>setLoginError(true)).finally(()=>{setLoginLoader(false)})
   };
 
   // Return JSX to render login page

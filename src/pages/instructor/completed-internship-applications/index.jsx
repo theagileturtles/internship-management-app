@@ -14,6 +14,7 @@ import {
   Pagination,
   Tooltip,
   Checkbox,
+  Center,
 } from "@mantine/core";
 import moment from "moment";
 
@@ -54,7 +55,7 @@ export default function Index({ data }) {
               COMPLETED INTERNSHIP APPLICATIONS
             </Title>
           </Grid.Col>
-          <Grid.Col
+          {/* <Grid.Col
             pr={"1rem"}
             sx={{ display: "flex", justifyContent: "end" }}
             xs={6}
@@ -75,7 +76,7 @@ export default function Index({ data }) {
                 label="Pending For SGK Entry"
               />
             </Group>
-          </Grid.Col>
+          </Grid.Col> */}
         </Grid>
 
         <Box
@@ -108,7 +109,7 @@ export default function Index({ data }) {
               </Grid.Col>
             </Grid>
             <Accordion color="mainBlue" variant="filled" chevronPosition="left">
-              {data.map((element, index) => (
+              {data.length===0?<Center><Text fw={700}>There is no record now.</Text></Center>:data.map((element, index) => (
                 <Accordion.Item
                   key={element.uuid + "_accordion_item_" + index}
                   sx={{
@@ -233,9 +234,13 @@ export default function Index({ data }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   const response = await fetch(
-    "http://localhost:3000/api/instructor/get/internship-applications?status=pending_for_sgk,approved"
+    "http://localhost:3000/api/instructor/get/internship-applications?status=pending_for_sgk,approved",{
+      headers:{
+        "Cookie": context.req.headers.cookie||"",
+      }
+    }
   ).then((res) => res.json());
   const data = [...response.data];
   return { props: { data } };
