@@ -230,11 +230,11 @@ export default function Index({ data }) {
 export async function getServerSideProps(context) {
 
 
-  const data = await fetchData();
+  const data = await fetchData(context);
   return { props: { data } };
 }
 
-async function fetchData(keyword) {
+async function fetchData(context, keyword) {
   if (keyword) {
     const res = await fetch(
       "http://localhost:3000/api/student/getInternshipOpportunities?keyword=" +
@@ -243,7 +243,11 @@ async function fetchData(keyword) {
     return await res.json();
   } else {
     const res = await fetch(
-      "http://localhost:3000/api/student/getInternshipOpportunities"
+      "http://localhost:3000/api/student/getInternshipOpportunities",{
+        headers:{
+          "Cookie": context?.req?.headers?.cookie||"",
+        }
+      }
     );
     return await res.json();
   }

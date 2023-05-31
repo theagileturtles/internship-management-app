@@ -29,7 +29,7 @@ export const authOptions = {
                 }
             },
             async authorize(credentials, req) {
-                const user = await fetch(`http://localhost:3000/api/mockup/login`, {
+                const mockupUser = await fetch(`http://localhost:3000/api/mockup/login`, {
                         method: "POST",
                         body: JSON.stringify({
                             email: credentials?.email,
@@ -42,7 +42,17 @@ export const authOptions = {
                     }}).then((resjson) => resjson).
                     catch((err)=>console.log(err))
 
-                if (user) {
+                if (mockupUser) {
+                    const user = await fetch(`http://localhost:3000/api/login`, {
+                        method: "POST",
+                        body: JSON.stringify(mockupUser)
+                    })
+                    .then((res) =>{
+                        if(res.status === 200){
+                        return res.json()
+                    }}).then((resjson) => resjson).
+                    catch((err)=>console.log(err))
+                    console.log(user)
                     return user
                 } else {
                     return null

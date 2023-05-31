@@ -6,6 +6,8 @@ import {
 import sessionExample from "../../../../session-example.json"
 
 import AWS from "aws-sdk";
+import { authOptions } from "../auth/[...nextauth]";
+import { getServerSession } from "next-auth";
 
 export const config = {
   api: {
@@ -16,7 +18,7 @@ export const config = {
 }
 
 export default async function handler(req, res) {
-  const session = sessionExample.session;
+  const session = await getServerSession(req, res, authOptions)
   const body = JSON.parse(req.body);
   try {
     const s3 = new AWS.S3({

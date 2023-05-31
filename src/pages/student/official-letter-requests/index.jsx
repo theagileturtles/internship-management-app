@@ -175,7 +175,7 @@ export default function Index({ data }) {
                             </DetailsText>
                           </Box>
                         </Grid.Col> :<></>}
-                        {element.officialLetter ? <Grid.Col span={12}>
+                        {element.status.alias === "received" ? <Grid.Col span={12}>
                           <Group
                             sx={{
                               display: "flex",
@@ -218,7 +218,11 @@ export async function getServerSideProps(context) {
 
 
   const res = await fetch(
-    "http://localhost:3000/api/student/getOfficialLetterRequest"
+    "http://localhost:3000/api/student/getOfficialLetterRequest",{
+      headers:{
+        "Cookie": context.req.headers.cookie||"",
+      }
+    }
   );
   const data = await res.json();
 

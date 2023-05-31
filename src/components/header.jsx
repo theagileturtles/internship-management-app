@@ -6,7 +6,7 @@ import {
   Text,
   Badge,
   Indicator,
-  Loader,Menu
+  Loader,Menu, Center, Stack, Title
 } from "@mantine/core";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
@@ -147,14 +147,15 @@ export default function Header(props) {
           </ActionIcon>
         </div> */}
         <div style={userInfoStyle}>
-          <div style={nameStyle}>
-            <Text>
-              {user?.title ?? "" + " " + user?.firstName + " " + user?.lastName}
-            </Text>
-            <div style={idStyle}>
-              <Text>{user?.schoolID ?? ""}</Text>
-            </div>
-          </div>
+          <Center>
+            <Stack spacing={0}>
+            <Title ta={"center"} order={4}>
+              {(user?.title ?? "") + " " + user?.firstName + " " + user?.lastName}
+            </Title>
+            {user?.schoolID ?<Text size={"sm"} ta={"center"}>{user?.schoolID}</Text> :<></>} 
+            </Stack>
+           
+          </Center>
           <div style={avatarContainerStyle}>
             <Menu shadow="md" width={200}>
               <Menu.Target>

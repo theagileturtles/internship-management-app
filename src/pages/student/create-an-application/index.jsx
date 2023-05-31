@@ -408,7 +408,11 @@ export async function getServerSideProps(context) {
 
   let data = null;
   const response = await fetch(
-    "http://localhost:3000/api/student/get-form-uuid"
+    "http://localhost:3000/api/student/get-form-uuid",{
+      headers:{
+        "Cookie": context.req.headers.cookie||"",
+      }
+    }
   )
     .then((res) => res.json())
     .then((res) => res.data);
