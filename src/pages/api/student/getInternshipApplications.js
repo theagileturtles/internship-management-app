@@ -1,8 +1,10 @@
+import { getServerSession } from "next-auth";
 import { internshipStatusConverter, typeConverter } from "../../../utils/ResponseConverter";
 import {
   createConnection,
   query
 } from "../data_access/database";
+import { authOptions } from "../auth/[...nextauth]";
 
 const sessionData = require('./../../../../session-example.json');
 
@@ -15,7 +17,8 @@ export default async function handler(req, res) {
   }
   
   try {
-    const user = sessionData.session.user;
+    const session = await getServerSession(req, res, authOptions)
+    const user = session.user;
     const uuid = user.uuid;
 
     // check if user_uuid is provided

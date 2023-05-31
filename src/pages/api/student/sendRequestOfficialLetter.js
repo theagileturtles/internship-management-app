@@ -1,3 +1,4 @@
+import { getServerSession } from "next-auth";
 import {
   createConnection,
   query
@@ -5,6 +6,7 @@ import {
 
 const sessionData = require('./../../../../session-example.json');
 import AWS from "aws-sdk";
+import { authOptions } from "../auth/[...nextauth]";
 
 export const config = {
   api: {
@@ -25,8 +27,9 @@ export default async function handler(req, res) {
   }
 
   try {
+    const session = await getServerSession(req, res, authOptions)
 
-    if (!sessionData.session) {
+    if (!session) {
       res.status(401).json({
         error: "Unauthorized"
       });
@@ -58,7 +61,7 @@ export default async function handler(req, res) {
     values (UUID_TO_BIN(?),UUID_TO_BIN(?), ?, ?, ?, ?)
   `
       const q = query(connection);
-      const rows = await q(sql, [uuid,sessionData.session.user.uuid, reqBody.company, reqBody.type, reqBody.message,reqBody.numberOfIncomplete]);
+      const rows = await q(sql, [uuid,session.user.uuid, reqBody.company, reqBody.type, reqBody.message,reqBody.numberOfIncomplete]);
       // close the database connection
       connection.end();
 

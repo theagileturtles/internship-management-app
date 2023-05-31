@@ -29,6 +29,7 @@ function LoginPage() {
   const [loginError, setLoginError] = useState(false)
   const router = useRouter()
   const theme = useMantineTheme();
+  const [loginLoader, setLoginLoader] = useState(false)
   const { data: session } = useSession();
 
 
@@ -53,23 +54,26 @@ function LoginPage() {
 
   // Function to handle login form submission
   const handleLogin = async (event) => {
+    setLoginLoader(true)
     event.preventDefault();
+    let promise;
+
     const result = await signIn("credentials", {email:email, password:password, redirect:false})
     if(result.error){
       setLoginError(true)
     }else{
       switch (session?.user?.roleID) {
         case 1:
-          router.push("/admin/manage-career-center-staff");
+          promise = router.push("/admin/manage-career-center-staff");
           break;
         case 2:
-          router.push("/student/internship-applications");
+          promise = router.push("/student/internship-applications");
           break;
         case 3:
-          router.push("/instructor/completed-internship-applications");
+          promise = router.push("/instructor/completed-internship-applications");
           break;
         case 4:
-          router.push("/career-center/completed-internship-applications");
+          promise = router.push("/career-center/completed-internship-applications");
           break;
         case 5:
           return false;
@@ -77,6 +81,7 @@ function LoginPage() {
           break;
       }
     }
+    promise.catch(()=>setLoginError(true)).finally(()=>{setLoginLoader(false)})
   };
 
   // Return JSX to render login page
@@ -155,6 +160,7 @@ function LoginPage() {
             ":hover": { backgroundColor: theme.colors.mainHoverBlue },
           }}
           onClick={handleLogin}
+          loading={loginLoader}
         >
           Sign In
         </Button>
