@@ -1,11 +1,13 @@
 const sessionData = require('./../../../../../session-example.json');
+import { getServerSession } from "next-auth";
 import {
     createConnection,
     query
 } from "../../data_access/database"
+import { authOptions } from "../../auth/[...nextauth]";
 
 export default async function handler(req, res) {
-    const session = sessionData.session
+    const session = await getServerSession(req, res, authOptions)
     const {
         uuid
     } = req.query
@@ -41,7 +43,7 @@ export default async function handler(req, res) {
             senderUUID: element.senderUUID,
             read: element.read,
             name: `${element.title??""} ${element.first_name} ${element.last_name}`.trim(),
-            description: `${element.department??""} ${element.role} ${" - "+element.studentID??""}`.trim() ,
+            description: `${element.department??""} ${element.role} ${element.studentID??""}`.trim() ,
             createdAt: new Date(new Date(element.created_at).getTime() - (new Date(element.created_at).getTimezoneOffset() * 60000)),
         }
 

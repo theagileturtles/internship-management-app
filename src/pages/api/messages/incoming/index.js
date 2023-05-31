@@ -1,11 +1,13 @@
 const sessionData = require('./../../../../../session-example.json');
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]";
 import {
     createConnection,
     query
 } from "../../data_access/database"
 
 export default async function handler(req, res) {
-    const session = sessionData.session
+    const session = await getServerSession(req, res, authOptions)
 
     if(!session){
         res.status(401).json({error:"Unaouthorized"})
