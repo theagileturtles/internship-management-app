@@ -5,9 +5,11 @@ import {
 
 import sessionExample from "../../../../session-example.json"
 import { internshipStatusConverter, typeConverter } from "../../../utils/ResponseConverter";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req, res) {
-  const session = sessionExample.session;
+  const session = await getServerSession(req, res, authOptions)
   if (!session) {
     res.status(401).json({
       error: "Unauthorized"
@@ -31,7 +33,7 @@ export default async function handler(req, res) {
       "WHERE users.uuid = students.user_uuid AND internship_applications.user_uuid = users.uuid AND students.department_id = ?";
 
     if (req.query.status) {
-      sql += "AND status IN (?)"
+      sql += " AND status IN (?)"
     } 
 
     sql+=" ORDER BY internship_applications.updated_at DESC"

@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     connection.end();
     return
   }
-  let userDetails;
+  let userDetails=[]
   let userDepartments = []
 
 

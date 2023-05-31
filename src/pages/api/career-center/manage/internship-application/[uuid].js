@@ -4,9 +4,10 @@ import {
 } from "../../../data_access/database";
 import AWS from "aws-sdk";
 import sessionExample from "../../../../../../session-example.json"
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export default async function handler(req, res) {
-  const session = sessionExample.session;
+  const session = await getServerSession(req, res, authOptions)
   if (!session) {
     res.status(401).json({
       error: "Unauthorized"
