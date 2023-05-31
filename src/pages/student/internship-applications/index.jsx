@@ -1,4 +1,4 @@
-import Layout from "@/components/layout";
+import Layout from '../../../components/layout';
 import {
   Accordion,
   Box,
@@ -216,6 +216,5 @@ export async function getServerSideProps() {
     "http://localhost:3000/api/student/getInternshipApplications"
   );
   const data = await res.json();
-    console.log("data:" + data)
   return { props: { data } };
 }

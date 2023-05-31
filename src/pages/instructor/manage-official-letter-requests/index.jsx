@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Layout from "@/components/layout";
-import UploadInput from "@/components/uploadinput";
-import generateFile from "@/utils/GenerateLetter";
+import Layout from "../../../components/layout"
+import UploadInput from "../../../components/uploadinput";
+import generateFile from "../../../utils/GenerateLetter";
 import {
   Accordion,
   Box,

@@ -1,5 +1,5 @@
-import Layout from "@/components/layout";
-import UploadInput from "@/components/uploadinput";
+import Layout from "../../../components/layout"
+import UploadInput from "../../../components/uploadinput";
 import { Title, Box, Stack, Button, Group, ActionIcon, Transition, Notification, Text } from "@mantine/core";
 
 import { useEffect, useState } from "react";

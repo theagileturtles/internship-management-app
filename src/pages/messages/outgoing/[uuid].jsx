@@ -1,4 +1,4 @@
-import MessagesLayout from "@/components/messagesLayout";
+import MessagesLayout from "../../../components/messagesLayout";
 import {
   Avatar,
   Stack,
