@@ -4,7 +4,7 @@ import {
 } from "../../data_access/database";
 
 import sessionExample from "../../../../../session-example.json"
-import { internshipStatusConverter, typeConverter } from "@/utils/ResponseConverter";
+import { internshipStatusConverter, typeConverter } from "../../../../utils/ResponseConverter";
 
 export default async function handler(req, res) {
   const session = sessionExample.session;

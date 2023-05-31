@@ -10,12 +10,14 @@ import {
   useMantineTheme,
   Title,
   Text,
+  Center,
 } from "@mantine/core";
 // Importing logo image from assets folder
 import logo from "../../../assets/uulogo.png";
 // Importing Image component from Next.js library for optimized image rendering
 import Image from "next/image";
-import {signIn } from "next-auth/react"
+import {signIn, useSession } from "next-auth/react"
+import { useRouter } from "next/router";
 
 // LoginPage function component definition
 function LoginPage() {
@@ -24,8 +26,11 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const [loginError, setLoginError] = useState(false)
+  const router = useRouter()
   const theme = useMantineTheme();
+  const { data: session } = useSession();
+
 
   // Function to handle changes in email input field
   const handleEmailChange = (event) => {
@@ -47,10 +52,31 @@ function LoginPage() {
   };
 
   // Function to handle login form submission
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    console.log("Login with:", email, password, rememberMe);
-    signIn("credentials", {email:email, password:password})
+    const result = await signIn("credentials", {email:email, password:password, redirect:false})
+    if(result.error){
+      setLoginError(true)
+    }else{
+      switch (session.user.roleID) {
+        case 1:
+          router.push("/admin/manage-career-center-staff");
+          break;
+        case 2:
+          router.push("/student/internship-applications");
+          break;
+        case 3:
+          router.push("/instructor/completed-internship-applications");
+          break;
+        case 4:
+          router.push("/career-center/completed-internship-applications");
+          break;
+        case 5:
+          return false;
+        default:
+          break;
+      }
+    }
   };
 
   // Return JSX to render login page
@@ -100,23 +126,24 @@ function LoginPage() {
         {/* Box component for positioning rememberMe checkbox */}
         <Stack
           sx={{
-            width: "100%",
+            width:"300px",
             display: "flex",
             justifyContent: "left",
             alignItems: "start",
           }}
         >
+          {loginError?<Center><Text size={"sm"} ta={"center"} color="red">Login error. Please check the information that you provide and try to login again.</Text></Center>:<></>}
           <Checkbox
             label="Show Password"
             checked={showPassword}
             onChange={handleShowPassword}
           />
           {/* Checkbox component for rememberMe option */}
-          <Checkbox
+          {/* <Checkbox
             label="Remember me"
             checked={rememberMe}
             onChange={handleRememberMeChange}
-          />
+          /> */}
         </Stack>
         {/* Button component for submitting the login form */}
         <Button

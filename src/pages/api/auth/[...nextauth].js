@@ -12,15 +12,11 @@ import { signIn } from "next-auth/react";
 
 export const authOptions = {
     site: 'http://localhost:3000',
+    secret:process.env.AUTH_SECRET,
     // Configure one or more authentication providers
     providers: [
         CredentialsProvider({
-            // The name to display on the sign in form (e.g. "Sign in with...")
             name: "Credentials",
-            // `credentials` is used to generate a form on the sign in page.
-            // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-            // e.g. domain, username, password, 2FA token, etc.
-            // You can pass any HTML attribute to the <input> tag through the object.
             credentials: {
                 email: {
                     label: "Email",
@@ -60,30 +56,26 @@ export const authOptions = {
     },
     callbacks: {
         async signIn({user}){
-            console.log(user)
-            switch (user.roleID) {
-                case 1:
-                    return "/admin/manage-career-center-staff"
-                case 2:
-                    return "/student/internship-applications"
-                case 3:
-                    return "/instructor/completed-internship-applications"
-                case 4:
-                    return "/career-center/completed-internship-applications"
-                case 5:
-                    return false         
-                default:
-                    break;
-            }
-        },
-        async redirect() {
-            return "/"
+            // switch (user.roleID) {
+            //     case 1:
+            //         return "/admin/manage-career-center-staff"
+            //     case 2:
+            //         return "/student/internship-applications"
+            //     case 3:
+            //         return "/instructor/completed-internship-applications"
+            //     case 4:
+            //         return "/career-center/completed-internship-applications"
+            //     case 5:
+            //         return false         
+            //     default:
+            //         break;
+            // }
+            return user;
         },
         async jwt({
             token,
             user
         }) {
-
             if (user) {
                 token = {
                     ...user

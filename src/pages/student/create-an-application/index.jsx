@@ -1,5 +1,5 @@
-import Layout from "@/components/layout";
-import UploadInput from "@/components/uploadinput";
+import Layout from '../../../components/layout';
+import UploadInput from "../../../components/uploadinput";
 import {
   Box,
   Title,

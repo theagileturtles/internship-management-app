@@ -1,5 +1,5 @@
-import Layout from "@/components/layout";
-import MessagesLayout from "@/components/messagesLayout";
+
+import MessagesLayout from "../../../components/messagesLayout";
 import {
   ActionIcon,
   Avatar,

@@ -1,9 +1,10 @@
 import "@/styles/globals.css";
 import { MantineProvider } from "@mantine/core";
+import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
 import Router from 'next/router';
 
-export default function App({ Component, pageProps }) {
+export default function App({ Component, pageProps: { session, ...pageProps } }) {
 
   // Router.onRouteChangeStart = (url) => {
   //   console.log("hey")
@@ -18,6 +19,7 @@ export default function App({ Component, pageProps }) {
   // };
 
   return (
+    <SessionProvider session={session}>
     <MantineProvider
       theme={{
         colorScheme: "light",
@@ -81,5 +83,6 @@ export default function App({ Component, pageProps }) {
       </Head>
       <Component {...pageProps} />
     </MantineProvider>
+</SessionProvider>
   );
 }

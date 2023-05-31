@@ -1,4 +1,4 @@
-import { internshipStatusConverter, typeConverter } from "@/utils/ResponseConverter";
+import { internshipStatusConverter, typeConverter } from "../../../utils/ResponseConverter";
 import {
   createConnection,
   query

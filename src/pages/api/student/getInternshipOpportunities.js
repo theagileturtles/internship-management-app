@@ -1,4 +1,4 @@
-import { oppurtunityTypeConverter } from "@/utils/ResponseConverter";
+import { oppurtunityTypeConverter } from "../../../utils/ResponseConverter";
 import {
     createConnection,
     query
