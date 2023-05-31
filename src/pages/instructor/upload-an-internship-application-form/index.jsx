@@ -289,13 +289,17 @@ function toBase64(blob) {
   });
 }
 
-export async function getServerSideProps() {
-  const data = await getUUID();
+export async function getServerSideProps(context) {
+  const data = await getUUID(context);
   return { props: { data } };
 }
 
-async function getUUID() {
-  return await fetch("http://localhost:3000/api/instructor/get/form-uuid")
+async function getUUID(context) {
+  return await fetch("http://localhost:3000/api/instructor/get/form-uuid",{
+    headers:{
+      "Cookie": context?.req?.headers?.cookie||"",
+    }
+  })
     .then((res) => res.json())
     .then((res) => res.data);
 }
