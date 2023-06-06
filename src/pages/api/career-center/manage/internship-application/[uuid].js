@@ -5,6 +5,7 @@ import {
 import AWS from "aws-sdk";
 import sessionExample from "../../../../../../session-example.json"
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth";
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions)

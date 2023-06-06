@@ -175,7 +175,7 @@ export default function Index({ data }) {
                             </DetailsText>
                           </Box>
                         </Grid.Col> :<></>}
-                        {element.status.alias === "received" ? <Grid.Col span={12}>
+                        {element.status.alias === "completed" ? <Grid.Col span={12}>
                           <Group
                             sx={{
                               display: "flex",

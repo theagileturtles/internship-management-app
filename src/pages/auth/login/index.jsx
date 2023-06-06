@@ -82,6 +82,7 @@ function LoginPage() {
       }
     Promise.all(promises).catch(()=>setLoginError(true)).finally(()=>{setLoginLoader(false)})
     }
+    setLoginLoader(false)
   };
 
   // Return JSX to render login page

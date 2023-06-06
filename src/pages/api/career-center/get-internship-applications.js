@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     let sql = "SELECT BIN_TO_UUID(internship_applications.uuid) AS UUID,  BIN_TO_UUID(users.uuid) AS userUUID, users.first_name AS firstName, " +
       "users.last_name AS lastName ,company,school_id AS studentID, status, internship_applications.created_at AS createdAt, internship_applications.updated_at, internship_applications.type AS type " +
       "FROM internship_management_app.users, internship_management_app.students, internship_management_app.internship_applications " +
-      "WHERE users.uuid = students.user_uuid AND internship_applications.user_uuid = users.uuid AND students.department_id = ?";
+      "WHERE users.uuid = students.user_uuid AND internship_applications.user_uuid = users.uuid";
 
     if (req.query.status) {
       sql += " AND status IN (?)"
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     sql+=" ORDER BY internship_applications.updated_at DESC"
 
     let response = await query(connection)(sql,
-      [session.user.departmentID, req.query.status?.split(",").map((element)=>element.trim())]);
+      [req.query.status?.split(",").map((element)=>element.trim())]);
 
     response = response.map((element) => {
       return {

@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     try {
         connection = createConnection();
         let response = await query(connection)(
-            "SELECT BIN_TO_UUID(messages.uuid) UUID,messages.message,  BIN_TO_UUID(messages.sender_uuid) AS senderUUID, "+ 
+            "SELECT BIN_TO_UUID(messages.uuid) UUID,messages.message,image,  BIN_TO_UUID(messages.sender_uuid) AS senderUUID, "+ 
             "first_name, last_name, title, subject, messages.created_at, messages.read, "+
             "school_id AS studentID, departments.name AS department, roles.name AS role "+
             "FROM internship_management_app.messages "+
@@ -42,6 +42,7 @@ export default async function handler(req, res) {
             subject: element.subject,
             receiver: element.receiver,
             read: element.read,
+            image: element.image,
             name: `${element.title??""} ${element.first_name} ${element.last_name}`.trim(),
             description: `${element.department??""} ${element.role} ${ (element.studentID ?? "")}`.trim() ,
             createdAt: new Date(new Date(element.created_at).getTime() - (new Date(element.created_at).getTimezoneOffset() * 60000)),

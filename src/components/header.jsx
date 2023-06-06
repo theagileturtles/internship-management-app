@@ -163,6 +163,7 @@ export default function Header(props) {
                 <Avatar
                   color="dark"
                   sx={avatarStyle}
+                  src={user?.image}
                   alt={
                     user?.title ??
                     "" + " " + user?.firstName + " " + user?.lastName

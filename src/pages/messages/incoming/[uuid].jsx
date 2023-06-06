@@ -84,7 +84,7 @@ export default function Index({ data }) {
         >
           <Stack>
             <Group>
-              <Avatar />
+              <Avatar src={data.image} />
               <Stack spacing={0}>
                 <Title order={5}>{data.name}</Title>
                 <Text color="dimmed" size={"xs"}>
