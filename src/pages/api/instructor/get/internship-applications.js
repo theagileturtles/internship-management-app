@@ -27,7 +27,7 @@ export default async function handler(req, res) {
   let connection;
   try {
     connection = createConnection();
-    let sql = "SELECT BIN_TO_UUID(internship_applications.uuid) AS UUID,  BIN_TO_UUID(users.uuid) AS userUUID, users.first_name AS firstName, " +
+    let sql = "SELECT BIN_TO_UUID(internship_applications.uuid) AS UUID,image,  BIN_TO_UUID(users.uuid) AS userUUID, users.first_name AS firstName, " +
       "users.last_name AS lastName ,company,school_id AS studentID, status, internship_applications.created_at AS createdAt, internship_applications.updated_at, internship_applications.type AS type " +
       "FROM internship_management_app.users, internship_management_app.students, internship_management_app.internship_applications " +
       "WHERE users.uuid = students.user_uuid AND internship_applications.user_uuid = users.uuid AND students.department_id = ? ";
@@ -48,6 +48,7 @@ export default async function handler(req, res) {
         updatedAt: new Date(new Date(element.updated_at).getTime() - (new Date(element.updated_at ).getTimezoneOffset() * 60000)),
         status:internshipStatusConverter(element.status),
         type: typeConverter(element.type),
+        image:element.image,
         sgkForm: element.status === "approved" ? "http://localhost:3000/api/instructor/download/internship-application/sgk-form/"+element.UUID:undefined,
         files: [{
             name: "Transcript",

@@ -443,7 +443,7 @@ function toBase64(blob) {
   });
 }
 
-export async function getServerSideProps(req, res, context) {
+export async function getServerSideProps(context) {
 
 
   const { uuid } = context.query;

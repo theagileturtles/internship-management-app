@@ -410,7 +410,7 @@ async function fetchData(context) {
   const response = await fetch(
     "http://localhost:3000/api/instructor/get/internship-applications?status=pending_for_coordinator",{
       headers:{
-        "Cookie": context.req.headers.cookie||"",
+        "Cookie": context?.req?.headers?.cookie||"",
       }
     }
   ).then((res) => res.json());

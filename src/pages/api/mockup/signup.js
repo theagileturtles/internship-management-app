@@ -15,8 +15,8 @@ export default async function handler(req, res) {
     const connection = createConnection();
     try {
         await query(connection)(
-            "INSERT INTO mockup_database.users (first_name, last_name, email, password, role_id) values(?,?,?,MD5(?),?);",
-            [body.firstName, body.lastName, body.email, body.password, body.role])
+            "INSERT INTO mockup_database.users (first_name, last_name, email, password, role_id,image) values(?,?,?,MD5(?),?,?);",
+            [body.firstName, body.lastName, body.email, body.password, body.role, body.image])
 
 
         switch (body.role) {

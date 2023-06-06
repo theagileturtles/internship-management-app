@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   const connection = createConnection();
   let users = await query(connection)(
     "SELECT BIN_TO_UUID(uuid) AS uuid, first_name AS firstName, " +
-    "last_name AS lastName, email, role_id AS roleID " +
+    "last_name AS lastName, email, role_id AS roleID, image " +
     "FROM mockup_database.users " +
     "WHERE email = ? AND password = MD5(?);",
     [body.email, body.password]

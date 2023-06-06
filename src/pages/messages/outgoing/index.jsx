@@ -43,7 +43,7 @@ export default function Index({ data }) {
           >
             <Grid.Col md={2} lg={1}>
               <Stack spacing={0}>
-                <Avatar />
+              <Avatar src={element.image} />
               </Stack>
             </Grid.Col>
             <Grid.Col md={10} lg={3}>

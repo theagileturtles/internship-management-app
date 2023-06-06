@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     try {
         connection = createConnection();
         let response = await query(connection)(
-            "SELECT BIN_TO_UUID(messages.uuid) UUID, BIN_TO_UUID(messages.receiver_uuid) AS  receiverUUID,  first_name, last_name, title, subject, messages.created_at FROM internship_management_app.messages "+
+            "SELECT BIN_TO_UUID(messages.uuid) UUID,image, BIN_TO_UUID(messages.receiver_uuid) AS  receiverUUID,  first_name, last_name, title, subject, messages.created_at FROM internship_management_app.messages "+
             "JOIN internship_management_app.users ON users.UUID = messages.receiver_uuid "+
             "LEFT JOIN internship_management_app.instructors ON  users.UUID = instructors.user_uuid "+
             "WHERE UUID_TO_BIN(?) = sender_uuid "+
@@ -28,6 +28,7 @@ export default async function handler(req, res) {
               messageUUID: element.UUID,
               receiverUUID: element.receiverUUID,
               name:`${element.title??""} ${element.first_name} ${element.last_name}`.trim() ,
+              image: element.image,
               subject: element.subject,
               createdAt: new Date(new Date(element.created_at).getTime() - (new Date(element.created_at).getTimezoneOffset() * 60000)),
 
