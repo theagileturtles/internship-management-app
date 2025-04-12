@@ -15,20 +15,20 @@ export default async function handler(req, res) {
     const connection = createConnection();
     try {
         await query(connection)(
-            "INSERT INTO mockup_database.users (first_name, last_name, email, password, role_id,image) values(?,?,?,MD5(?),?,?);",
+            "INSERT INTO internship_management_app.users (first_name, last_name, email, password, role_id,image) values(?,?,?,MD5(?),?,?);",
             [body.firstName, body.lastName, body.email, body.password, body.role, body.image])
 
 
         switch (body.role) {
             case 2:
                 await query(connection)(
-                    "INSERT INTO mockup_database.students (user_uuid,school_id, department_id) values(@last_user_uuid,?,?);",
+                    "INSERT INTO internship_management_app.students (user_uuid,school_uuid, department_id) values(@last_user_uuid,?,?);",
                     [body.schoolID, body.departmentID]
                 )
                 break;
             case 3:
                 await query(connection)(
-                    "INSERT INTO mockup_database.instructors (user_uuid,title, department_id) values(@last_user_uuid,?,?);",
+                    "INSERT INTO internship_management_app.instructors (user_uuid,title, department_id) values(@last_user_uuid,?,?);",
                     [body.title, body.departmentID]
                 )
                 break;

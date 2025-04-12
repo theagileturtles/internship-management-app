@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   let users = await query(connection)(
     "SELECT BIN_TO_UUID(uuid) AS uuid, first_name AS firstName, " +
     "last_name AS lastName, email, role_id AS roleID, image " +
-    "FROM mockup_database.users " +
+    "FROM internship_management_app.users " +
     "WHERE email = ? AND password = MD5(?);",
     [body.email, body.password]
   );
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
   switch (users[0].roleID) {
     case 2:
       userDetails = await query(connection)(
-        "SELECT school_id AS schoolID, department_id AS departmentID FROM mockup_database.students WHERE user_uuid = UUID_TO_BIN(?)",
+        "SELECT school_uuid AS schoolID, department_id AS departmentID FROM internship_management_app.students WHERE user_uuid = UUID_TO_BIN(?)",
         [users[0].uuid]
       )
       if (typeof userDetails[0] === "undefined") {
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
       break;
     case 3:
       userDetails = await query(connection)(
-        "SELECT title, department_id AS departmentID FROM mockup_database.instructors WHERE user_uuid = UUID_TO_BIN(?)",
+        "SELECT title, department_id AS departmentID FROM internship_management_app.instructors WHERE user_uuid = UUID_TO_BIN(?)",
         [users[0].uuid]
       )
       if (typeof userDetails[0] === "undefined") {

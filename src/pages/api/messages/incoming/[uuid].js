@@ -24,7 +24,7 @@ export default async function handler(req, res) {
         let response = await query(connection)(
            "SELECT BIN_TO_UUID(messages.uuid) UUID,messages.message,image,  BIN_TO_UUID(messages.sender_uuid) AS senderUUID, "+ 
             "first_name, last_name, title, subject, messages.created_at, messages.read, "+
-            "school_id AS studentID, departments.name AS department, roles.name AS role "+
+            "school_uuid AS studentID, departments.name AS department, roles.name AS role "+
             "FROM internship_management_app.messages "+
             "JOIN internship_management_app.users ON users.UUID = messages.sender_uuid "+
             "LEFT JOIN internship_management_app.instructors ON  users.UUID = instructors.user_uuid "+
