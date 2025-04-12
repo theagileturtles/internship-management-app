@@ -5,7 +5,7 @@ import {
     query
 } from "../data_access/database";
 
-const sessionData = require('./../../../../session-example.json');
+
 
 export default async function handler(req, res) {
     const session = await getServerSession(req, res, authOptions)

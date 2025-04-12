@@ -4,7 +4,7 @@ import {
   query
 } from "../data_access/database";
 
-const sessionData = require('./../../../../session-example.json');
+
 import AWS from "aws-sdk";
 import { authOptions } from "../auth/[...nextauth]";
 

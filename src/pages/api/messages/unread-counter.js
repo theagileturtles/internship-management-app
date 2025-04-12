@@ -1,4 +1,4 @@
-const sessionData = require('./../../../../session-example.json');
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import {

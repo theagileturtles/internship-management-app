@@ -11,7 +11,7 @@ import {
   Button,
 } from "@mantine/core";
 import { useState } from "react";
-const sessionData = require("./../../../../session-example.json");
+const  = require("./../../../../session-example.json");
 
 export default function Index({ data }) {
   const [reply, setReply] = useState("");

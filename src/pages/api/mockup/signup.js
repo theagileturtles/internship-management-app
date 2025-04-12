@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         switch (body.role) {
             case 2:
                 await query(connection)(
-                    "INSERT INTO internship_management_app.students (user_uuid,school_uuid, department_id) values(@last_user_uuid,?,?);",
+                    "INSERT INTO internship_management_app.students (user_uuid,school_id, department_id) values(@last_user_uuid,?,?);",
                     [body.schoolID, body.departmentID]
                 )
                 break;

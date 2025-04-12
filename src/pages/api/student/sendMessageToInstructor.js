@@ -3,7 +3,7 @@ import {
     query
   } from "../data_access/database";
   
-  const sessionData = require('./../../../../session-example.json');
+  
   
   export default async function handler(req, res) {
   
@@ -20,7 +20,7 @@ import {
     }
     
     try {
-      const user = sessionData.session.user;
+      const user = .session.user;
       const uuid = user.uuid;
   
       // check if user_uuid is provided

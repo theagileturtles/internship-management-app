@@ -34,7 +34,7 @@ export default async function handler(req, res) {
   switch (users[0].roleID) {
     case 2:
       userDetails = await query(connection)(
-        "SELECT school_uuid AS schoolID, department_id AS departmentID FROM internship_management_app.students WHERE user_uuid = UUID_TO_BIN(?)",
+        "SELECT school_id AS schoolID, department_id AS departmentID FROM internship_management_app.students WHERE user_uuid = UUID_TO_BIN(?)",
         [users[0].uuid]
       )
       if (typeof userDetails[0] === "undefined") {

@@ -15,7 +15,7 @@ import {
     const connection = createConnection();
     let users = await query(connection)(
        "SELECT bin_to_uuid(UUID) AS uuid, users.image, first_name AS firstName, last_name AS lastName, "+
-        "role_id AS roleID, school_uuid AS schoolID, title, (IFNULL(instructors.department_id, "+
+        "role_id AS roleID, school_id AS schoolID, title, (IFNULL(instructors.department_id, "+
         "students.department_id)) as departmentID  FROM internship_management_app.users "+
         "LEFT JOIN internship_management_app.students ON students.user_uuid = users.uuid "+
         "LEFT JOIN internship_management_app.instructors ON instructors.user_uuid = users.uuid "+
@@ -32,7 +32,7 @@ import {
         switch (body.roleID) {
             case 2:
                 await query(connection)(
-                    "INSERT INTO internship_management_app.students (user_uuid,school_uuid, department_id) values(@last_user_uuid,?,?);",
+                    "INSERT INTO internship_management_app.students (user_uuid,school_id, department_id) values(@last_user_uuid,?,?);",
                     [body.schoolID, body.departmentID]
                 )
                 break;
@@ -48,7 +48,7 @@ import {
 
         users = await query(connection)(
             "SELECT bin_to_uuid(UUID) AS uuid,users.image, first_name AS firstName, last_name AS lastName, "+
-             "role_id AS roleID, school_uuid AS schoolID, title, (IFNULL(instructors.department_id, "+
+             "role_id AS roleID, school_id AS schoolID, title, (IFNULL(instructors.department_id, "+
              "students.department_id)) as departmentID  FROM internship_management_app.users "+
              "LEFT JOIN internship_management_app.students ON students.user_uuid = users.uuid "+
              "LEFT JOIN internship_management_app.instructors ON instructors.user_uuid = users.uuid "+

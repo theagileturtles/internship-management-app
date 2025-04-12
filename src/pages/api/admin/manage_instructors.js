@@ -3,7 +3,7 @@ import {
     query
   } from "../../api/data_access/database";
   
-import sessionExample from "../../../../session-example.json"
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 
