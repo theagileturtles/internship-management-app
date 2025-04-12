@@ -1,4 +1,3 @@
-const  = require('./../../../../../session-example.json');
 import { getServerSession } from "next-auth";
 import {
     createConnection,
@@ -45,7 +44,7 @@ export default async function handler(req, res) {
             read: element.read,
             name: `${element.title??""} ${element.first_name} ${element.last_name}`.trim(),
             description: `${element.department??""} ${element.role} ${element.studentID??""}`.trim() ,
-            createdAt: new Date(new Date(element.created_at).getTime() - (new Date(element.created_at).getTimezoneOffset() * 60000)),
+            createdAt: new Date(new Date(element.created_at).getTime() ),
         }
 
         if(!element.read){

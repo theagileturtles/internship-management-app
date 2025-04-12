@@ -24,7 +24,7 @@ export default async function handler(req,res){
         response = response.map((element)=>{
             return {
                 UUID:element.uuid,
-                createdAt: new Date(new Date(element.created_at).getTime() - (new Date(element.created_at).getTimezoneOffset() * 60000)),
+                createdAt: new Date(new Date(element.created_at).getTime() ),
                 label: `${element.title} ${element.first_name} ${element.last_name}`,
                 departmentID: element.department_id
             }

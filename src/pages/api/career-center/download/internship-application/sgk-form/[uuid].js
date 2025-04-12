@@ -1,5 +1,4 @@
 import { getServerSession } from "next-auth";
-import sessionExample from "../../../../../../../session-example.json"
 import AWS from "aws-sdk";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 

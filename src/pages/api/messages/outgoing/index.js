@@ -1,4 +1,3 @@
-const  = require('./../../../../../session-example.json');
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 import {
@@ -30,7 +29,7 @@ export default async function handler(req, res) {
               name:`${element.title??""} ${element.first_name} ${element.last_name}`.trim() ,
               image: element.image,
               subject: element.subject,
-              createdAt: new Date(new Date(element.created_at).getTime() - (new Date(element.created_at).getTimezoneOffset() * 60000)),
+              createdAt: new Date(new Date(element.created_at).getTime() ),
 
             }
          })

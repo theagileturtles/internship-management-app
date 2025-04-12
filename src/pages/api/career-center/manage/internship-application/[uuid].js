@@ -3,7 +3,7 @@ import {
   query
 } from "../../../data_access/database";
 import AWS from "aws-sdk";
-import sessionExample from "../../../../../../session-example.json"
+
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
 
